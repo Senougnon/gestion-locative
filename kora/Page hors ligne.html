@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestion Locative (Hors Ligne)</title>
+    <style>
+        /* ... (Le contenu de styles.css est ici) ... */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #36ff03, #1900ff, #a7ff03);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2.5em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding: 0 10px;
+        }
+        
+        .nav-button {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            margin: 5px;
+            white-space: nowrap;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-button-icon {
+            font-size: 1.2em;
+        }
+        
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background-color: #fdbb2d;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+        
+        .nav-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .nav-button.active,
+        .nav-button:hover {
+            background-color: #1a2a6c;
+            color: #fdbb2d;
+        }
+        
+        main {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        section {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: white;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #fdbb2d;
+            transition: width 0.3s;
+        }
+        
+        section:hover h2::after {
+            width: 100%;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        input,
+        select,
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+        
+        input:focus,
+        select:focus {
+            background-color: rgba(255, 255, 255, 0.9);
+            outline: none;
+        }
+        
+        button {
+            background-color: #1a2a6c;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #fdbb2d;
+            color: #1a2a6c;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .data-table th {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+        
+        .data-table td {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .data-table .actions-cell {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .data-table .actions-cell button {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .edit-btn,
+        .delete-btn {
+            background-color: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+        
+        .edit-btn:hover {
+            background-color: #fdbb2d;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff4d4d;
+        }
+        
+        ul {
+            list-style-type: none;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        li::before {
+            content: '➤';
+            position: absolute;
+            left: 0;
+            color: #fdbb2d;
+        }
+        
+        footer {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            text-align: center;
+            margin-top: auto;
+            color: white;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        /* Styles pour le formulaire d'ajout */
+        .data-form {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .data-form.active {
+            display: flex; /* Affiché lorsqu'il est actif */
+        }
+        
+        .data-form h3 {
+            margin-bottom: 10px;
+        }
+        
+        .data-form input, .data-form select {
+            margin-bottom: 10px;
+        }
+        
+        /* Styles pour les boutons */
+        .add-btn {
+            margin-bottom: 20px;
+        }
+        
+        .submit-btn, .cancel-btn {
+            padding: 8px 15px;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .cancel-btn {
+            background-color: #ff4d4d;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #cc0000;
+        }
+        
+        /* Styles pour la section d'authentification */
+        #auth-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        
+        .auth-form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .auth-form-container h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .auth-form-container input {
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #333;
+        }
+        
+        .auth-form-container input:focus {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .auth-form-container button {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            color: #333;
+        }
+        
+        .auth-switch a {
+            color: #1a2a6c;
+            text-decoration: none;
+        }
+        
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Styles pour le loader */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001; /* Au-dessus de la section d'authentification */
+        }
+        
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #1a2a6c;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 1rem; /* Ajustez selon vos besoins */
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ajustez selon vos besoins */
+            gap: 1rem;
+        }
+        
+        .dashboard-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dashboard-item label {
+            color: white;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+        }
+        
+        .dashboard-item span {
+            color: #fdbb2d;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        /* Styles spécifiques pour la section Abonnements */
+        #abonnements {
+            text-align: center;
+        }
+        
+        #abonnement-status {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #f0f0f0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        #abonnement-status-text {
+            font-weight: bold;
+            color: #fdbb2d;
+            text-transform: uppercase;
+        }
+        
+        #trial-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+        
+        .subscribe-btn,
+        .cancel-subscription-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 30px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subscribe-btn {
+            background-color: #00b894;
+            color: white;
+        }
+        
+        .subscribe-btn:hover {
+            background-color: #009c78;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cancel-subscription-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        
+        .cancel-subscription-btn:hover {
+            background-color: #cc0000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Styles pour les très petits écrans */
+        @media screen and (max-width: 320px) {
+            .nav-button {
+                padding: 8px 12px; /* Padding réduit pour les très petits écrans */
+                font-size: 11px;
+            }
+        
+            .dashboard-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        
+            .dashboard-item label {
+                margin-bottom: 5px;
+            }
+        
+            .dashboard-item span {
+                font-size: 1em;
+            }
+        
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        
+            .add-btn {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">Gestion Locative</h1>
+        </header>
+
+        <nav>
+            <button class="nav-button active" data-target="dashboard">
+                <span class="nav-button-icon">🏠</span>
+                Tableau de Bord
+            </button>
+            <button class="nav-button" data-target="proprietaires">
+                <span class="nav-button-icon">👤</span>
+                Propriétaires
+            </button>
+            <button class="nav-button" data-target="maisons">
+                <span class="nav-button-icon">🏘️</span>
+                Maisons
+            </button>
+            <button class="nav-button" data-target="locataires">
+                <span class="nav-button-icon">👥</span>
+                Locataires
+            </button>
+            <button class="nav-button" data-target="souscriptions">
+                <span class="nav-button-icon">📝</span>
+                Souscriptions
+            </button>
+            <button id="logout-btn">Déconnexion</button>
+        </nav>
+
+        <div id="dashboard" class="content-section active">
+            <div class="dashboard-header">
+                <h2>Tableau de Bord</h2>
+            </div>
+            <div class="dashboard-content">
+                <div class="dashboard-item">
+                    <label>Propriétaires:</label>
+                    <span id="dashboard-proprietaires-count">0</span>
+                </div>
+                <div class="dashboard-item">
+                    <label>Locataires:</label>
+                    <span id="dashboard-locataires-count">0</span>
+                </div>
+                <div class="dashboard-item">
+                    <label>Maisons:</label>
+                    <span id="dashboard-maisons-count">0</span>
+                </div>
+                <div class="dashboard-item">
+                    <label>Souscriptions:</label>
+                    <span id="dashboard-souscriptions-count">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="proprietaires" class="content-section">
+            <div class="content-header">
+                <h2>Propriétaires</h2>
+                <button id="add-proprietaire-btn" class="add-btn">Ajouter</button>
+            </div>
+            <form id="add-proprietaire-form" class="data-form">
+                <h3>Ajouter un Propriétaire</h3>
+                <input type="text" id="proprietaire-nom" placeholder="Nom" required>
+                <input type="text" id="proprietaire-prenom" placeholder="Prénom" required>
+                <input type="tel" id="proprietaire-contact" placeholder="Contact" required>
+                <input type="email" id="proprietaire-email" placeholder="Email" required>
+                <input type="text" id="proprietaire-adresse" placeholder="Adresse" required>
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-proprietaire-btn" class="cancel-btn">Annuler</button>
+            </form>
+            <table id="proprietaires-list" class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="maisons" class="content-section">
+            <div class="content-header">
+                <h2>Maisons</h2>
+                <button id="add-maison-btn" class="add-btn">Ajouter</button>
+            </div>
+            
+            <form id="add-maison-form" class="data-form">
+                <h3>Ajouter une Maison</h3>
+                <select id="maison-proprietaire" required>
+                    <option value="">Sélectionner Propriétaire</option>
+                </select>
+                <input type="text" id="maison-type" placeholder="Type de construction" required>
+                <input type="number" id="maison-pieces" placeholder="Nombre de pièces" required>
+                <input type="text" id="maison-ville" placeholder="Ville" required>
+                <input type="text" id="maison-commune" placeholder="Commune" required>
+                <input type="text" id="maison-quartier" placeholder="Quartier" required>
+                <input type="number" id="maison-loyer" placeholder="Loyer" required>
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-maison-btn" class="cancel-btn">Annuler</button>
+            </form>
+            <table id="maisons-list" class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Propriétaire</th>
+                        <th>Type</th>
+                        <th>Pièces</th>
+                        <th>Ville, Commune, Quartier</th>
+                        <th>Loyer</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="locataires" class="content-section">
+            <div class="content-header">
+                <h2>Locataires</h2>
+                <button id="add-locataire-btn" class="add-btn">Ajouter</button>
+            </div>
+            
+            <form id="add-locataire-form" class="data-form">
+                <h3>Ajouter un Locataire</h3>
+                <input type="text" id="locataire-nom" placeholder="Nom" required>
+                <input type="text" id="locataire-prenom" placeholder="Prénom" required>
+                <input type="tel" id="locataire-contact" placeholder="Contact" required>
+                <input type="email" id="locataire-email" placeholder="Email" required>
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-locataire-btn" class="cancel-btn">Annuler</button>
+            </form>
+
+            <table id="locataires-list" class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="souscriptions" class="content-section">
+            <div class="content-header">
+                <h2>Souscriptions</h2>
+                <button id="add-souscription-btn" class="add-btn">Ajouter</button>
+            </div>
+            
+            <form id="add-souscription-form" class="data-form">
+                <h3>Ajouter une Souscription</h3>
+                <select id="souscription-maison" required>
+                    <option value="">Sélectionner Maison</option>
+                </select>
+                <select id="souscription-locataire" required>
+                    <option value="">Sélectionner Locataire</option>
+                </select>
+                <input type="number" id="souscription-caution" placeholder="Caution" required>
+                <input type="number" id="souscription-avance" placeholder="Avance" required>
+                <input type="text" id="souscription-autres" placeholder="Autres frais" required>
+                <input type="date" id="souscription-date-debut" placeholder="Date d'entrée" required>
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-souscription-btn" class="cancel-btn">Annuler</button>
+            </form>
+
+            <table id="souscriptions-list" class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID Maison</th>
+                        <th>ID Locataire</th>
+                        <th>Caution</th>
+                        <th>Avance</th>
+                        <th>Autres Frais</th>
+                        <th>Date d'entrée</th>
+                        <th>Loyer Mensuel</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="restriction-message" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 1002; justify-content: center; align-items: center; flex-direction: column; color: white;">
+        <h2>Accès Restreint</h2>
+        <p>Vous devez avoir un abonnement actif pour utiliser cette application en mode hors ligne. Veuillez vous connecter à Internet pour vous abonner.</p>
+        <button id="go-to-online-btn" class="subscribe-btn">Aller à la version en ligne</button>
+      </div>
+    <script>
+        // script_offline.js
+         let currentUser = null;
+
+        // Au chargement de la page, récupérez les informations de l'utilisateur depuis localStorage
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          currentUser = JSON.parse(storedUser);
+        }
+
+        // Gestion des onglets
+        const tabs = document.querySelectorAll(".nav-button");
+        const contentSections = document.querySelectorAll(".content-section");
+    
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                const target = tab.dataset.target;
+    
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+    
+                contentSections.forEach(s => s.classList.remove("active"));
+                document.getElementById(target).classList.add("active");
+            });
+        });
+    
+        // Gestion des formulaires d'ajout
+        const addProprietaireBtn = document.getElementById("add-proprietaire-btn");
+        const addMaisonBtn = document.getElementById("add-maison-btn");
+        const addLocataireBtn = document.getElementById("add-locataire-btn");
+        const addSouscriptionBtn = document.getElementById("add-souscription-btn");
+    
+        const addProprietaireForm = document.getElementById("add-proprietaire-form");
+        const addMaisonForm = document.getElementById("add-maison-form");
+        const addLocataireForm = document.getElementById("add-locataire-form");
+        const addSouscriptionForm = document.getElementById("add-souscription-form");
+    
+        const cancelProprietaireBtn = document.getElementById("cancel-proprietaire-btn");
+        const cancelMaisonBtn = document.getElementById("cancel-maison-btn");
+        const cancelLocataireBtn = document.getElementById("cancel-locataire-btn");
+        const cancelSouscriptionBtn = document.getElementById("cancel-souscription-btn");
+    
+        // Fonctions pour afficher/masquer les formulaires
+        function showForm(form) {
+            form.classList.add("active");
+        }
+    
+        function hideForm(form) {
+            form.classList.remove("active");
+            form.reset();
+        }
+    
+        // Événements pour afficher les formulaires
+        addProprietaireBtn.addEventListener("click", () => {
+            checkUserRoleAndSubscription()
+            showForm(addProprietaireForm)
+        });
+        addMaisonBtn.addEventListener("click", () => {
+            checkUserRoleAndSubscription()
+            showForm(addMaisonForm)
+        });
+        addLocataireBtn.addEventListener("click", () => {
+            checkUserRoleAndSubscription()
+            showForm(addLocataireForm)
+        });
+        addSouscriptionBtn.addEventListener("click", () => {
+            checkUserRoleAndSubscription()
+            showForm(addSouscriptionForm)
+        });
+    
+        // Événements pour masquer les formulaires
+        cancelProprietaireBtn.addEventListener("click", () => hideForm(addProprietaireForm));
+        cancelMaisonBtn.addEventListener("click", () => hideForm(addMaisonForm));
+        cancelLocataireBtn.addEventListener("click", () => hideForm(addLocataireForm));
+        cancelSouscriptionBtn.addEventListener("click", () => hideForm(addSouscriptionForm));
+    
+        // Fonctions pour gérer le localStorage
+        function getLocalStorageData(key) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+    
+        function setLocalStorageData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+    
+        // Gestion du formulaire d'ajout de propriétaire
+        addProprietaireForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+    
+            const nom = document.getElementById("proprietaire-nom").value;
+            const prenom = document.getElementById("proprietaire-prenom").value;
+            const contact = document.getElementById("proprietaire-contact").value;
+            const email = document.getElementById("proprietaire-email").value;
+            const adresse = document.getElementById("proprietaire-adresse").value;
+    
+            addProprietaire(nom, prenom, contact, email, adresse);
+            hideForm(addProprietaireForm);
+            loadProprietaires();
+        });
+    
+        // Gestion du formulaire d'ajout de maison
+        addMaisonForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+    
+            const proprietaireId = document.getElementById("maison-proprietaire").value;
+            const type = document.getElementById("maison-type").value;
+            const pieces = parseInt(document.getElementById("maison-pieces").value);
+            const ville = document.getElementById("maison-ville").value;
+            const commune = document.getElementById("maison-commune").value;
+            const quartier = document.getElementById("maison-quartier").value;
+            const loyer = parseInt(document.getElementById("maison-loyer").value);
+    
+            addMaison(proprietaireId, type, pieces, ville, commune, quartier, loyer);
+            hideForm(addMaisonForm);
+            loadMaisons();
+        });
+    
+        // Gestion du formulaire d'ajout de locataire
+        addLocataireForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+    
+            const nom = document.getElementById("locataire-nom").value;
+            const prenom = document.getElementById("locataire-prenom").value;
+            const contact = document.getElementById("locataire-contact").value;
+            const email = document.getElementById("locataire-email").value;
+    
+            addLocataire(nom, prenom, contact, email);
+            hideForm(addLocataireForm);
+            loadLocataires();
+        });
+    
+        // Gestion du formulaire d'ajout de souscription
+        addSouscriptionForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+    
+            const maisonId = document.getElementById("souscription-maison").value;
+            const locataireId = document.getElementById("souscription-locataire").value;
+            const caution = parseInt(document.getElementById("souscription-caution").value);
+            const avance = parseInt(document.getElementById("souscription-avance").value);
+            const autres = document.getElementById("souscription-autres").value;
+            const dateDebut = document.getElementById("souscription-date-debut").value;
+    
+            addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut);
+            hideForm(addSouscriptionForm);
+            loadSouscriptions();
+        });
+    
+        // Fonctions pour ajouter des données (localStorage)
+        function addProprietaire(nom, prenom, contact, email, adresse) {
+            const proprietaires = getLocalStorageData('proprietaires');
+            const newId = proprietaires.length > 0 ? Math.max(...proprietaires.map(p => p.id)) + 1 : 1;
+            const newProprietaire = { id: newId, nom, prenom, contact, email, adresse };
+            proprietaires.push(newProprietaire);
+            setLocalStorageData('proprietaires', proprietaires);
+        }
+    
+        function addMaison(proprietaireId, type, pieces, ville, commune, quartier, loyer) {
+            const maisons = getLocalStorageData('maisons');
+            const newId = maisons.length > 0 ? Math.max(...maisons.map(m => m.id)) + 1 : 1;
+            const newMaison = { type, pieces, ville, commune, quartier, loyer };
+            maisons.push(newMaison);
+            setLocalStorageData('maisons', maisons);
+        }
+    
+        function addLocataire(nom, prenom, contact, email) {
+            const locataires = getLocalStorageData('locataires');
+            const newId = locataires.length > 0 ? Math.max(...locataires.map(l => l.id)) + 1 : 1;
+            const newLocataire = { id: newId, nom, prenom, contact, email };
+            locataires.push(newLocataire);
+            setLocalStorageData('locataires', locataires);
+        }
+    
+        function addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut) {
+            const souscriptions = getLocalStorageData('souscriptions');
+            const maisons = getLocalStorageData('maisons');
+            const loyer = maisons.find(m => m.id === parseInt(maisonId))?.loyer || 0;
+            const newId = souscriptions.length > 0 ? Math.max(...souscriptions.map(s => s.id)) + 1 : 1;
+            const newSouscription = { id: newId, maison: maisonId, locataire: locataireId, caution, avance, autres, dateDebut, loyer };
+            souscriptions.push(newSouscription);
+            setLocalStorageData('souscriptions', souscriptions);
+        }
+    
+        // Fonctions pour charger les données (localStorage)
+        function loadProprietaires() {
+            const proprietairesList = document.querySelector("#proprietaires-list tbody");
+            proprietairesList.innerHTML = "";
+            const proprietaires = getLocalStorageData('proprietaires');
+            let proprietairesCount = proprietaires.length;
+    
+            proprietaires.forEach((proprietaire, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${proprietaire.id}</td>
+                    <td>${proprietaire.nom}</td>
+                    <td>${proprietaire.prenom}</td>
+                    <td>${proprietaire.contact}</td>
+                    <td>${proprietaire.email}</td>
+                    <td>${proprietaire.adresse}</td>
+                    <td class="actions-cell">
+                        <button class="edit-btn" data-id="${proprietaire.id}">Modifier</button>
+                        <button class="delete-btn" data-id="${proprietaire.id}">Supprimer</button>
+                    </td>
+                `;
+                proprietairesList.appendChild(row);
+            });
+    
+            document.getElementById('dashboard-proprietaires-count').textContent = proprietairesCount;
+        }
+    
+        function loadMaisons() {
+            const maisonsList = document.querySelector("#maisons-list tbody");
+            maisonsList.innerHTML = "";
+            const maisons = getLocalStorageData('maisons');
+            const proprietaires = getLocalStorageData('proprietaires');
+            let maisonsCount = maisons.length;
+    
+            // Mettre à jour la liste déroulante des propriétaires
+            const proprietaireSelect = document.getElementById("maison-proprietaire");
+            proprietaireSelect.innerHTML = '<option value="">Sélectionner Propriétaire</option>';
+            proprietaires.forEach(proprietaire => {
+                const option = document.createElement("option");
+                option.value = proprietaire.id;
+                option.text = `${proprietaire.nom} ${proprietaire.prenom}`;
+                proprietaireSelect.appendChild(option);
+            });
+    
+            maisons.forEach(maison => {
+                const proprietaire = proprietaires.find(p => p.id === parseInt(maison.proprietaire));
+                const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Propriétaire inconnu';
+    
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${maison.id}</td>
+                    <td>${proprietaireNom}</td>
+                    <td>${maison.type}</td>
+                    <td>${maison.pieces}</td>
+                    <td>${maison.ville}, ${maison.commune}, ${maison.quartier}</td>
+                    <td>${maison.loyer}</td>
+                    <td class="actions-cell">
+                        <button class="edit-btn" data-id="${maison.id}">Modifier</button>
+                        <button class="delete-btn" data-id="${maison.id}">Supprimer</button>
+                    </td>
+                `;
+                maisonsList.appendChild(row);
+            });
+    
+            document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
+        }
+    
+        function loadLocataires() {
+            const locatairesList = document.querySelector("#locataires-list tbody");
+            locatairesList.innerHTML = "";
+            const locataires = getLocalStorageData('locataires');
+            let locatairesCount = locataires.length;
+    
+            locataires.forEach(locataire => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${locataire.id}</td>
+                    <td>${locataire.nom}</td>
+                    <td>${locataire.prenom}</td>
+                    <td>${locataire.contact}</td>
+                    <td>${locataire.email}</td>
+                    <td class="actions-cell">
+                        <button class="edit-btn" data-id="${locataire.id}">Modifier</button>
+                        <button class="delete-btn" data-id="${locataire.id}">Supprimer</button>
+                    </td>
+                `;
+                locatairesList.appendChild(row);
+            });
+    
+            document.getElementById('dashboard-locataires-count').textContent = locatairesCount;
+        }
+    
+        function loadSouscriptions() {
+            const souscriptionsList = document.querySelector("#souscriptions-list tbody");
+            souscriptionsList.innerHTML = "";
+            const souscriptions = getLocalStorageData('souscriptions');
+            const maisons = getLocalStorageData('maisons');
+            const locataires = getLocalStorageData('locataires');
+            let souscriptionsCount = souscriptions.length;
+    
+            // Mettre à jour la liste déroulante des maisons
+            const maisonSelect = document.getElementById("souscription-maison");
+            maisonSelect.innerHTML = '<option value="">Sélectionner Maison</option>';
+            maisons.forEach(maison => {
+                const option = document.createElement("option");
+                option.value = maison.id;
+                option.text = `${maison.id} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+                maisonSelect.appendChild(option);
+            });
+    
+            // Mettre à jour la liste déroulante des locataires
+            const locataireSelect = document.getElementById("souscription-locataire");
+            locataireSelect.innerHTML = '<option value="">Sélectionner Locataire</option>';
+            locataires.forEach(locataire => {
+                const option = document.createElement("option");
+                option.value = locataire.id;
+                option.text = `${locataire.nom} ${locataire.prenom}`;
+                locataireSelect.appendChild(option);
+            });
+    
+            souscriptions.forEach(souscription => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${souscription.maison}</td>
+                    <td>${souscription.locataire}</td>
+                    <td>${souscription.caution}</td>
+                    <td>${souscription.avance}</td>
+                    <td>${souscription.autres}</td>
+                    <td>${souscription.dateDebut}</td>
+                    <td>${souscription.loyer}</td>
+                    <td class="actions-cell">
+                        <button class="edit-btn" data-id="${souscription.id}">Modifier</button>
+                        <button class="delete-btn" data-id="${souscription.id}">Supprimer</button>
+                    </td>
+                `;
+                souscriptionsList.appendChild(row);
+            });
+    
+            document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
+        }
+    
+        // Délégation d'événements pour les boutons "Modifier" et "Supprimer"
+        document.querySelector("#proprietaires-list tbody").addEventListener("click", handleEditDelete);
+        document.querySelector("#maisons-list tbody").addEventListener("click", handleEditDelete);
+        document.querySelector("#locataires-list tbody").addEventListener("click", handleEditDelete);
+        document.querySelector("#souscriptions-list tbody").addEventListener("click", handleEditDelete);
+    
+        function handleEditDelete(event) {
+            const target = event.target;
+            if (target.classList.contains("edit-btn")) {
+                const itemId = parseInt(target.dataset.id);
+                const itemType = target.closest(".content-section").id;
+                editItem(itemType, itemId);
+            } else if (target.classList.contains("delete-btn")) {
+                const itemId = parseInt(target.dataset.id);
+                const itemType = target.closest(".content-section").id;
+                deleteItem(itemType, itemId);
+            }
+        }
+    
+        // Fonctions pour modifier et supprimer des éléments (localStorage)
+        function editItem(itemType, itemId) {
+            if (itemType === 'proprietaires') {
+                editProprietaire(itemId);
+            } else if (itemType === 'maisons') {
+                editMaison(itemId);
+            } else if (itemType === 'locataires') {
+                editLocataire(itemId);
+            } else if (itemType === 'souscriptions') {
+                editSouscription(itemId);
+            }
+        }
+        
+        function deleteItem(itemType, itemId) {
+            let items = getLocalStorageData(itemType);
+            items = items.filter(item => item.id !== itemId);
+            setLocalStorageData(itemType, items);
+        
+            // Recharger la liste après la suppression
+            if (itemType === 'proprietaires') {
+                loadProprietaires();
+            } else if (itemType === 'maisons') {
+                loadMaisons();
+            } else if (itemType === 'locataires') {
+                loadLocataires();
+            } else if (itemType === 'souscriptions') {
+                loadSouscriptions();
+            }
+        }
+    
+        function editProprietaire(itemId) {
+            const proprietaires = getLocalStorageData('proprietaires');
+            const proprietaire = proprietaires.find(p => p.id === itemId);
+        
+            // Remplir le formulaire avec les données du propriétaire
+            document.getElementById("proprietaire-nom").value = proprietaire.nom;
+            document.getElementById("proprietaire-prenom").value = proprietaire.prenom;
+            document.getElementById("proprietaire-contact").value = proprietaire.contact;
+            document.getElementById("proprietaire-email").value = proprietaire.email;
+            document.getElementById("proprietaire-adresse").value = proprietaire.adresse;
+        
+            // Afficher le formulaire
+            showForm(addProprietaireForm);
+        
+            // Modifier l'écouteur d'événements du formulaire pour la mise à jour
+            addProprietaireForm.onsubmit = (event) => {
+                event.preventDefault();
+                updateProprietaire(itemId);
+            };
+        }
+        
+        function updateProprietaire(itemId) {
+            const proprietaires = getLocalStorageData('proprietaires');
+            const index = proprietaires.findIndex(p => p.id === itemId);
+        
+            // Mettre à jour les données du propriétaire
+            proprietaires[index] = {
+                id: itemId,
+                nom: document.getElementById("proprietaire-nom").value,
+                prenom: document.getElementById("proprietaire-prenom").value,
+                contact: document.getElementById("proprietaire-contact").value,
+                email: document.getElementById("proprietaire-email").value,
+                adresse: document.getElementById("proprietaire-adresse").value
+            };
+        
+            // Enregistrer les modifications dans localStorage
+            setLocalStorageData('proprietaires', proprietaires);
+        
+            // Recharger la liste et masquer le formulaire
+            loadProprietaires();
+            hideForm(addProprietaireForm);
+        
+            // Réinitialiser l'écouteur d'événements du formulaire pour l'ajout
+            addProprietaireForm.onsubmit = (event) => {
+                event.preventDefault();
+                addProprietaire(
+                    document.getElementById("proprietaire-nom").value,
+                    document.getElementById("proprietaire-prenom").value,
+                    document.getElementById("proprietaire-contact").value,
+                    document.getElementById("proprietaire-email").value,
+                    document.getElementById("proprietaire-adresse").value
+                );
+                hideForm(addProprietaireForm);
+                loadProprietaires();
+            };
+        }
+    
+        function editMaison(itemId) {
+            const maisons = getLocalStorageData('maisons');
+            const maison = maisons.find(m => m.id === itemId);
+        
+            // Remplir le formulaire avec les données de la maison
+            document.getElementById("maison-proprietaire").value = maison.proprietaire;
+            document.getElementById("maison-type").value = maison.type;
+            document.getElementById("maison-pieces").value = maison.pieces;
+            document.getElementById("maison-ville").value = maison.ville;
+            document.getElementById("maison-commune").value = maison.commune;
+            document.getElementById("maison-quartier").value = maison.quartier;
+            document.getElementById("maison-loyer").value = maison.loyer;
+        
+            // Afficher le formulaire
+            showForm(addMaisonForm);
+        
+            // Modifier l'écouteur d'événements du formulaire pour la mise à jour
+            addMaisonForm.onsubmit = (event) => {
+                event.preventDefault();
+                updateMaison(itemId);
+            };
+        }
+        
+        function updateMaison(itemId) {
+            const maisons = getLocalStorageData('maisons');
+            const index = maisons.findIndex(m => m.id === itemId);
+        
+            // Mettre à jour les données de la maison
+            maisons[index] = {
+                id: itemId,
+                proprietaire: document.getElementById("maison-proprietaire").value,
+                type: document.getElementById("maison-type").value,
+                pieces: parseInt(document.getElementById("maison-pieces").value),
+                ville: document.getElementById("maison-ville").value,
+                commune: document.getElementById("maison-commune").value,
+                quartier: document.getElementById("maison-quartier").value,
+                loyer: parseInt(document.getElementById("maison-loyer").value)
+            };
+        
+            // Enregistrer les modifications dans localStorage
+            setLocalStorageData('maisons', maisons);
+        
+            // Recharger la liste et masquer le formulaire
+            loadMaisons();
+            hideForm(addMaisonForm);
+        
+            // Réinitialiser l'écouteur d'événements du formulaire pour l'ajout
+            addMaisonForm.onsubmit = (event) => {
+                event.preventDefault();
+                addMaison(
+                    document.getElementById("maison-proprietaire").value,
+                    document.getElementById("maison-type").value,
+                    parseInt(document.getElementById("maison-pieces").value),
+                    document.getElementById("maison-ville").value,
+                    document.getElementById("maison-commune").value,
+                    document.getElementById("maison-quartier").value,
+                    parseInt(document.getElementById("maison-loyer").value)
+                );
+                hideForm(addMaisonForm);
+                loadMaisons();
+            };
+        }
+    
+        function editLocataire(itemId) {
+            const locataires = getLocalStorageData('locataires');
+            const locataire = locataires.find(l => l.id === itemId);
+    
+            // Remplir le formulaire avec les données du locataire
+            document.getElementById("locataire-nom").value = locataire.nom;
+            document.getElementById("locataire-prenom").value = locataire.prenom;
+            document.getElementById("locataire-contact").value = locataire.contact;
+            document.getElementById("locataire-email").value = locataire.email;
+    
+            // Afficher le formulaire
+            showForm(addLocataireForm);
+    
+            // Modifier l'écouteur d'événements du formulaire pour la mise à jour
+            addLocataireForm.onsubmit = (event) => {
+                event.preventDefault();
+                updateLocataire(itemId);
+            };
+        }
+    
+        function updateLocataire(itemId) {
+            const locataires = getLocalStorageData('locataires');
+            const index = locataires.findIndex(l => l.id === itemId);
+    
+            // Mettre à jour les données du locataire
+            locataires[index] = {
+                id: itemId,
+                nom: document.getElementById("locataire-nom").value,
+                prenom: document.getElementById("locataire-prenom").value,
+                contact: document.getElementById("locataire-contact").value,
+                email: document.getElementById("locataire-email").value
+            };
+    
+            // Enregistrer les modifications dans localStorage
+            setLocalStorageData('locataires', locataires);
+    
+            // Recharger la liste et masquer le formulaire
+            loadLocataires();
+            hideForm(addLocataireForm);
+    
+            // Réinitialiser l'écouteur d'événements du formulaire pour l'ajout
+            addLocataireForm.onsubmit = (event) => {
+                event.preventDefault();
+                addLocataire(
+                    document.getElementById("locataire-nom").value,
+                    document.getElementById("locataire-prenom").value,
+                    document.getElementById("locataire-contact").value,
+                    document.getElementById("locataire-email").value
+                );
+                hideForm(addLocataireForm);
+                loadLocataires();
+            };
+        }
+    
+        function editSouscription(itemId) {
+            const souscriptions = getLocalStorageData('souscriptions');
+            const souscription = souscriptions.find(s => s.id === itemId);
+    
+            // Remplir le formulaire avec les données de la souscription
+            document.getElementById("souscription-maison").value = souscription.maison;
+            document.getElementById("souscription-locataire").value = souscription.locataire;
+            document.getElementById("souscription-caution").value = souscription.caution;
+            document.getElementById("souscription-avance").value = souscription.avance;
+            document.getElementById("souscription-autres").value = souscription.autres;
+            document.getElementById("souscription-date-debut").value = souscription.dateDebut;
+    
+            // Afficher le formulaire
+            showForm(addSouscriptionForm);
+    
+            // Modifier l'écouteur d'événements du formulaire pour la mise à jour
+            addSouscriptionForm.onsubmit = (event) => {
+                event.preventDefault();
+                updateSouscription(itemId);
+            };
+        }
+    
+        function updateSouscription(itemId) {
+            const souscriptions = getLocalStorageData('souscriptions');
+            const index = souscriptions.findIndex(s => s.id === itemId);
+        
+            // Mettre à jour les données de la souscription
+            souscriptions[index] = {
+                id: itemId,
+                maison: document.getElementById("souscription-maison").value,
+                locataire: document.getElementById("souscription-locataire").value,
+                caution: parseInt(document.getElementById("souscription-caution").value),
+                avance: parseInt(document.getElementById("souscription-avance").value),
+                autres: document.getElementById("souscription-autres").value,
+                dateDebut: document.getElementById("souscription-date-debut").value,
+                loyer: souscriptions[index].loyer         };
+        
+                // Enregistrer les modifications dans localStorage
+                setLocalStorageData('souscriptions', souscriptions);
+            
+                // Recharger la liste et masquer le formulaire
+                loadSouscriptions();
+                hideForm(addSouscriptionForm);
+            
+                // Réinitialiser l'écouteur d'événements du formulaire pour l'ajout
+                addSouscriptionForm.onsubmit = (event) => {
+                    event.preventDefault();
+                    addSouscription(
+                        document.getElementById("souscription-maison").value,
+                        document.getElementById("souscription-locataire").value,
+                        parseInt(document.getElementById("souscription-caution").value),
+                        parseInt(document.getElementById("souscription-avance").value),
+                        document.getElementById("souscription-autres").value,
+                        document.getElementById("souscription-date-debut").value
+                    );
+                    hideForm(addSouscriptionForm);
+                    loadSouscriptions();
+                };
+            }
+
+            function checkUserRoleAndSubscription() {
+                if (currentUser) {
+                    // Vérifier le rôle
+                    const isAdmin = currentUser.role === 'admin';
+                    const addProprietaireBtn = document.getElementById('add-proprietaire-btn');
+                    const addMaisonBtn = document.getElementById('add-maison-btn');
+                    const addLocataireBtn = document.getElementById('add-locataire-btn');
+                    const addSouscriptionBtn = document.getElementById('add-souscription-btn');
+        
+                    if (addProprietaireBtn) {
+                        addProprietaireBtn.style.display = isAdmin ? 'block' : 'none';
+                    }
+                    if (addMaisonBtn) {
+                        addMaisonBtn.style.display = isAdmin ? 'block' : 'none';
+                    }
+                    if (addLocataireBtn) {
+                        addLocataireBtn.style.display = isAdmin ? 'block' : 'none';
+                    }
+                    if (addSouscriptionBtn) {
+                        addSouscriptionBtn.style.display = isAdmin ? 'block' : 'none';
+                    }
+                }
+            }
+            
+            function logout() {
+                localStorage.clear();
+                currentUser = null;
+                window.location.reload();
+              }
+        
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+        
+            // Initialiser les données au chargement de la page
+            function initializeDataLoad() {
+                checkUserRoleAndSubscription()
+                loadDashboardData();
+                loadProprietaires();
+                loadMaisons();
+                loadLocataires();
+                loadSouscriptions();
+            }
+            function checkUserAccess() {
+    const restrictionMessage = document.getElementById("restriction-message");
+    const goToOnlineBtn = document.getElementById("go-to-online-btn");
+  
+    // Vérifier si l'utilisateur a un abonnement actif dans localStorage
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      const currentUser = JSON.parse(storedUser);
+      if (currentUser.subscription && currentUser.subscription.status === 'active') {
+        // Utilisateur autorisé
+        restrictionMessage.style.display = "none";
+        return; // Sortir de la fonction si l'utilisateur est autorisé
+      }
+    }
+  
+    // Utilisateur non autorisé
+    restrictionMessage.style.display = "flex";
+  
+    // Redirection vers la page en ligne
+    goToOnlineBtn.addEventListener("click", () => {
+      window.location.href = "Page en ligne.html"; // Redirige vers la version en ligne
+    });
+  }
+
+  // Au chargement de la page
+window.addEventListener('DOMContentLoaded', () => {
+    initializeDataLoad();
+    checkUserAccess(); // Vérification des droits d'accès
+});
+  
+            // Charger les données du tableau de bord
+            function loadDashboardData() {
+                const proprietairesCount = getLocalStorageData('proprietaires').length;
+                const locatairesCount = getLocalStorageData('locataires').length;
+                const maisonsCount = getLocalStorageData('maisons').length;
+                const souscriptionsCount = getLocalStorageData('souscriptions').length;
+        
+                document.getElementById('dashboard-proprietaires-count').textContent = proprietairesCount;
+                document.getElementById('dashboard-locataires-count').textContent = locatairesCount;
+                document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
+                document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
+            }
+        
+            // Appeler initializeDataLoad au chargement de la page
+            initializeDataLoad();
+            </script>
+    </body>
+    </html>
