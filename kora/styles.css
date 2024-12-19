@@ -488,6 +488,51 @@ footer {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Styles pour les boutons d'exportation et d'impression */
+.table-actions {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.export-pdf-btn, .export-excel-btn, .print-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.export-pdf-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.export-pdf-btn:hover {
+    background-color: #c82333;
+}
+
+.export-excel-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.export-excel-btn:hover {
+    background-color: #218838;
+}
+
+.print-btn {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.print-btn:hover {
+    background-color: #138496;
+}
+
 /* Styles pour les très petits écrans */
 @media screen and (max-width: 320px) {
     .nav-button {
@@ -517,4 +562,54 @@ footer {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+}
+
+/* Styles pour la fenêtre modale */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1002; /* Au-dessus de tout le reste */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(6, 0, 58, 0.308);
+}
+
+.modal-content {
+    background-color: #020068;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Style pour les cellules d'ID cliquables */
+.clickable-id {
+    cursor: pointer;
+    text-decoration: underline;
+    color: rgb(255, 255, 255); /* Ou la couleur de votre choix */
+}
+
+.clickable-id:hover {
+    color: rgb(139, 0, 0); /* Ou une couleur légèrement différente */
 }
