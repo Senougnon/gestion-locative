@@ -1,1 +1,1466 @@
-const _0x49d7ab=_0x314e;(function(_0x46662a,_0x5eeaf7){const _0x31e02a=_0x314e,_0x1ce5ea=_0x46662a();while(!![]){try{const _0x26de21=parseInt(_0x31e02a(0x26f))/0x1*(parseInt(_0x31e02a(0x22a))/0x2)+-parseInt(_0x31e02a(0x233))/0x3*(-parseInt(_0x31e02a(0x1fa))/0x4)+-parseInt(_0x31e02a(0x241))/0x5*(parseInt(_0x31e02a(0x1f1))/0x6)+-parseInt(_0x31e02a(0x27c))/0x7*(-parseInt(_0x31e02a(0x1e6))/0x8)+parseInt(_0x31e02a(0x23b))/0x9*(parseInt(_0x31e02a(0x242))/0xa)+parseInt(_0x31e02a(0x1eb))/0xb*(-parseInt(_0x31e02a(0x245))/0xc)+parseInt(_0x31e02a(0x235))/0xd;if(_0x26de21===_0x5eeaf7)break;else _0x1ce5ea['push'](_0x1ce5ea['shift']());}catch(_0x2fe4c9){_0x1ce5ea['push'](_0x1ce5ea['shift']());}}}(_0x5467,0x9130c));import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';import{getDatabase,ref,get,set,push,onValue,remove,update}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';const firebaseConfig={'apiKey':_0x49d7ab(0x20b),'authDomain':'immo-75593.firebaseapp.com','databaseURL':_0x49d7ab(0x26b),'projectId':'immo-75593','storageBucket':'immo-75593.firebasestorage.app','messagingSenderId':_0x49d7ab(0x25f),'appId':_0x49d7ab(0x1e7),'measurementId':'G-52KYCJZSHE'},app=initializeApp(firebaseConfig),database=getDatabase(app);function _0x5467(){const _0x389d9a=['register-form-container','Vous\x20n\x27avez\x20pas\x20d\x27abonnement\x20actif\x20à\x20annuler.','caution','reset','error','CHECKOUT_COMPLETED','Vous\x20devez\x20avoir\x20un\x20abonnement\x20actif\x20ou\x20une\x20période\x20d\x27essai\x20pour\x20accéder\x20à\x20cette\x20section.','maison-proprietaire','click','Propriétaire\x20inconnu','forEach','#maisons-list\x20tbody','maison-type','AIzaSyCNiyVW5DgsvqIR2eAlQ2Ls02DuliFWOOI','val','locataire','maison-quartier','Déconnexion','</td>\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','Vous\x20avez\x20déjà\x20une\x20période\x20d\x27essai\x20en\x20cours.','subscription','user','proprietaire-contact','login-username','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','then','monthly','maison-pieces','\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22','Pseudo\x20ou\x20mot\x20de\x20passe\x20incorrect.','finally','add-proprietaire-btn','email','locataires','removeItem','status','target','none','cancel-locataire-btn','Erreur\x20lors\x20de\x20la\x20connexion\x20:','style','Période\x20d\x27essai\x20de\x207\x20jours\x20activée\x20!','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','Votre\x20abonnement\x20expirera\x20dans\x20','16qZpkDj','dashboard-souscriptions-count','cancel-proprietaire-btn','locataire-contact','souscriptions','querySelectorAll','add-souscription-form','maison-ville','commune','327768wlHeAX','stringify','752245zvVOWi','submit','preventDefault','quartier','subscribe-yearly-btn','subscribe-monthly-btn','286515AwTsad','souscription-caution','dateDebut','toISOString','Aucun\x20utilisateur\x20trouvé.','/subscription','2261650sGTAdl','130pBvWjd','proprietaires','add-maison-btn','33588XxChTK','textContent','Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20souscription:','pieces','add-locataire-btn','add-maison-form','\x22>Supprimer</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','maison-commune','prenom','delete-btn','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','Erreur\x20lors\x20de\x20la\x20suppression\x20de\x20','locataire-email','.nav-button','\x20jour(s).\x20Pensez\x20à\x20le\x20renouveler.','annuel','username','\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22','\x20réussi!','add','trial','maisons','\x20-\x20','souscription-maison','addEventListener','users/','146632846661','locataire-prenom','text','autres','#proprietaires-list\x20tbody','round','register-username','getElementById','flex','logout-btn','user@example.com','Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20maison:','https://immo-75593-default-rtdb.firebaseio.com','proprietaire-email','proprietaire-adresse','location','51822FgxUzA','Erreur\x20lors\x20de\x20l\x27inscription\x20:','index.html','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','dataset','display','endDate','parse','.content-section','Modifier','\x22>Supprimer</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','trial-info','maisons/','13244yXOocc','dashboard-maisons-count','souscription-autres','block','register-password','catch','innerHTML','</td>\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','#locataires-list\x20tbody','Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20maison.','adresse','contact','cancelled','getTime','Vous\x20avez\x20déjà\x20un\x20abonnement\x20actif.','login-form-container','Abonnement\x20','proprietaire-prenom','Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20propriétaire.','appendChild','getItem','Abonnement\x20mensuel\x20à\x20la\x20plateforme\x20de\x20gestion\x20locative','<option\x20value=\x22\x22>Sélectionner\x20Locataire</option>','proprietaire-nom','createElement','cancel-subscription-btn','active','Erreur\x20lors\x20du\x20paiement.\x20Veuillez\x20réessayer.','locataire-nom','loading-overlay','expired','length','querySelector','remove','dashboard-proprietaires-count','avance','[data-target=\x22abonnements\x22]','Abonnement\x20annulé.','contains','\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22','role','login-password','admin','value','option','setItem','charCodeAt','password','closest','body','DIALOG_DISMISSED','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','keys','<option\x20value=\x22\x22>Sélectionner\x20Maison</option>','ville','href','add-souscription-btn','\x22>Supprimer</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','exists','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22','Transaction\x20:\x20','edit-btn','souscription-locataire','736vOBihh','1:146632846661:web:d63ca5c24f5b4acdeea22c','Abonnement\x20annuel\x20à\x20la\x20plateforme\x20de\x20gestion\x20locative','yearly','dashboard-locataires-count','3058AgrPQB','proprietaires/','nom','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','button','reason','6hFxcHB','pk_live_TfSz212W0xSMKK7oPEogkFmp','users','loyer','currentUser','#souscriptions-list\x20tbody','log','abonnement-status-text','Erreur\x20lors\x20de\x20l\x27inscription.','28vKymwG','Abonné','mensuel','classList'];_0x5467=function(){return _0x389d9a;};return _0x5467();}let isAuthenticated=![];const authSection=document[_0x49d7ab(0x266)]('auth-section'),loginFormContainer=document[_0x49d7ab(0x266)](_0x49d7ab(0x28b)),registerFormContainer=document['getElementById'](_0x49d7ab(0x1fe)),loginForm=document[_0x49d7ab(0x266)]('login-form'),registerForm=document[_0x49d7ab(0x266)]('register-form'),showRegisterLink=document[_0x49d7ab(0x266)]('show-register'),showLoginLink=document[_0x49d7ab(0x266)]('show-login');let currentUser=null;const storedUser=localStorage[_0x49d7ab(0x290)](_0x49d7ab(0x1f5));storedUser&&(currentUser=JSON[_0x49d7ab(0x276)](storedUser),isAuthenticated=!![]);showRegisterLink['addEventListener']('click',()=>{const _0x2db97f=_0x49d7ab;loginFormContainer['style'][_0x2db97f(0x274)]='none',registerFormContainer['style'][_0x2db97f(0x274)]='block';}),showLoginLink[_0x49d7ab(0x25d)](_0x49d7ab(0x206),()=>{const _0x464db2=_0x49d7ab;registerFormContainer[_0x464db2(0x226)][_0x464db2(0x274)]=_0x464db2(0x223),loginFormContainer[_0x464db2(0x226)][_0x464db2(0x274)]=_0x464db2(0x27f);}),registerForm[_0x49d7ab(0x25d)](_0x49d7ab(0x236),async _0x1004fa=>{const _0x552874=_0x49d7ab;_0x1004fa['preventDefault'](),showLoading();const _0x9c383b=document[_0x552874(0x266)](_0x552874(0x265))[_0x552874(0x1d2)],_0x1a53a3=document[_0x552874(0x266)](_0x552874(0x280))[_0x552874(0x1d2)];try{const _0x37108d=simpleHash(_0x1a53a3),_0x372aaf=ref(database,'users');await push(_0x372aaf,{'username':_0x9c383b,'password':_0x37108d,'role':_0x552874(0x213)}),alert('Inscription\x20réussie\x20!'),registerForm['reset'](),showLoginForm();}catch(_0x47b129){console[_0x552874(0x202)](_0x552874(0x270),_0x47b129),alert(_0x552874(0x1f9));}finally{hideLoading();}});function showLoginForm(){const _0x37948c=_0x49d7ab;registerFormContainer[_0x37948c(0x226)][_0x37948c(0x274)]=_0x37948c(0x223),loginFormContainer[_0x37948c(0x226)][_0x37948c(0x274)]=_0x37948c(0x27f);}loginForm['addEventListener']('submit',async _0x7a3770=>{const _0x536e1c=_0x49d7ab;_0x7a3770[_0x536e1c(0x237)](),showLoading();const _0x317e91=document[_0x536e1c(0x266)](_0x536e1c(0x215))['value'],_0x105b66=document['getElementById'](_0x536e1c(0x1d0))[_0x536e1c(0x1d2)];try{const _0x37074d=ref(database,_0x536e1c(0x1f3)),_0x4d4648=await get(_0x37074d);if(_0x4d4648[_0x536e1c(0x1e1)]()){const _0x1c18af=_0x4d4648['val']();let _0x524994=![];for(const _0x53519d in _0x1c18af){const _0x28dfe3=_0x1c18af[_0x53519d];if(_0x28dfe3[_0x536e1c(0x255)]===_0x317e91&&_0x28dfe3[_0x536e1c(0x1d6)]===simpleHash(_0x105b66)){currentUser={'id':_0x53519d,'username':_0x28dfe3['username'],'role':_0x28dfe3[_0x536e1c(0x1cf)],'subscription':_0x28dfe3[_0x536e1c(0x212)]||{}},isAuthenticated=!![],localStorage[_0x536e1c(0x1d4)](_0x536e1c(0x1f5),JSON[_0x536e1c(0x234)](currentUser)),checkUserRoleAndSubscription(),hideAuthSection(),loadDashboardData(),initializeDataLoad(),_0x524994=!![];break;}}!_0x524994&&alert(_0x536e1c(0x21b));}else alert(_0x536e1c(0x23f));}catch(_0x26c043){console[_0x536e1c(0x202)](_0x536e1c(0x225),_0x26c043),alert('Erreur\x20lors\x20de\x20la\x20connexion.');}finally{hideLoading();}});async function checkAndUpdateSubscriptionStatus(){const _0x4a5c5a=_0x49d7ab;if(currentUser&&currentUser[_0x4a5c5a(0x212)]){const _0x101cee=new Date(),_0x2d706e=new Date(currentUser[_0x4a5c5a(0x212)][_0x4a5c5a(0x275)]);if(_0x101cee>_0x2d706e)currentUser['subscription']['status']='expired',await update(ref(database,'users/'+currentUser['id']+_0x4a5c5a(0x240)),{'status':_0x4a5c5a(0x29a)}),localStorage['setItem']('currentUser',JSON[_0x4a5c5a(0x234)](currentUser)),alert('Votre\x20abonnement\x20a\x20expiré.\x20Veuillez\x20renouveler\x20votre\x20abonnement\x20pour\x20continuer\x20à\x20utiliser\x20les\x20fonctionnalités\x20premium.'),checkUserRoleAndSubscription();else{const _0x1623c7=Math[_0x4a5c5a(0x264)]((_0x2d706e-_0x101cee)/(0x3e8*0x3c*0x3c*0x18));_0x1623c7<=0x2&&alert(_0x4a5c5a(0x229)+_0x1623c7+_0x4a5c5a(0x253));}}}function checkUserRoleAndSubscription(){const _0x56b424=_0x49d7ab;if(currentUser){const _0x14db55=currentUser['role']===_0x56b424(0x1d1),_0x3f4f18=document[_0x56b424(0x266)](_0x56b424(0x21d)),_0x247598=document[_0x56b424(0x266)](_0x56b424(0x244)),_0x1c3b30=document[_0x56b424(0x266)](_0x56b424(0x249)),_0x5266fd=document['getElementById'](_0x56b424(0x1df));_0x3f4f18&&(_0x3f4f18[_0x56b424(0x226)][_0x56b424(0x274)]=_0x14db55?'block':_0x56b424(0x223));_0x247598&&(_0x247598[_0x56b424(0x226)][_0x56b424(0x274)]=_0x14db55?'block':_0x56b424(0x223));_0x1c3b30&&(_0x1c3b30[_0x56b424(0x226)][_0x56b424(0x274)]=_0x14db55?'block':_0x56b424(0x223));_0x5266fd&&(_0x5266fd[_0x56b424(0x226)]['display']=_0x14db55?_0x56b424(0x27f):'none');const _0x165843=currentUser[_0x56b424(0x212)],_0x4f3bd4=_0x165843&&_0x165843[_0x56b424(0x221)]===_0x56b424(0x296),_0x5f2570=document['getElementById']('subscribe-monthly-btn'),_0xbb91df=document[_0x56b424(0x266)](_0x56b424(0x239)),_0x5d3f9d=document['getElementById'](_0x56b424(0x295)),_0x53bd52=document[_0x56b424(0x266)](_0x56b424(0x27a));_0x4f3bd4?(document[_0x56b424(0x266)](_0x56b424(0x1f8))[_0x56b424(0x246)]=_0x56b424(0x1fb),_0x5f2570[_0x56b424(0x226)][_0x56b424(0x274)]=_0x56b424(0x223),_0xbb91df[_0x56b424(0x226)]['display']=_0x56b424(0x223),_0x5d3f9d['style']['display']=_0x56b424(0x27f),_0x53bd52[_0x56b424(0x226)][_0x56b424(0x274)]='none'):(document[_0x56b424(0x266)]('abonnement-status-text')[_0x56b424(0x246)]='Non\x20abonné',_0x5f2570[_0x56b424(0x226)]['display']=_0x56b424(0x27f),_0xbb91df[_0x56b424(0x226)]['display']='block',_0x5d3f9d[_0x56b424(0x226)]['display']=_0x56b424(0x223),_0x53bd52[_0x56b424(0x226)][_0x56b424(0x274)]=_0x56b424(0x27f)),localStorage[_0x56b424(0x1d4)](_0x56b424(0x1f5),JSON[_0x56b424(0x234)](currentUser));}}function simpleHash(_0x3260c0){const _0xe985fc=_0x49d7ab;let _0x5a1da4=0x0;for(let _0x218657=0x0;_0x218657<_0x3260c0['length'];_0x218657++){const _0x581c60=_0x3260c0[_0xe985fc(0x1d5)](_0x218657);_0x5a1da4=(_0x5a1da4<<0x5)-_0x5a1da4+_0x581c60,_0x5a1da4|=0x0;}return _0x5a1da4['toString']();}function showMainInterface(){const _0x5e7adf=_0x49d7ab;authSection[_0x5e7adf(0x226)][_0x5e7adf(0x274)]='none';}function _0x314e(_0x2b84ad,_0x28242b){const _0x546777=_0x5467();return _0x314e=function(_0x314e12,_0x2794da){_0x314e12=_0x314e12-0x1cb;let _0x2b96c7=_0x546777[_0x314e12];return _0x2b96c7;},_0x314e(_0x2b84ad,_0x28242b);}function hideAuthSection(){const _0x43fd36=_0x49d7ab;authSection['style'][_0x43fd36(0x274)]=_0x43fd36(0x223);}const tabs=document[_0x49d7ab(0x22f)](_0x49d7ab(0x252)),contentSections=document[_0x49d7ab(0x22f)](_0x49d7ab(0x277));tabs[_0x49d7ab(0x208)](_0x46475a=>{const _0x2abcd0=_0x49d7ab;_0x46475a[_0x2abcd0(0x25d)](_0x2abcd0(0x206),()=>{const _0x4b6c70=_0x2abcd0,_0x403333=_0x46475a[_0x4b6c70(0x273)][_0x4b6c70(0x222)];checkUserAccess(_0x403333),tabs[_0x4b6c70(0x208)](_0x481738=>_0x481738[_0x4b6c70(0x1fd)][_0x4b6c70(0x29d)](_0x4b6c70(0x296))),_0x46475a[_0x4b6c70(0x1fd)][_0x4b6c70(0x258)](_0x4b6c70(0x296));});});function showLoading(){const _0x30b961=_0x49d7ab;document[_0x30b961(0x266)](_0x30b961(0x299))['style'][_0x30b961(0x274)]=_0x30b961(0x267);}function hideLoading(){const _0xe6009e=_0x49d7ab;document[_0xe6009e(0x266)](_0xe6009e(0x299))[_0xe6009e(0x226)][_0xe6009e(0x274)]='none';}const addProprietaireBtn=document[_0x49d7ab(0x266)]('add-proprietaire-btn'),addMaisonBtn=document[_0x49d7ab(0x266)]('add-maison-btn'),addLocataireBtn=document['getElementById']('add-locataire-btn'),addSouscriptionBtn=document[_0x49d7ab(0x266)](_0x49d7ab(0x1df)),addProprietaireForm=document[_0x49d7ab(0x266)]('add-proprietaire-form'),addMaisonForm=document['getElementById'](_0x49d7ab(0x24a)),addLocataireForm=document[_0x49d7ab(0x266)]('add-locataire-form'),addSouscriptionForm=document['getElementById'](_0x49d7ab(0x230)),cancelProprietaireBtn=document['getElementById'](_0x49d7ab(0x22c)),cancelMaisonBtn=document[_0x49d7ab(0x266)]('cancel-maison-btn'),cancelLocataireBtn=document[_0x49d7ab(0x266)](_0x49d7ab(0x224)),cancelSouscriptionBtn=document[_0x49d7ab(0x266)]('cancel-souscription-btn');function showForm(_0x43c43a){const _0x39ac0f=_0x49d7ab;_0x43c43a[_0x39ac0f(0x1fd)]['add'](_0x39ac0f(0x296));}function hideForm(_0x1c19c1){const _0x128878=_0x49d7ab;_0x1c19c1[_0x128878(0x1fd)][_0x128878(0x29d)](_0x128878(0x296)),_0x1c19c1[_0x128878(0x201)]();}addProprietaireBtn[_0x49d7ab(0x25d)](_0x49d7ab(0x206),()=>showForm(addProprietaireForm)),addMaisonBtn['addEventListener'](_0x49d7ab(0x206),()=>showForm(addMaisonForm)),addLocataireBtn[_0x49d7ab(0x25d)]('click',()=>showForm(addLocataireForm)),addSouscriptionBtn[_0x49d7ab(0x25d)]('click',()=>showForm(addSouscriptionForm)),cancelProprietaireBtn['addEventListener'](_0x49d7ab(0x206),()=>hideForm(addProprietaireForm)),cancelMaisonBtn['addEventListener']('click',()=>hideForm(addMaisonForm)),cancelLocataireBtn['addEventListener'](_0x49d7ab(0x206),()=>hideForm(addLocataireForm)),cancelSouscriptionBtn['addEventListener'](_0x49d7ab(0x206),()=>hideForm(addSouscriptionForm)),addProprietaireForm[_0x49d7ab(0x25d)]('submit',_0x115fe7=>{const _0x243222=_0x49d7ab;_0x115fe7[_0x243222(0x237)](),showLoading();const _0x4bfc5e=document['getElementById'](_0x243222(0x293))[_0x243222(0x1d2)],_0x307967=document[_0x243222(0x266)](_0x243222(0x28d))['value'],_0x3922c6=document['getElementById'](_0x243222(0x214))['value'],_0x1d5fef=document[_0x243222(0x266)](_0x243222(0x26c))[_0x243222(0x1d2)],_0x20c4b8=document['getElementById'](_0x243222(0x26d))[_0x243222(0x1d2)];addProprietaire(_0x4bfc5e,_0x307967,_0x3922c6,_0x1d5fef,_0x20c4b8)['then'](()=>{hideForm(addProprietaireForm),loadProprietaires();})['catch'](_0x5aa073=>{const _0x2d5b9f=_0x243222;console[_0x2d5b9f(0x202)]('Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20propriétaire:',_0x5aa073),alert(_0x2d5b9f(0x28e));})['finally'](()=>{hideLoading();});}),addMaisonForm[_0x49d7ab(0x25d)]('submit',_0xc67526=>{const _0xf8e337=_0x49d7ab;_0xc67526[_0xf8e337(0x237)](),showLoading();const _0x2145c2=document[_0xf8e337(0x266)](_0xf8e337(0x205))[_0xf8e337(0x1d2)],_0x503669=document['getElementById'](_0xf8e337(0x20a))[_0xf8e337(0x1d2)],_0x2cd40c=parseInt(document[_0xf8e337(0x266)](_0xf8e337(0x219))[_0xf8e337(0x1d2)]),_0x5329ef=document[_0xf8e337(0x266)](_0xf8e337(0x231))['value'],_0x133c59=document[_0xf8e337(0x266)](_0xf8e337(0x24c))[_0xf8e337(0x1d2)],_0x26c3e8=document[_0xf8e337(0x266)](_0xf8e337(0x20e))[_0xf8e337(0x1d2)],_0x2629b4=parseInt(document[_0xf8e337(0x266)]('maison-loyer')[_0xf8e337(0x1d2)]);addMaison(_0x2145c2,_0x503669,_0x2cd40c,_0x5329ef,_0x133c59,_0x26c3e8,_0x2629b4)[_0xf8e337(0x217)](()=>{hideForm(addMaisonForm),loadMaisons();})[_0xf8e337(0x281)](_0x1c0484=>{const _0x38b9db=_0xf8e337;console[_0x38b9db(0x202)](_0x38b9db(0x26a),_0x1c0484),alert(_0x38b9db(0x285));})[_0xf8e337(0x21c)](()=>{hideLoading();});}),addLocataireForm[_0x49d7ab(0x25d)]('submit',_0x501cac=>{const _0x2420c7=_0x49d7ab;_0x501cac[_0x2420c7(0x237)](),showLoading();const _0x18a76b=document['getElementById'](_0x2420c7(0x298))[_0x2420c7(0x1d2)],_0x104fa5=document[_0x2420c7(0x266)](_0x2420c7(0x260))[_0x2420c7(0x1d2)],_0x517f97=document['getElementById'](_0x2420c7(0x22d))[_0x2420c7(0x1d2)],_0x1770ab=document[_0x2420c7(0x266)](_0x2420c7(0x251))[_0x2420c7(0x1d2)];addLocataire(_0x18a76b,_0x104fa5,_0x517f97,_0x1770ab)[_0x2420c7(0x217)](()=>{hideForm(addLocataireForm),loadLocataires();})['catch'](_0x30ae9d=>{const _0x4ac6a8=_0x2420c7;console[_0x4ac6a8(0x202)]('Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20locataire:',_0x30ae9d),alert('Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20locataire.');})['finally'](()=>{hideLoading();});}),addSouscriptionForm[_0x49d7ab(0x25d)](_0x49d7ab(0x236),_0x45b4d8=>{const _0x2fa85a=_0x49d7ab;_0x45b4d8['preventDefault'](),showLoading();const _0x2b135e=document[_0x2fa85a(0x266)]('souscription-maison')['value'],_0x14c2c6=document['getElementById'](_0x2fa85a(0x1e5))['value'],_0x4adf8f=parseInt(document[_0x2fa85a(0x266)](_0x2fa85a(0x23c))[_0x2fa85a(0x1d2)]),_0x2d6d1f=parseInt(document[_0x2fa85a(0x266)]('souscription-avance')[_0x2fa85a(0x1d2)]),_0x181992=document[_0x2fa85a(0x266)](_0x2fa85a(0x27e))[_0x2fa85a(0x1d2)],_0x4515ae=document['getElementById']('souscription-date-debut')[_0x2fa85a(0x1d2)];addSouscription(_0x2b135e,_0x14c2c6,_0x4adf8f,_0x2d6d1f,_0x181992,_0x4515ae)[_0x2fa85a(0x217)](()=>{hideForm(addSouscriptionForm),loadSouscriptions();})[_0x2fa85a(0x281)](_0x1d7823=>{const _0x35deb6=_0x2fa85a;console[_0x35deb6(0x202)](_0x35deb6(0x247),_0x1d7823),alert('Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20souscription.');})[_0x2fa85a(0x21c)](()=>{hideLoading();});});async function addProprietaire(_0x36c8a0,_0x41dfec,_0x53d2c6,_0x3a0bc6,_0x2850d9){const _0x2a0d13=ref(database,'proprietaires'),_0x34951a=push(_0x2a0d13);await set(_0x34951a,{'nom':_0x36c8a0,'prenom':_0x41dfec,'contact':_0x53d2c6,'email':_0x3a0bc6,'adresse':_0x2850d9});}async function addMaison(_0x565b8f,_0x12a124,_0x4a1305,_0x4892bd,_0x42643e,_0x4ba45c,_0x2866d5){const _0x502a13=_0x49d7ab,_0x195619=ref(database,_0x502a13(0x25a)),_0x520cd8=push(_0x195619);await set(_0x520cd8,{'proprietaire':_0x565b8f,'type':_0x12a124,'pieces':_0x4a1305,'ville':_0x4892bd,'commune':_0x42643e,'quartier':_0x4ba45c,'loyer':_0x2866d5});}async function addLocataire(_0x2511f5,_0x441580,_0x25e181,_0x14c388){const _0x5ced93=ref(database,'locataires'),_0x3efbe4=push(_0x5ced93);await set(_0x3efbe4,{'nom':_0x2511f5,'prenom':_0x441580,'contact':_0x25e181,'email':_0x14c388});}async function addSouscription(_0x63100,_0x471fb6,_0x171ce6,_0x22a04e,_0x10106f,_0x4b6b9b){const _0xd93658=_0x49d7ab,_0x4f8e1c=ref(database,_0xd93658(0x22e)),_0x351943=push(_0x4f8e1c),_0x1625f2=ref(database,_0xd93658(0x27b)+_0x63100),_0x5a6ff6=await get(_0x1625f2),_0x21b3f9=_0x5a6ff6[_0xd93658(0x20c)]()[_0xd93658(0x1f4)];await set(_0x351943,{'maison':_0x63100,'locataire':_0x471fb6,'caution':_0x171ce6,'avance':_0x22a04e,'autres':_0x10106f,'dateDebut':_0x4b6b9b,'loyer':_0x21b3f9});}function loadProprietaires(){const _0x1c5646=_0x49d7ab;showLoading();const _0x24c380=document['querySelector'](_0x1c5646(0x263));_0x24c380['innerHTML']='';const _0x4a7896=ref(database,'proprietaires');onValue(_0x4a7896,_0x373b4b=>{const _0x363ed5=_0x1c5646,_0x4f8ebf=_0x373b4b[_0x363ed5(0x20c)]();let _0x2edb5b=0x0,_0x2ef35f=0x1;for(const _0x4bd752 in _0x4f8ebf){_0x2edb5b++;const _0x382d82=_0x4f8ebf[_0x4bd752],_0x45aa7c=document[_0x363ed5(0x294)]('tr');_0x45aa7c[_0x363ed5(0x282)]=_0x363ed5(0x24f)+_0x2ef35f+_0x363ed5(0x210)+_0x382d82['nom']+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x382d82[_0x363ed5(0x24d)]+_0x363ed5(0x1da)+_0x382d82[_0x363ed5(0x287)]+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x382d82[_0x363ed5(0x21e)]+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x382d82[_0x363ed5(0x286)]+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22'+_0x4bd752+_0x363ed5(0x256)+_0x4bd752+_0x363ed5(0x279),_0x24c380[_0x363ed5(0x28f)](_0x45aa7c),_0x2ef35f++;}document[_0x363ed5(0x266)](_0x363ed5(0x29e))[_0x363ed5(0x246)]=_0x2edb5b,hideLoading();},{'onlyOnce':!![]});}function loadMaisons(){const _0x1627f1=_0x49d7ab;showLoading();const _0x302d84=document[_0x1627f1(0x29c)]('#maisons-list\x20tbody');_0x302d84[_0x1627f1(0x282)]='';const _0x414e4d=ref(database,_0x1627f1(0x25a));onValue(_0x414e4d,_0x365a28=>{const _0x4a7f6c=_0x1627f1,_0x9ee824=_0x365a28['val']();let _0x432b33=0x0,_0x49f099=0x1;const _0x2be4b9=document['getElementById'](_0x4a7f6c(0x205));_0x2be4b9[_0x4a7f6c(0x282)]='<option\x20value=\x22\x22>Sélectionner\x20Propriétaire</option>';const _0x309d29=ref(database,'proprietaires');get(_0x309d29)[_0x4a7f6c(0x217)](_0x5f450f=>{const _0x5ef8c9=_0x4a7f6c,_0x13024d=_0x5f450f[_0x5ef8c9(0x20c)]();for(const _0x3b2f81 in _0x13024d){const _0x5503e2=_0x13024d[_0x3b2f81],_0x7bf5fd=document[_0x5ef8c9(0x294)](_0x5ef8c9(0x1d3));_0x7bf5fd[_0x5ef8c9(0x1d2)]=_0x3b2f81,_0x7bf5fd['text']=_0x5503e2[_0x5ef8c9(0x1ed)]+'\x20'+_0x5503e2[_0x5ef8c9(0x24d)],_0x2be4b9[_0x5ef8c9(0x28f)](_0x7bf5fd);}});for(const _0x4eb3bc in _0x9ee824){_0x432b33++;const _0x3a0897=_0x9ee824[_0x4eb3bc];get(ref(database,_0x4a7f6c(0x1ec)+_0x3a0897['proprietaire']))['then'](_0x3cdbe5=>{const _0x33da64=_0x4a7f6c,_0x970a50=_0x3cdbe5[_0x33da64(0x20c)](),_0x592847=_0x970a50?_0x970a50[_0x33da64(0x1ed)]+'\x20'+_0x970a50[_0x33da64(0x24d)]:_0x33da64(0x207),_0x17b610=document['createElement']('tr');_0x17b610[_0x33da64(0x282)]=_0x33da64(0x272)+_0x49f099+'</td>\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x592847+_0x33da64(0x1ee)+_0x3a0897['type']+_0x33da64(0x1ee)+_0x3a0897[_0x33da64(0x248)]+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x3a0897[_0x33da64(0x1dd)]+',\x20'+_0x3a0897[_0x33da64(0x232)]+',\x20'+_0x3a0897[_0x33da64(0x238)]+_0x33da64(0x1ee)+_0x3a0897['loyer']+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22'+_0x4eb3bc+_0x33da64(0x1ce)+_0x4eb3bc+_0x33da64(0x24b),_0x302d84[_0x33da64(0x28f)](_0x17b610),_0x49f099++;});}document[_0x4a7f6c(0x266)](_0x4a7f6c(0x27d))['textContent']=_0x432b33,hideLoading();},{'onlyOnce':!![]});}function loadLocataires(){const _0x37d2f8=_0x49d7ab;showLoading();const _0x3ec52b=document[_0x37d2f8(0x29c)](_0x37d2f8(0x284));_0x3ec52b[_0x37d2f8(0x282)]='';const _0x589713=ref(database,_0x37d2f8(0x21f));onValue(_0x589713,_0x5050f7=>{const _0x1fc2c1=_0x37d2f8,_0x447f3d=_0x5050f7[_0x1fc2c1(0x20c)]();let _0x13f768=0x0,_0x3dcb7e=0x1;for(const _0x195f4b in _0x447f3d){_0x13f768++;const _0x365778=_0x447f3d[_0x195f4b],_0x1dbfa3=document[_0x1fc2c1(0x294)]('tr');_0x1dbfa3[_0x1fc2c1(0x282)]=_0x1fc2c1(0x216)+_0x3dcb7e+_0x1fc2c1(0x283)+_0x365778[_0x1fc2c1(0x1ed)]+_0x1fc2c1(0x228)+_0x365778[_0x1fc2c1(0x24d)]+_0x1fc2c1(0x228)+_0x365778['contact']+_0x1fc2c1(0x228)+_0x365778[_0x1fc2c1(0x21e)]+_0x1fc2c1(0x1e2)+_0x195f4b+_0x1fc2c1(0x21a)+_0x195f4b+_0x1fc2c1(0x1e0),_0x3ec52b[_0x1fc2c1(0x28f)](_0x1dbfa3),_0x3dcb7e++;}document[_0x1fc2c1(0x266)]('dashboard-locataires-count')['textContent']=_0x13f768,hideLoading();},{'onlyOnce':!![]});}function loadSouscriptions(){const _0xea5c2f=_0x49d7ab;showLoading();const _0x2d73c4=document[_0xea5c2f(0x29c)](_0xea5c2f(0x1f6));_0x2d73c4[_0xea5c2f(0x282)]='';const _0x2bfd44=document['getElementById'](_0xea5c2f(0x25c));_0x2bfd44[_0xea5c2f(0x282)]=_0xea5c2f(0x1dc);const _0x45e741=ref(database,'maisons');get(_0x45e741)[_0xea5c2f(0x217)](_0x3b6b4b=>{const _0x899efc=_0xea5c2f,_0x3f4a02=_0x3b6b4b['val']();for(const _0x1fa9d4 in _0x3f4a02){const _0x3d7075=_0x3f4a02[_0x1fa9d4],_0x307cff=document['createElement'](_0x899efc(0x1d3));_0x307cff[_0x899efc(0x1d2)]=_0x1fa9d4,_0x307cff['text']=_0x1fa9d4+_0x899efc(0x25b)+_0x3d7075[_0x899efc(0x1dd)]+',\x20'+_0x3d7075[_0x899efc(0x232)]+',\x20'+_0x3d7075[_0x899efc(0x238)],_0x2bfd44[_0x899efc(0x28f)](_0x307cff);}});const _0x16b0b3=document[_0xea5c2f(0x266)](_0xea5c2f(0x1e5));_0x16b0b3['innerHTML']=_0xea5c2f(0x292);const _0x38494c=ref(database,_0xea5c2f(0x21f));get(_0x38494c)['then'](_0x39d28d=>{const _0x4268d8=_0xea5c2f,_0x4723af=_0x39d28d[_0x4268d8(0x20c)]();for(const _0xee58dd in _0x4723af){const _0x3d580f=_0x4723af[_0xee58dd],_0x307917=document['createElement'](_0x4268d8(0x1d3));_0x307917['value']=_0xee58dd,_0x307917[_0x4268d8(0x261)]=_0x3d580f[_0x4268d8(0x1ed)]+'\x20'+_0x3d580f[_0x4268d8(0x24d)],_0x16b0b3[_0x4268d8(0x28f)](_0x307917);}});const _0x4bc90b=ref(database,_0xea5c2f(0x22e));onValue(_0x4bc90b,_0x322c1b=>{const _0x5978e9=_0xea5c2f,_0x128b79=_0x322c1b[_0x5978e9(0x20c)]();let _0x28c09a=0x0,_0x1debd9=0x1;for(const _0x2e5a67 in _0x128b79){_0x28c09a++;const _0x72fb18=_0x128b79[_0x2e5a67],_0x3b0f3a=document['createElement']('tr');_0x3b0f3a[_0x5978e9(0x282)]=_0x5978e9(0x216)+_0x72fb18['maison']+_0x5978e9(0x228)+_0x72fb18[_0x5978e9(0x20d)]+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x72fb18[_0x5978e9(0x200)]+_0x5978e9(0x228)+_0x72fb18[_0x5978e9(0x29f)]+_0x5978e9(0x228)+_0x72fb18[_0x5978e9(0x262)]+_0x5978e9(0x228)+_0x72fb18[_0x5978e9(0x23d)]+_0x5978e9(0x228)+_0x72fb18[_0x5978e9(0x1f4)]+_0x5978e9(0x1e2)+_0x2e5a67+'\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22'+_0x2e5a67+_0x5978e9(0x1e0),_0x2d73c4[_0x5978e9(0x28f)](_0x3b0f3a),_0x1debd9++;}document[_0x5978e9(0x266)]('dashboard-souscriptions-count')['textContent']=_0x28c09a,hideLoading();},{'onlyOnce':!![]});}document['querySelector'](_0x49d7ab(0x263))[_0x49d7ab(0x25d)](_0x49d7ab(0x206),handleEditDelete),document[_0x49d7ab(0x29c)](_0x49d7ab(0x209))[_0x49d7ab(0x25d)](_0x49d7ab(0x206),handleEditDelete),document['querySelector'](_0x49d7ab(0x284))[_0x49d7ab(0x25d)](_0x49d7ab(0x206),handleEditDelete),document[_0x49d7ab(0x29c)](_0x49d7ab(0x1f6))['addEventListener']('click',handleEditDelete);function handleEditDelete(_0x199aa7){const _0x4ee332=_0x49d7ab,_0x4a11a5=_0x199aa7[_0x4ee332(0x222)];if(_0x4a11a5['classList'][_0x4ee332(0x1cd)](_0x4ee332(0x1e4))){const _0x2c90b0=_0x4a11a5[_0x4ee332(0x273)]['id'],_0x5b1706=_0x4a11a5[_0x4ee332(0x1d7)](_0x4ee332(0x277))['id'];console[_0x4ee332(0x1f7)](_0x4ee332(0x278),_0x5b1706,_0x2c90b0);}else{if(_0x4a11a5[_0x4ee332(0x1fd)][_0x4ee332(0x1cd)](_0x4ee332(0x24e))){const _0x559cb6=_0x4a11a5[_0x4ee332(0x273)]['id'],_0x5d1f51=_0x4a11a5[_0x4ee332(0x1d7)]('.content-section')['id'];deleteItem(_0x5d1f51,_0x559cb6);}}}async function deleteItem(_0x5f10c5,_0x5a6bdf){const _0x460061=_0x49d7ab;showLoading();try{const _0x2c0839=ref(database,_0x5f10c5+'/'+_0x5a6bdf);await remove(_0x2c0839);if(_0x5f10c5===_0x460061(0x243))loadProprietaires();else{if(_0x5f10c5===_0x460061(0x25a))loadMaisons();else{if(_0x5f10c5==='locataires')loadLocataires();else _0x5f10c5===_0x460061(0x22e)&&loadSouscriptions();}}}catch(_0x1695fb){console[_0x460061(0x202)](_0x460061(0x250)+_0x5f10c5+':',_0x1695fb),alert('Erreur\x20lors\x20de\x20la\x20suppression\x20de\x20'+_0x5f10c5+'.');}finally{hideLoading();}}const subscribeMonthlyBtn=document[_0x49d7ab(0x266)](_0x49d7ab(0x23a)),subscribeYearlyBtn=document[_0x49d7ab(0x266)]('subscribe-yearly-btn'),cancelSubscriptionBtn=document[_0x49d7ab(0x266)](_0x49d7ab(0x295));subscribeMonthlyBtn[_0x49d7ab(0x25d)](_0x49d7ab(0x206),()=>{const _0x2be39a=_0x49d7ab;handleSubscription(_0x2be39a(0x218));}),subscribeYearlyBtn[_0x49d7ab(0x25d)](_0x49d7ab(0x206),()=>{const _0x520a9a=_0x49d7ab;handleSubscription(_0x520a9a(0x1e9));});async function handleSubscription(_0x84749f){const _0x361f34=_0x49d7ab;if(currentUser&&currentUser[_0x361f34(0x212)]&&currentUser[_0x361f34(0x212)]['status']===_0x361f34(0x296)){alert('Vous\x20avez\x20déjà\x20un\x20abonnement\x20actif.');return;}const _0x3e05ce=_0x84749f===_0x361f34(0x218)?0x3e8:0x2710,_0x563a22=_0x84749f===_0x361f34(0x218)?_0x361f34(0x291):_0x361f34(0x1e8);showLoading(),FedaPay['init']({'public_key':_0x361f34(0x1f2),'transaction':{'amount':_0x3e05ce,'description':_0x563a22},'customer':{'email':_0x361f34(0x269)},'onComplete':async function(_0x577100){const _0x531dfc=_0x361f34;if(_0x577100[_0x531dfc(0x1f0)]===FedaPay[_0x531dfc(0x203)]){const _0x49df88=new Date(),_0x193517=new Date(_0x84749f===_0x531dfc(0x218)?_0x49df88['getTime']()+0x1e*0x18*0x3c*0x3c*0x3e8:_0x49df88[_0x531dfc(0x289)]()+0x16d*0x18*0x3c*0x3c*0x3e8),_0x29fb1a={'status':'active','type':_0x84749f,'startDate':_0x49df88[_0x531dfc(0x23e)](),'endDate':_0x193517['toISOString']()};await update(ref(database,_0x531dfc(0x25e)+currentUser['id']+_0x531dfc(0x240)),_0x29fb1a),currentUser&&(currentUser[_0x531dfc(0x212)]=_0x29fb1a,localStorage[_0x531dfc(0x1d4)](_0x531dfc(0x1f5),JSON[_0x531dfc(0x234)](currentUser))),checkUserRoleAndSubscription(),alert(_0x531dfc(0x28c)+(_0x84749f===_0x531dfc(0x218)?_0x531dfc(0x1fc):_0x531dfc(0x254))+_0x531dfc(0x257)),loadDashboardData();}else _0x577100[_0x531dfc(0x1f0)]===FedaPay[_0x531dfc(0x1d9)]?alert('Paiement\x20annulé.'):(console[_0x531dfc(0x1f7)](_0x531dfc(0x1e3),_0x577100),alert(_0x531dfc(0x297)));}})['open'](),hideLoading();}async function loadDashboardData(){const _0xa723d7=_0x49d7ab;if(!isAuthenticated)return;const _0x12c6e6=ref(database,_0xa723d7(0x243));onValue(_0x12c6e6,_0xa5585d=>{const _0x315a16=_0xa723d7,_0x25c4bc=_0xa5585d[_0x315a16(0x20c)](),_0x14c32a=_0x25c4bc?Object[_0x315a16(0x1db)](_0x25c4bc)[_0x315a16(0x29b)]:0x0;document['getElementById'](_0x315a16(0x29e))[_0x315a16(0x246)]=_0x14c32a;});const _0x5b29db=ref(database,_0xa723d7(0x21f));onValue(_0x5b29db,_0x191cb2=>{const _0x16a629=_0xa723d7,_0x4c9bb1=_0x191cb2[_0x16a629(0x20c)](),_0x35a002=_0x4c9bb1?Object[_0x16a629(0x1db)](_0x4c9bb1)[_0x16a629(0x29b)]:0x0;document[_0x16a629(0x266)](_0x16a629(0x1ea))[_0x16a629(0x246)]=_0x35a002;});const _0x50ffa7=ref(database,_0xa723d7(0x25a));onValue(_0x50ffa7,_0x1f755b=>{const _0x23902b=_0xa723d7,_0x1995a9=_0x1f755b[_0x23902b(0x20c)](),_0x5c141e=_0x1995a9?Object['keys'](_0x1995a9)[_0x23902b(0x29b)]:0x0;document[_0x23902b(0x266)]('dashboard-maisons-count')[_0x23902b(0x246)]=_0x5c141e;});const _0x5d836b=ref(database,_0xa723d7(0x22e));onValue(_0x5d836b,_0x4dc358=>{const _0x2dc19c=_0xa723d7,_0x415f35=_0x4dc358[_0x2dc19c(0x20c)](),_0x34a0b9=_0x415f35?Object['keys'](_0x415f35)[_0x2dc19c(0x29b)]:0x0;document[_0x2dc19c(0x266)](_0x2dc19c(0x22b))[_0x2dc19c(0x246)]=_0x34a0b9;});const _0x4d661f=ref(database,_0xa723d7(0x1f3));onValue(_0x4d661f,_0x2b9c64=>{const _0x4c5056=_0xa723d7,_0xf8f4f2=_0x2b9c64[_0x4c5056(0x20c)]();let _0x4ed0da=0x0;for(const _0x1a926f in _0xf8f4f2){const _0x20c031=_0xf8f4f2[_0x1a926f];_0x20c031[_0x4c5056(0x212)]&&_0x20c031[_0x4c5056(0x212)][_0x4c5056(0x221)]===_0x4c5056(0x296)&&_0x4ed0da++;}document[_0x4c5056(0x266)]('dashboard-abonnements-count')[_0x4c5056(0x246)]=_0x4ed0da;});}async function startTrial(){const _0x911f37=_0x49d7ab;if(currentUser&&currentUser['subscription']&&currentUser[_0x911f37(0x212)]['status']===_0x911f37(0x259)){alert(_0x911f37(0x211));return;}const _0x5b9d04=new Date(Date['now']()+0x7*0x18*0x3c*0x3c*0x3e8),_0x9f4eac={'status':_0x911f37(0x259),'startDate':new Date()['toISOString'](),'endDate':_0x5b9d04['toISOString']()};await update(ref(database,_0x911f37(0x25e)+currentUser['id']+'/subscription'),_0x9f4eac),currentUser&&(currentUser[_0x911f37(0x212)]=_0x9f4eac,localStorage[_0x911f37(0x1d4)]('currentUser',JSON[_0x911f37(0x234)](currentUser))),checkUserRoleAndSubscription(),alert(_0x911f37(0x227)),loadDashboardData();}subscribeBtn[_0x49d7ab(0x25d)](_0x49d7ab(0x206),()=>{const _0x37dfb0=_0x49d7ab;if(currentUser&&currentUser[_0x37dfb0(0x212)]&&currentUser[_0x37dfb0(0x212)]['status']===_0x37dfb0(0x296)){alert(_0x37dfb0(0x28a));return;}confirm('Voulez-vous\x20démarrer\x20une\x20période\x20d\x27essai\x20gratuite\x20de\x207\x20jours\x20?')?startTrial():initFedapayPayment();}),cancelSubscriptionBtn[_0x49d7ab(0x25d)](_0x49d7ab(0x206),async()=>{const _0x420963=_0x49d7ab;currentUser&&currentUser[_0x420963(0x212)]?confirm('Êtes-vous\x20sûr\x20de\x20vouloir\x20annuler\x20votre\x20abonnement\x20?')&&(await update(ref(database,_0x420963(0x25e)+currentUser['id']+_0x420963(0x240)),{'status':_0x420963(0x288)}),currentUser['subscription'][_0x420963(0x221)]='cancelled',localStorage[_0x420963(0x1d4)]('currentUser',JSON[_0x420963(0x234)](currentUser)),checkUserRoleAndSubscription(),alert(_0x420963(0x1cc)),loadDashboardData()):alert(_0x420963(0x1ff));});function logout(){const _0x552669=_0x49d7ab;localStorage[_0x552669(0x220)](_0x552669(0x1f5)),isAuthenticated=![],currentUser=null,window[_0x552669(0x26e)][_0x552669(0x1de)]=_0x552669(0x271);}const logoutButton=document['createElement'](_0x49d7ab(0x1ef));logoutButton['id']=_0x49d7ab(0x268),logoutButton[_0x49d7ab(0x246)]=_0x49d7ab(0x20f),document[_0x49d7ab(0x1d8)]['appendChild'](logoutButton),document['getElementById'](_0x49d7ab(0x268))[_0x49d7ab(0x25d)](_0x49d7ab(0x206),logout);function checkUserAccess(_0x405a1d=null){const _0x30ac3c=_0x49d7ab;if(currentUser&&currentUser[_0x30ac3c(0x212)]&&(currentUser[_0x30ac3c(0x212)][_0x30ac3c(0x221)]===_0x30ac3c(0x296)||currentUser[_0x30ac3c(0x212)][_0x30ac3c(0x221)]===_0x30ac3c(0x259)))_0x405a1d&&(contentSections[_0x30ac3c(0x208)](_0x3e2db8=>_0x3e2db8[_0x30ac3c(0x1fd)][_0x30ac3c(0x29d)]('active')),document[_0x30ac3c(0x266)](_0x405a1d)[_0x30ac3c(0x1fd)][_0x30ac3c(0x258)](_0x30ac3c(0x296)));else{alert(_0x30ac3c(0x204)),contentSections[_0x30ac3c(0x208)](_0x9a57ce=>_0x9a57ce[_0x30ac3c(0x1fd)][_0x30ac3c(0x29d)](_0x30ac3c(0x296))),document[_0x30ac3c(0x266)]('abonnements')['classList'][_0x30ac3c(0x258)](_0x30ac3c(0x296)),tabs['forEach'](_0x17d007=>_0x17d007['classList']['remove'](_0x30ac3c(0x296)));const _0x4d31b7=document['querySelector'](_0x30ac3c(0x1cb));_0x4d31b7&&_0x4d31b7['classList'][_0x30ac3c(0x258)]('active');}}function initializeDataLoad(){isAuthenticated&&(checkUserRoleAndSubscription(),checkAndUpdateSubscriptionStatus(),loadDashboardData(),loadProprietaires(),loadMaisons(),loadLocataires(),loadSouscriptions());}initializeDataLoad();
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+// Configuration Firebase (Remplacez par votre configuration)
+const firebaseConfig = {
+    apiKey: "AIzaSyCNiyVW5DgsvqIR2eAlQ2Ls02DuliFWOOI",
+    authDomain: "immo-75593.firebaseapp.com",
+    databaseURL: "https://immo-75593-default-rtdb.firebaseio.com",
+    projectId: "immo-75593",
+    storageBucket: "immo-75593.firebasestorage.app",
+    messagingSenderId: "146632846661",
+    appId: "1:146632846661:web:d63ca5c24f5b4acdeea22c",
+    measurementId: "G-52KYCJZSHE"
+  };
+
+// Initialiser Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+// État de l'authentification
+let isAuthenticated = false;
+
+// Gestion de l'authentification
+const authSection = document.getElementById("auth-section");
+const loginFormContainer = document.getElementById("login-form-container");
+const registerFormContainer = document.getElementById("register-form-container");
+const loginForm = document.getElementById("login-form");
+const registerForm = document.getElementById("register-form");
+const showRegisterLink = document.getElementById("show-register");
+const showLoginLink = document.getElementById("show-login");
+
+// Récupérer les données utilisateur de localStorage au chargement de la page
+let currentUser = null;
+
+// Vérifier si l'utilisateur est déjà authentifié au chargement de la page
+window.addEventListener('load', () => {
+  const storedUser = localStorage.getItem('currentUser');
+  const storedAuthStatus = localStorage.getItem('isAuthenticated');
+
+  if (storedUser && storedAuthStatus === 'true') {
+    currentUser = JSON.parse(storedUser);
+    isAuthenticated = true;
+    checkUserRoleAndSubscription();
+    hideAuthSection();
+    initializeDataLoad();
+  } else {
+    // Afficher la section d'authentification si l'utilisateur n'est pas connecté
+    authSection.style.display = "flex";
+  }
+});
+
+// Basculer entre les formulaires de connexion et d'inscription
+showRegisterLink.addEventListener("click", () => {
+  loginFormContainer.style.display = "none";
+  registerFormContainer.style.display = "block";
+});
+
+showLoginLink.addEventListener("click", () => {
+  registerFormContainer.style.display = "none";
+  loginFormContainer.style.display = "block";
+});
+
+// Inscription
+registerForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showLoading();
+  const username = document.getElementById("register-username").value;
+  const password = document.getElementById("register-password").value;
+
+  try {
+    // Hasher le mot de passe (simple exemple, utilisez une méthode plus sécurisée en production)
+    const hashedPassword = simpleHash(password);
+
+    // Enregistrer l'utilisateur dans Firebase
+    const usersRef = ref(database, 'users');
+    const newUserRef = push(usersRef); // Créer une nouvelle référence pour l'utilisateur
+    await set(newUserRef, {
+      id: newUserRef.key, // Enregistrer l'ID auto-généré
+      username: username,
+      password: hashedPassword,
+      role: 'user', // Attribuer un rôle par défaut
+      trialUsed: false // Ajouter le champ trialUsed initialisé à false
+    });
+
+    alert("Inscription réussie !");
+    registerForm.reset();
+    showLoginForm(); // Affiche le formulaire de connexion après l'inscription
+  } catch (error) {
+    console.error("Erreur lors de l'inscription :", error);
+    alert("Erreur lors de l'inscription.");
+  } finally {
+    hideLoading();
+  }
+});
+
+// Connexion
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showLoading();
+  const username = document.getElementById("login-username").value;
+  const password = document.getElementById("login-password").value;
+
+  try {
+    const usersRef = ref(database, 'users');
+    const snapshot = await get(usersRef);
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+      let userFound = false;
+      for (const userId in users) {
+        const user = users[userId];
+        // Comparer le mot de passe haché
+        if (user.username === username && user.password === simpleHash(password)) {
+          // Stocker les informations de l'utilisateur
+          currentUser = {
+            id: user.id, // Récupérer l'ID
+            username: user.username,
+            role: user.role, // Récupérer le rôle
+            subscription: user.subscription || {},
+            trialUsed: user.trialUsed || false // Récupérer l'état de trialUsed
+            // ... autres informations si nécessaires ...
+          };
+          isAuthenticated = true;
+          // Stocker les données utilisateur dans localStorage
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          localStorage.setItem('isAuthenticated', 'true'); // Stocke l'état de connexion
+          checkUserRoleAndSubscription();
+          hideAuthSection();
+          loadDashboardData();
+          initializeDataLoad(); // Initialiser le chargement des données ici
+          userFound = true;
+          break;
+        }
+      }
+      if (!userFound) {
+        alert("Pseudo ou mot de passe incorrect.");
+      }
+    } else {
+      alert("Aucun utilisateur trouvé.");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la connexion :", error);
+    alert("Erreur lors de la connexion.");
+  } finally {
+    hideLoading();
+  }
+});
+
+// Fonction pour démarrer la période d'essai
+async function startTrial() {
+    if (currentUser.subscription && currentUser.subscription.status === 'trial') {
+      alert("Vous avez déjà une période d'essai en cours.");
+      return;
+    }
+
+    // Vérifier si l'utilisateur a déjà utilisé la période d'essai
+    if (currentUser.trialUsed) {
+        alert("Vous avez déjà bénéficié d'une période d'essai gratuite.");
+        return;
+    }
+
+    const trialEndDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 jours à partir de maintenant
+    const trialData = {
+        status: 'trial',
+        startDate: new Date().toISOString(),
+        endDate: trialEndDate.toISOString()
+    };
+
+    await update(ref(database, `users/${currentUser.id}`), {
+        subscription: trialData,
+        trialUsed: true // Marquer la période d'essai comme utilisée
+    });
+
+    if (currentUser) {
+        currentUser.subscription = trialData;
+        currentUser.trialUsed = true; // Mettre à jour la propriété trialUsed
+        // Mettre à jour localStorage
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+
+    checkUserRoleAndSubscription();
+    alert("Période d'essai de 7 jours activée !");
+    loadDashboardData(); // Rechargez les données pour mettre à jour le statut de l'abonnement
+}
+
+// Fonction pour afficher le formulaire de connexion
+function showLoginForm() {
+  registerFormContainer.style.display = "none";
+  loginFormContainer.style.display = "block";
+}
+
+
+
+// Fonction pour vérifier et mettre à jour le statut de l'abonnement
+async function checkAndUpdateSubscriptionStatus() {
+    if (currentUser && currentUser.subscription) {
+      const today = new Date();
+      const subscriptionEndDate = new Date(currentUser.subscription.endDate);
+  
+      if (today > subscriptionEndDate) {
+        // Abonnement expiré
+        currentUser.subscription.status = "expired";
+        await update(ref(database, `users/${currentUser.id}/subscription`), {
+          status: "expired",
+        });
+  
+        // Mettre à jour localStorage
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+  
+        // Alerter l'utilisateur
+        alert(
+          "Votre abonnement a expiré. Veuillez renouveler votre abonnement pour continuer à utiliser les fonctionnalités premium."
+        );
+  
+        checkUserRoleAndSubscription(); // Mettre à jour l'interface utilisateur
+      } else {
+        // Vérifier si l'abonnement expire bientôt (par exemple, dans 2 jours)
+        const daysUntilExpiration = Math.round(
+          (subscriptionEndDate - today) / (1000 * 60 * 60 * 24)
+        );
+        if (daysUntilExpiration <= 2) {
+          alert(
+            `Votre abonnement expirera dans ${daysUntilExpiration} jour(s). Pensez à le renouveler.`
+          );
+        }
+      }
+    }
+  }
+
+  function checkUserRoleAndSubscription() {
+    if (currentUser) {
+      // Vérifier le rôle
+      const isAdmin = currentUser.role === "admin";
+      const addProprietaireBtn = document.getElementById("add-proprietaire-btn");
+      const addMaisonBtn = document.getElementById("add-maison-btn");
+      const addLocataireBtn = document.getElementById("add-locataire-btn");
+      const addSouscriptionBtn = document.getElementById("add-souscription-btn");
+      const addRecouvrementBtn = document.getElementById("add-recouvrement-btn");
+  
+      if (addProprietaireBtn) {
+        addProprietaireBtn.style.display = isAdmin ? "block" : "none";
+      }
+      if (addMaisonBtn) {
+        addMaisonBtn.style.display = isAdmin ? "block" : "none";
+      }
+      if (addLocataireBtn) {
+        addLocataireBtn.style.display = isAdmin ? "block" : "none";
+      }
+      if (addSouscriptionBtn) {
+        addSouscriptionBtn.style.display = isAdmin ? "block" : "none";
+      }
+  
+      if (addRecouvrementBtn) {
+        addRecouvrementBtn.style.display = isAdmin ? "block" : "none";
+      }
+  
+      // Vérifier l'abonnement
+      const userSubscription = currentUser.subscription;
+      const isSubscribed = userSubscription && (userSubscription.status === "active" || userSubscription.status === "trial");
+      const subscribeBtn = document.getElementById("subscribe-monthly-btn");
+      const subscribeAnnuelBtn = document.getElementById("subscribe-yearly-btn");
+      const cancelSubscriptionBtn = document.getElementById("cancel-subscription-btn");
+      const trialInfo = document.getElementById("trial-info");
+      const startTrialBtn = document.getElementById("start-trial-btn");
+  
+      if (isSubscribed) {
+        // Utilisateur abonné ou en période d'essai
+        document.getElementById("abonnement-status-text").textContent = userSubscription.status === "trial" ? "Essai gratuit" : "Abonné";
+        subscribeBtn.style.display = "none";
+        subscribeAnnuelBtn.style.display = "none";
+        cancelSubscriptionBtn.style.display = "block";
+        trialInfo.style.display = "none";
+        startTrialBtn.style.display = "none"; // Cacher le bouton de démarrage de l'essai
+      } else {
+        // Utilisateur non abonné
+        document.getElementById("abonnement-status-text").textContent = "Non abonné";
+        subscribeBtn.style.display = "block";
+        subscribeAnnuelBtn.style.display = "block";
+        cancelSubscriptionBtn.style.display = "none";
+        trialInfo.style.display = "block";
+        startTrialBtn.style.display = "block"; // Afficher le bouton de démarrage de l'essai
+      }
+  
+      // Mettre à jour localStorage avec le statut de l'abonnement
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    }
+  }
+
+// Fonction pour hacher le mot de passe (méthode simple pour l'exemple)
+function simpleHash(str) {
+let hash = 0;
+for (let i = 0; i < str.length; i++) {
+const char = str.charCodeAt(i);
+hash = (hash << 5) - hash + char;
+hash |= 0; // Convertir en entier 32bit
+}
+return hash.toString();
+}
+
+// Fonction pour afficher l'interface utilisateur après la connexion
+function showMainInterface() {
+authSection.style.display = "none";
+// Afficher les autres sections de l'application
+// ...
+}
+
+// Fonction pour masquer la section d'authentification
+function hideAuthSection() {
+authSection.style.display = "none";
+}
+
+// Gestion des onglets
+const tabs = document.querySelectorAll(".nav-button");
+const contentSections = document.querySelectorAll(".content-section");
+
+// Gestion des onglets
+tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.target;
+  
+      // Vérifier l'accès avant de changer d'onglet
+      checkUserAccess(target);
+  
+      // Mettre à jour l'état des boutons de navigation
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active"); // Activer l'onglet cliqué
+
+      // Recharger les données si nécessaire (en fonction de l'onglet)
+      if (target === 'proprietaires') {
+        loadProprietaires();
+      } else if (target === 'maisons') {
+        loadMaisons();
+      } else if (target === 'locataires') {
+        loadLocataires();
+      } else if (target === 'souscriptions') {
+        loadSouscriptions();
+      } else if (target === 'recouvrements') {
+        loadRecouvrements();
+      } else if (target === 'dashboard'){
+        loadDashboardData();
+      }
+    });
+  });
+
+// Fonctions pour afficher/masquer le chargement
+function showLoading() {
+document.getElementById("loading-overlay").style.display = "flex";
+}
+
+function hideLoading() {
+document.getElementById("loading-overlay").style.display = "none";
+}
+
+// Gestion des formulaires d'ajout
+const addProprietaireBtn = document.getElementById("add-proprietaire-btn");
+const addMaisonBtn = document.getElementById("add-maison-btn");
+const addLocataireBtn = document.getElementById("add-locataire-btn");
+const addSouscriptionBtn = document.getElementById("add-souscription-btn");
+const addRecouvrementBtn = document.getElementById("add-recouvrement-btn");
+
+const addProprietaireForm = document.getElementById("add-proprietaire-form");
+const addMaisonForm = document.getElementById("add-maison-form");
+const addLocataireForm = document.getElementById("add-locataire-form");
+const addSouscriptionForm = document.getElementById("add-souscription-form");
+const addRecouvrementForm = document.getElementById("add-recouvrement-form");
+
+const cancelProprietaireBtn = document.getElementById("cancel-proprietaire-btn");
+const cancelMaisonBtn = document.getElementById("cancel-maison-btn");
+const cancelLocataireBtn = document.getElementById("cancel-locataire-btn");
+const cancelSouscriptionBtn = document.getElementById("cancel-souscription-btn");
+const cancelRecouvrementBtn = document.getElementById("cancel-recouvrement-btn");
+
+// Fonctions pour afficher/masquer les formulaires
+function showForm(form) {
+form.classList.add("active");
+}
+
+function hideForm(form) {
+form.classList.remove("active");
+form.reset();
+}
+
+// Événements pour afficher les formulaires
+addProprietaireBtn.addEventListener("click", () => showForm(addProprietaireForm));
+addMaisonBtn.addEventListener("click", () => showForm(addMaisonForm));
+addLocataireBtn.addEventListener("click", () => showForm(addLocataireForm));
+addSouscriptionBtn.addEventListener("click", () => showForm(addSouscriptionForm));
+addRecouvrementBtn.addEventListener("click", () => showForm(addRecouvrementForm));
+
+// Événements pour masquer les formulaires
+cancelProprietaireBtn.addEventListener("click", () => hideForm(addProprietaireForm));
+cancelMaisonBtn.addEventListener("click", () => hideForm(addMaisonForm));
+cancelLocataireBtn.addEventListener("click", () => hideForm(addLocataireForm));
+cancelSouscriptionBtn.addEventListener("click", () => hideForm(addSouscriptionForm));
+cancelRecouvrementBtn.addEventListener("click", () => hideForm(addRecouvrementForm));
+
+// Gestion du formulaire d'ajout de propriétaire
+addProprietaireForm.addEventListener("submit", (event) => {
+event.preventDefault();
+showLoading();
+
+const nom = document.getElementById("proprietaire-nom").value;
+const prenom = document.getElementById("proprietaire-prenom").value;
+const contact = document.getElementById("proprietaire-contact").value;
+const email = document.getElementById("proprietaire-email").value;
+const adresse = document.getElementById("proprietaire-adresse").value;
+
+addProprietaire(nom, prenom, contact, email, adresse)
+.then(() => {
+    hideForm(addProprietaireForm);
+    loadProprietaires(); // Recharger la liste
+})
+.catch((error) => {
+    console.error("Erreur lors de l'ajout du propriétaire:", error);
+    alert("Erreur lors de l'ajout du propriétaire.");
+})
+.finally(() => {
+    hideLoading();
+});
+});
+
+// Gestion du formulaire d'ajout de maison
+addMaisonForm.addEventListener("submit", (event) => {
+event.preventDefault();
+showLoading();
+
+const proprietaireId = document.getElementById("maison-proprietaire").value;
+const type = document.getElementById("maison-type").value;
+const pieces = parseInt(document.getElementById("maison-pieces").value);
+const ville = document.getElementById("maison-ville").value;
+const commune = document.getElementById("maison-commune").value;
+const quartier = document.getElementById("maison-quartier").value;
+const loyer = parseInt(document.getElementById("maison-loyer").value);
+
+addMaison(proprietaireId, type, pieces, ville, commune, quartier, loyer)
+.then(() => {
+    hideForm(addMaisonForm);
+    loadMaisons(); // Recharger la liste
+})
+.catch((error) => {
+    console.error("Erreur lors de l'ajout de la maison:", error);
+    alert("Erreur lors de l'ajout de la maison.");
+})
+.finally(() => {
+    hideLoading();
+});
+});
+
+// Gestion du formulaire d'ajout de locataire
+addLocataireForm.addEventListener("submit", (event) => {
+event.preventDefault();
+showLoading();
+
+const nom = document.getElementById("locataire-nom").value;
+const prenom = document.getElementById("locataire-prenom").value;
+const contact = document.getElementById("locataire-contact").value;
+const email = document.getElementById("locataire-email").value;
+
+addLocataire(nom, prenom, contact, email)
+.then(() => {
+    hideForm(addLocataireForm);
+    loadLocataires(); // Recharger la liste
+})
+.catch((error) => {
+    console.error("Erreur lors de l'ajout du locataire:", error);
+    alert("Erreur lors de l'ajout du locataire.");
+})
+.finally(() => {
+    hideLoading();
+});
+});
+
+// Gestion du formulaire d'ajout de souscription
+addSouscriptionForm.addEventListener("submit", (event) => {
+event.preventDefault();
+showLoading();
+
+const maisonId = document.getElementById("souscription-maison").value;
+const locataireId = document.getElementById("souscription-locataire").value;
+const caution = parseInt(document.getElementById("souscription-caution").value);
+const avance = parseInt(document.getElementById("souscription-avance").value);
+const autres = document.getElementById("souscription-autres").value;
+const dateDebut = document.getElementById("souscription-date-debut").value;
+
+addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut)
+.then(() => {
+    hideForm(addSouscriptionForm);
+    loadSouscriptions(); // Recharger la liste
+})
+.catch((error) => {
+    console.error("Erreur lors de l'ajout de la souscription:", error);
+    alert("Erreur lors de l'ajout de la souscription.");
+})
+.finally(() => {
+    hideLoading();
+});
+});
+
+// Gestion du formulaire d'ajout de recouvrement
+addRecouvrementForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    showLoading();
+  
+    const souscriptionId = document.getElementById("recouvrement-souscription").value;
+    const mois = document.getElementById("recouvrement-mois").value;
+    const montant = parseInt(document.getElementById("recouvrement-montant").value);
+    const statut = document.getElementById("recouvrement-statut").value;
+  
+    addRecouvrement(souscriptionId, mois, montant, statut)
+      .then(() => {
+        hideForm(addRecouvrementForm);
+        loadRecouvrements(); // Recharger la liste des recouvrements
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'ajout du recouvrement:", error);
+        alert("Erreur lors de l'ajout du recouvrement.");
+      })
+      .finally(() => {
+        hideLoading();
+      });
+  });
+
+// ... (début du fichier script.js)
+
+// Fonction pour récupérer et mettre à jour l'ID de l'utilisateur
+async function getUserNextId() {
+  if (!currentUser) {
+    throw new Error("Aucun utilisateur connecté.");
+  }
+
+  const userCounterRef = ref(database, `users/${currentUser.id}/nextId`);
+  const snapshot = await get(userCounterRef);
+  let nextId;
+
+  if (snapshot.exists()) {
+    nextId = snapshot.val() + 1;
+  } else {
+    nextId = 1;
+  }
+
+  await set(userCounterRef, nextId);
+  return nextId;
+}
+
+// Fonction pour ajouter un propriétaire (modifiée)
+async function addProprietaire(nom, prenom, contact, email, adresse) {
+  const proprietairesRef = ref(database, 'proprietaires');
+  const newProprietaireRef = push(proprietairesRef);
+  const itemId = await getUserNextId();
+  await set(newProprietaireRef, {
+    id: itemId,
+    userId: currentUser.id,
+    nom: nom,
+    prenom: prenom,
+    contact: contact,
+    email: email || "", // Email vide si non fourni
+    adresse: adresse
+  });
+}
+
+async function addMaison(proprietaireId, type, pieces, ville, commune, quartier, loyer) {
+  const maisonsRef = ref(database, 'maisons');
+  const newMaisonRef = push(maisonsRef);
+  const itemId = await getUserNextId(); // Obtenir l'ID unique pour l'utilisateur
+  await set(newMaisonRef, {
+    id: itemId,
+    userId: currentUser.id,
+    proprietaire: proprietaireId,
+    type: type,
+    pieces: pieces,
+    ville: ville,
+    commune: commune,
+    quartier: quartier,
+    loyer: loyer
+  });
+}
+
+// Fonction pour ajouter un locataire (modifiée)
+async function addLocataire(nom, prenom, contact, email) {
+  const locatairesRef = ref(database, 'locataires');
+  const newLocataireRef = push(locatairesRef);
+  const itemId = await getUserNextId();
+  await set(newLocataireRef, {
+    id: itemId,
+    userId: currentUser.id,
+    nom: nom,
+    prenom: prenom,
+    contact: contact,
+    email: email || "", // Email vide si non fourni
+  });
+}
+
+async function addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut) {
+  const souscriptionsRef = ref(database, 'souscriptions');
+  const newSouscriptionRef = push(souscriptionsRef);
+  const itemId = await getUserNextId(); // Obtenir l'ID unique pour l'utilisateur
+  const maisonRef = ref(database, `maisons/${maisonId}`);
+  const maisonSnapshot = await get(maisonRef);
+  const loyer = maisonSnapshot.val().loyer;
+
+  await set(newSouscriptionRef, {
+    id: itemId,
+    userId: currentUser.id,
+    maison: maisonId,
+    locataire: locataireId,
+    caution: caution,
+    avance: avance,
+    autres: autres,
+    dateDebut: dateDebut,
+    loyer: loyer
+  });
+}
+
+async function addRecouvrement(souscriptionId, mois, montant, statut) {
+  const recouvrementsRef = ref(database, 'recouvrements');
+  const newRecouvrementRef = push(recouvrementsRef);
+  const itemId = await getUserNextId(); // Obtenir l'ID unique pour l'utilisateur
+  await set(newRecouvrementRef, {
+    id: itemId,
+    userId: currentUser.id,
+    souscription: souscriptionId,
+    mois: mois,
+    montant: montant,
+    statut: statut
+  });
+}
+
+// Fonction pour formater les IDs
+function formatItemId(itemId) {
+    return itemId.toString().padStart(4, '0'); // Ajoute des zéros à gauche pour avoir 4 chiffres
+  }
+  
+  function loadProprietaires() {
+    showLoading();
+    const proprietairesList = document.querySelector("#proprietaires-list tbody");
+    proprietairesList.innerHTML = "";
+  
+    const proprietairesRef = ref(database, 'proprietaires');
+    onValue(proprietairesRef, (snapshot) => {
+      const proprietaires = snapshot.val();
+      let proprietairesCount = 0;
+      for (const proprietaireId in proprietaires) {
+        const proprietaire = proprietaires[proprietaireId];
+  
+        // Vérifier si le propriétaire appartient à l'utilisateur actuel
+        if (proprietaire.userId === currentUser.id) {
+          proprietairesCount++;
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="clickable-id" data-type="proprietaires" data-id="${proprietaireId}">PROP-${formatItemId(proprietaire.id)}</td>
+            <td>${proprietaire.nom}</td>
+            <td>${proprietaire.prenom}</td>
+            <td>${proprietaire.contact}</td>
+            <td>${proprietaire.email}</td>
+            <td>${proprietaire.adresse}</td>
+            <td class="actions-cell">
+              <button class="edit-btn" data-id="${proprietaireId}">Modifier</button>
+              <button class="delete-btn" data-id="${proprietaireId}">Supprimer</button>
+            </td>
+          `;
+          proprietairesList.appendChild(row);
+        }
+      }
+      document.getElementById('dashboard-proprietaires-count').textContent = proprietairesCount;
+      hideLoading();
+    }, {
+      onlyOnce: true
+    });
+  }
+  
+
+  function loadMaisons() {
+    showLoading();
+    const maisonsList = document.querySelector("#maisons-list tbody");
+    maisonsList.innerHTML = "";
+  
+    const maisonsRef = ref(database, 'maisons');
+    onValue(maisonsRef, (snapshot) => {
+      const maisons = snapshot.val();
+      let maisonsCount = 0;
+  
+      // Mettre à jour la liste déroulante des propriétaires
+      const proprietaireSelect = document.getElementById("maison-proprietaire");
+      proprietaireSelect.innerHTML = '<option value="">Sélectionner Propriétaire</option>';
+      const proprietairesRef = ref(database, 'proprietaires');
+      get(proprietairesRef).then((proprietairesSnapshot) => {
+        const proprietaires = proprietairesSnapshot.val();
+        for (const proprietaireId in proprietaires) {
+          const proprietaire = proprietaires[proprietaireId];
+          // Vérifier si le propriétaire appartient à l'utilisateur actuel
+          if (proprietaire.userId === currentUser.id) {
+            const option = document.createElement("option");
+            option.value = proprietaireId;
+            option.text = `${proprietaire.nom} ${proprietaire.prenom}`;
+            proprietaireSelect.appendChild(option);
+          }
+        }
+      });
+  
+      for (const maisonId in maisons) {
+        const maison = maisons[maisonId];
+  
+        // Vérifier si la maison appartient à l'utilisateur actuel
+        if (maison.userId === currentUser.id) {
+          maisonsCount++;
+          // Récupérer le nom du propriétaire
+          get(ref(database, `proprietaires/${maison.proprietaire}`)).then((proprietaireSnapshot) => {
+            const proprietaire = proprietaireSnapshot.val();
+            const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Propriétaire inconnu';
+  
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td class="clickable-id" data-type="maisons" data-id="${maisonId}">MAIS-${formatItemId(maison.id)}</td>
+                <td>${proprietaireNom}</td>
+                <td>${maison.type}</td>
+                <td>${maison.pieces}</td>
+                <td>${maison.ville}, ${maison.commune}, ${maison.quartier}</td>
+                <td>${maison.loyer}</td>
+                <td class="actions-cell">
+                <button class="edit-btn" data-id="${maisonId}">Modifier</button>
+                <button class="delete-btn" data-id="${maisonId}">Supprimer</button>
+                </td>
+            `;
+            maisonsList.appendChild(row);
+          });
+        }
+      }
+      document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
+      hideLoading();
+    }, {
+      onlyOnce: true
+    });
+  }
+  
+
+function loadLocataires() {
+  showLoading();
+  const locatairesList = document.querySelector("#locataires-list tbody");
+  locatairesList.innerHTML = "";
+
+  const locatairesRef = ref(database, 'locataires');
+  onValue(locatairesRef, (snapshot) => {
+    const locataires = snapshot.val();
+    let locatairesCount = 0;
+    for (const locataireId in locataires) {
+      const locataire = locataires[locataireId];
+
+      // Vérifier si le locataire appartient à l'utilisateur actuel
+      if (locataire.userId === currentUser.id) {
+        locatairesCount++;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="clickable-id" data-type="locataires" data-id="${locataireId}">LOC-${formatItemId(locataire.id)}</td>
+            <td>${locataire.nom}</td>
+            <td>${locataire.prenom}</td>
+            <td>${locataire.contact}</td>
+            <td>${locataire.email}</td>
+            <td class="actions-cell">
+                <button class="edit-btn" data-id="${locataireId}">Modifier</button>
+                <button class="delete-btn" data-id="${locataireId}">Supprimer</button>
+            </td>
+        `;
+        locatairesList.appendChild(row);
+      }
+    }
+    document.getElementById('dashboard-locataires-count').textContent = locatairesCount;
+    hideLoading();
+  }, {
+    onlyOnce: true
+  });
+}
+
+function loadSouscriptions() {
+  showLoading();
+  const souscriptionsList = document.querySelector("#souscriptions-list tbody");
+  souscriptionsList.innerHTML = "";
+
+  // Mettre à jour la liste déroulante des maisons
+  const maisonSelect = document.getElementById("souscription-maison");
+  maisonSelect.innerHTML = '<option value="">Sélectionner Maison</option>';
+  const maisonsRef = ref(database, 'maisons');
+  get(maisonsRef).then((maisonsSnapshot) => {
+    const maisons = maisonsSnapshot.val();
+    for (const maisonId in maisons) {
+      const maison = maisons[maisonId];
+      // Vérifier si la maison appartient à l'utilisateur actuel
+      if (maison.userId === currentUser.id) {
+        const option = document.createElement("option");
+        option.value = maisonId;
+        // Utiliser l'ID formaté pour l'affichage dans la liste déroulante
+        option.text = `MAIS-${formatItemId(maison.id)} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+        maisonSelect.appendChild(option);
+      }
+    }
+  });
+
+  // Mettre à jour la liste déroulante des locataires
+  const locataireSelect = document.getElementById("souscription-locataire");
+  locataireSelect.innerHTML = '<option value="">Sélectionner Locataire</option>';
+  const locatairesRef = ref(database, 'locataires');
+  get(locatairesRef).then((locatairesSnapshot) => {
+    const locataires = locatairesSnapshot.val();
+    for (const locataireId in locataires) {
+      const locataire = locataires[locataireId];
+      // Vérifier si le locataire appartient à l'utilisateur actuel
+      if (locataire.userId === currentUser.id) {
+        const option = document.createElement("option");
+        option.value = locataireId;
+        option.text = `${locataire.nom} ${locataire.prenom}`;
+        locataireSelect.appendChild(option);
+      }
+    }
+  });
+
+  const souscriptionsRef = ref(database, 'souscriptions');
+  onValue(souscriptionsRef, (snapshot) => {
+    const souscriptions = snapshot.val();
+    let souscriptionsCount = 0;
+    for (const souscriptionId in souscriptions) {
+      const souscription = souscriptions[souscriptionId];
+
+      // Vérifier si la souscription appartient à l'utilisateur actuel
+      if (souscription.userId === currentUser.id) {
+        souscriptionsCount++;
+        // Récupérer les informations de la maison et du locataire
+        Promise.all([
+          get(ref(database, `maisons/${souscription.maison}`)),
+          get(ref(database, `locataires/${souscription.locataire}`))
+        ]).then(([maisonSnapshot, locataireSnapshot]) => {
+          const maison = maisonSnapshot.val();
+          const locataire = locataireSnapshot.val();
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="clickable-id" data-type="maisons" data-id="${souscription.maison}">MAIS-${formatItemId(maison.id)}</td>
+            <td class="clickable-id" data-type="locataires" data-id="${souscription.locataire}">LOC-${formatItemId(locataire.id)}</td>
+            <td>${souscription.caution}</td>
+            <td>${souscription.avance}</td>
+            <td>${souscription.autres}</td>
+            <td>${souscription.dateDebut}</td>
+            <td>${souscription.loyer}</td>
+            <td class="actions-cell">
+                <button class="edit-btn" data-id="${souscriptionId}">Modifier</button>
+                <button class="delete-btn" data-id="${souscriptionId}">Supprimer</button>
+            </td>
+        `;
+        souscriptionsList.appendChild(row);
+      });
+    }
+    document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
+    hideLoading();
+  }}, {
+    onlyOnce: true
+  });
+}
+
+function loadRecouvrements() {
+  showLoading();
+  const recouvrementsList = document.querySelector("#recouvrements-list tbody");
+  recouvrementsList.innerHTML = "";
+
+  // Mettre à jour la liste déroulante des souscriptions
+  const souscriptionSelect = document.getElementById("recouvrement-souscription");
+  souscriptionSelect.innerHTML = '<option value="">Sélectionner Souscription</option>';
+  const souscriptionsRef = ref(database, 'souscriptions');
+  get(souscriptionsRef).then((souscriptionsSnapshot) => {
+    const souscriptions = souscriptionsSnapshot.val();
+    for (const souscriptionId in souscriptions) {
+      const souscription = souscriptions[souscriptionId];
+      // Vérifier si la souscription appartient à l'utilisateur actuel
+      if (souscription.userId === currentUser.id) {
+        // Récupérer les informations de la maison et du locataire
+        Promise.all([
+          get(ref(database, `maisons/${souscription.maison}`)),
+          get(ref(database, `locataires/${souscription.locataire}`))
+        ]).then(([maisonSnapshot, locataireSnapshot]) => {
+          const maison = maisonSnapshot.val();
+          const locataire = locataireSnapshot.val();
+
+          const option = document.createElement("option");
+          option.value = souscriptionId;
+          // Utiliser les IDs formatés pour l'affichage dans la liste déroulante
+          option.text = `SOUS-${formatItemId(souscription.id)} (Maison: MAIS-${formatItemId(maison.id)}, Locataire: LOC-${formatItemId(locataire.id)})`;
+          souscriptionSelect.appendChild(option);
+        });
+      }
+    }
+  });
+
+  const recouvrementsRef = ref(database, 'recouvrements');
+  onValue(recouvrementsRef, (snapshot) => {
+    const recouvrements = snapshot.val();
+    for (const recouvrementId in recouvrements) {
+      const recouvrement = recouvrements[recouvrementId];
+
+      // Vérifier si le recouvrement appartient à l'utilisateur actuel
+      if (recouvrement.userId === currentUser.id) {
+        // **Récupérer la souscription avant de formater son ID**
+        get(ref(database, `souscriptions/${recouvrement.souscription}`))
+          .then((souscriptionSnapshot) => {
+            const souscription = souscriptionSnapshot.val();
+
+            // Vérifier si la souscription existe (au cas où elle aurait été supprimée entre-temps)
+            if (souscription) {
+              const row = document.createElement("tr");
+              // Utiliser l'ID formaté de la souscription pour l'affichage dans le tableau
+              row.innerHTML = `
+                <td class="clickable-id" data-type="souscriptions" data-id="${recouvrement.souscription}">SOUS-${formatItemId(souscription.id)}</td>
+                <td>${recouvrement.mois}</td>
+                <td>${recouvrement.montant}</td>
+                <td>${recouvrement.statut}</td>
+                <td class="actions-cell">
+                  <button class="edit-btn" data-id="${recouvrementId}">Modifier</button>
+                  <button class="delete-btn" data-id="${recouvrementId}">Supprimer</button>
+                </td>
+              `;
+              recouvrementsList.appendChild(row);
+            }
+          });
+      }
+    }
+    hideLoading();
+  }, {
+    onlyOnce: true
+  });
+}
+
+// Délégation d'événements pour les boutons "Modifier" et "Supprimer"
+document.querySelector("#proprietaires-list tbody").addEventListener("click", handleEditDelete);
+document.querySelector("#maisons-list tbody").addEventListener("click", handleEditDelete);
+document.querySelector("#locataires-list tbody").addEventListener("click", handleEditDelete);
+document.querySelector("#souscriptions-list tbody").addEventListener("click", handleEditDelete);
+document.querySelector("#recouvrements-list tbody").addEventListener("click", handleEditDelete);
+
+function handleEditDelete(event) {
+  const target = event.target;
+  if (target.classList.contains("edit-btn")) {
+    const itemId = target.dataset.id;
+    const itemType = target.closest(".content-section").id;
+
+    // **Exemple pour les propriétaires** (à adapter pour les autres types)
+    if (itemType === "proprietaires") {
+      const proprietaireRef = ref(database, `proprietaires/${itemId}`);
+      get(proprietaireRef).then((snapshot) => {
+        const proprietaire = snapshot.val();
+
+        // Remplir un formulaire de modification avec les données actuelles
+        const editForm = document.createElement("form");
+        editForm.innerHTML = `
+          <h3>Modifier le propriétaire</h3>
+          <input type="text" id="edit-nom" value="${proprietaire.nom}" required>
+          <input type="text" id="edit-prenom" value="${proprietaire.prenom}" required>
+          <input type="tel" id="edit-contact" value="${proprietaire.contact}" required>
+          <input type="email" id="edit-email" value="${proprietaire.email}" required>
+          <input type="text" id="edit-adresse" value="${proprietaire.adresse}" required>
+          <button type="submit" class="submit-btn">Enregistrer</button>
+          <button type="button" class="cancel-btn">Annuler</button>
+        `;
+
+        // Afficher le formulaire (vous pouvez l'ajouter à la place du bouton "Modifier", par exemple)
+        target.parentNode.replaceChild(editForm, target);
+
+        // Gérer la soumission du formulaire de modification
+        editForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          showLoading();
+
+          const updatedProprietaire = {
+            nom: document.getElementById("edit-nom").value,
+            prenom: document.getElementById("edit-prenom").value,
+            contact: document.getElementById("edit-contact").value,
+            email: document.getElementById("edit-email").value,
+            adresse: document.getElementById("edit-adresse").value,
+          };
+
+          // Mettre à jour les données dans Firebase
+          update(proprietaireRef, updatedProprietaire)
+            .then(() => {
+              // Recharger les données après la modification
+              loadProprietaires();
+              alert("Propriétaire modifié avec succès !");
+            })
+            .catch((error) => {
+              console.error("Erreur lors de la modification du propriétaire:", error);
+              alert("Erreur lors de la modification du propriétaire.");
+            })
+            .finally(() => {
+              hideLoading();
+            });
+        });
+
+        // Gérer l'annulation
+        editForm.querySelector(".cancel-btn").addEventListener("click", () => {
+          // Rétablir le bouton "Modifier"
+          editForm.parentNode.replaceChild(target, editForm);
+        });
+      });
+    }
+  } else if (target.classList.contains("delete-btn")) {
+    const itemId = target.dataset.id;
+    const itemType = target.closest(".content-section").id;
+    deleteItem(itemType, itemId);
+  }
+}
+
+// Fonction pour supprimer un élément
+async function deleteItem(itemType, itemId) {
+  showLoading();
+  try {
+    const itemRef = ref(database, `${itemType}/${itemId}`);
+    await remove(itemRef);
+    // Recharger la liste après la suppression
+    if (itemType === 'proprietaires') {
+      loadProprietaires();
+    } else if (itemType === 'maisons') {
+      loadMaisons();
+    } else if (itemType === 'locataires') {
+      loadLocataires();
+    } else if (itemType === 'souscriptions') {
+      loadSouscriptions();
+    } else if (itemType === 'recouvrements') {
+      loadRecouvrements();
+    }
+  } catch (error) {
+    console.error(`Erreur lors de la suppression de ${itemType}:`, error);
+    alert(`Erreur lors de la suppression de ${itemType}.`);
+  } finally {
+    hideLoading();
+  }
+}
+
+// Gestion des abonnements
+const subscribeMonthlyBtn = document.getElementById("subscribe-monthly-btn");
+const subscribeYearlyBtn = document.getElementById("subscribe-yearly-btn");
+const cancelSubscriptionBtn = document.getElementById("cancel-subscription-btn");
+const startTrialBtn = document.getElementById("start-trial-btn");
+
+// Abonnement mensuel
+subscribeMonthlyBtn.addEventListener("click", () => {
+  handleSubscription("monthly");
+});
+
+// Abonnement annuel
+subscribeYearlyBtn.addEventListener("click", () => {
+  handleSubscription("yearly");
+});
+
+// Gestionnaire d'événement pour le bouton d'essai gratuit
+startTrialBtn.addEventListener("click", startTrial);
+
+async function handleSubscription(subscriptionType) {
+  // Vérifier si l'utilisateur a déjà un abonnement actif
+  if (
+    currentUser &&
+    currentUser.subscription &&
+    currentUser.subscription.status === "active"
+  ) {
+    alert("Vous avez déjà un abonnement actif.");
+    return;
+  }
+
+  const amount = subscriptionType === "monthly" ? 1000 : 10000; // Correction: 1000 pour mensuel
+  const description =
+    subscriptionType === "monthly"
+      ? "Abonnement mensuel à la plateforme de gestion locative"
+      : "Abonnement annuel à la plateforme de gestion locative";
+
+  showLoading();
+  FedaPay.init({
+    public_key: "pk_live_TfSz212W0xSMKK7oPEogkFmp", // Remplacez par votre clé publique Fedapay
+    transaction: {
+      amount: amount,
+      description: description,
+    },
+    customer: {
+      email: "user@example.com", // Remplacez par l'email de l'utilisateur
+    },
+    onComplete: async function (transaction) {
+      // Utilise transaction.reason pour obtenir la raison
+      if (transaction.reason === FedaPay.CHECKOUT_COMPLETED) {
+        // Calculer la date d'expiration
+        const startDate = new Date();
+        const endDate = new Date(
+          subscriptionType === "monthly"
+            ? startDate.getTime() + 30 * 24 * 60 * 60 * 1000
+            : startDate.getTime() + 365 * 24 * 60 * 60 * 1000
+        );
+
+        // Enregistrez l'abonnement dans la base de données Firebase
+        const subscriptionData = {
+          status: "active",
+          type: subscriptionType,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        };
+        await update(
+          ref(database, `users/${currentUser.id}/subscription`),
+          subscriptionData
+        );
+
+        // Mettre à jour l'état de l'utilisateur courant
+        if (currentUser) {
+          currentUser.subscription = subscriptionData;
+          // Mettre à jour localStorage
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        }
+
+        checkUserRoleAndSubscription();
+        alert(
+          `Abonnement ${
+            subscriptionType === "monthly" ? "mensuel" : "annuel"
+          } réussi!`
+        );
+        loadDashboardData();
+      } else if (transaction.reason === FedaPay.DIALOG_DISMISSED) {
+        alert("Paiement annulé.");
+      } else {
+        console.log("Transaction : ", transaction);
+        alert("Erreur lors du paiement. Veuillez réessayer.");
+      }
+    },
+  }).open();
+  hideLoading();
+}
+
+
+// Fonction pour charger les données du tableau de bord
+async function loadDashboardData() {
+  if (!isAuthenticated) return;
+
+  // Charger le nombre de propriétaires
+  const proprietairesRef = ref(database, 'proprietaires');
+  onValue(proprietairesRef, (snapshot) => {
+    const proprietaires = snapshot.val();
+    let proprietairesCount = 0;
+    for (const proprietaireId in proprietaires) {
+      if (proprietaires[proprietaireId].userId === currentUser.id) {
+        proprietairesCount++;
+      }
+    }
+    document.getElementById('dashboard-proprietaires-count').textContent = proprietairesCount;
+  });
+
+  // Charger le nombre de locataires
+  const locatairesRef = ref(database, 'locataires');
+  onValue(locatairesRef, (snapshot) => {
+    const locataires = snapshot.val();
+    let locatairesCount = 0;
+    for (const locataireId in locataires) {
+      if (locataires[locataireId].userId === currentUser.id) {
+        locatairesCount++;
+      }
+    }
+    document.getElementById('dashboard-locataires-count').textContent = locatairesCount;
+  });
+
+  // Charger le nombre de maisons
+  const maisonsRef = ref(database, 'maisons');
+  onValue(maisonsRef, (snapshot) => {
+    const maisons = snapshot.val();
+    let maisonsCount = 0;
+    for (const maisonId in maisons) {
+      if (maisons[maisonId].userId === currentUser.id) {
+        maisonsCount++;
+      }
+    }
+    document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
+  });
+
+  // Charger le nombre de souscriptions
+  const souscriptionsRef = ref(database, 'souscriptions');
+  onValue(souscriptionsRef, (snapshot) => {
+    const souscriptions = snapshot.val();
+    let souscriptionsCount = 0;
+    for (const souscriptionId in souscriptions) {
+      if (souscriptions[souscriptionId].userId === currentUser.id) {
+        souscriptionsCount++;
+      }
+    }
+    document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
+  });
+
+  // Charger le nombre d'abonnements actifs
+  const usersRef = ref(database, 'users');
+  onValue(usersRef, (snapshot) => {
+    const users = snapshot.val();
+    let activeSubscriptionsCount = 0;
+    for (const userId in users) {
+      const user = users[userId];
+      if (user.subscription && user.subscription.status === 'active') {
+        activeSubscriptionsCount++;
+      }
+    }
+    document.getElementById('dashboard-abonnements-count').textContent = activeSubscriptionsCount;
+  });
+}
+
+cancelSubscriptionBtn.addEventListener("click", async () => {
+  if (currentUser && currentUser.subscription) {
+    if (confirm("Êtes-vous sûr de vouloir annuler votre abonnement ?")) {
+      // Mettre à jour le statut de l'abonnement dans Firebase
+      await update(ref(database, `users/${currentUser.id}/subscription`), { status: 'cancelled' });
+
+      // Mettre à jour l'état de l'utilisateur courant
+      currentUser.subscription.status = 'cancelled';
+      
+      // Mettre à jour localStorage
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      checkUserRoleAndSubscription();
+
+      alert('Abonnement annulé.');
+      loadDashboardData(); // Rechargez les données pour mettre à jour le statut de l'abonnement
+    }
+  } else {
+    alert('Vous n\'avez pas d\'abonnement actif à annuler.');
+  }
+});
+
+// Fonction de déconnexion
+function logout() {
+  localStorage.removeItem('currentUser');
+  localStorage.removeItem('isAuthenticated'); // Supprime l'état de connexion
+  isAuthenticated = false;
+  currentUser = null;
+  // Rediriger vers la page de connexion ou actualiser la page
+  window.location.href = 'Page en ligne.html'; // Redirection vers la page de connexion
+}
+
+// Ajout d'un bouton de déconnexion (exemple)
+const logoutButton = document.createElement('button');
+logoutButton.id = 'logout-btn';
+logoutButton.textContent = 'Déconnexion';
+document.body.appendChild(logoutButton); // Ajoutez-le à l'endroit approprié dans votre HTML
+
+// Gestionnaire d'événement pour la déconnexion
+document.getElementById('logout-btn').addEventListener('click', logout);
+
+function checkUserAccess(targetSectionId = null) {
+  if (currentUser && currentUser.subscription && (currentUser.subscription.status === 'active' || currentUser.subscription.status === 'trial')) {
+    // Utilisateur autorisé - ne rien faire
+    if (targetSectionId) {
+      // Afficher la section cible
+      contentSections.forEach(s => s.classList.remove("active"));
+      document.getElementById(targetSectionId).classList.add("active");
+    }
+  } else {
+    // Utilisateur non autorisé - rediriger vers la section d'abonnement
+    alert("Vous devez avoir un abonnement actif ou une période d'essai pour accéder à cette section.");
+    contentSections.forEach(s => s.classList.remove("active"));
+    document.getElementById("abonnements").classList.add("active"); // Afficher la section d'abonnement
+
+    // Mettre à jour l'état du bouton de navigation "Abonnements"
+    tabs.forEach(t => t.classList.remove("active"));
+    const abonnementTab = document.querySelector('[data-target="abonnements"]');
+    if (abonnementTab) {
+      abonnementTab.classList.add("active");
+    }
+  }
+}
+
+// Fonctions pour exporter les tableaux
+function exportTableToPDF(tableId, fileName) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const table = document.getElementById(tableId);
+    
+    doc.autoTable({ html: `#${tableId}` });
+    doc.save(`${fileName}.pdf`);
+}
+  
+function exportTableToExcel(tableId, fileName) {
+    const table = document.getElementById(tableId);
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet 1" });
+    XLSX.writeFile(wb, `${fileName}.xlsx`);
+}
+  
+function printTable(tableId) {
+    const printWindow = window.open('', '_blank');
+    const table = document.getElementById(tableId);
+    const tableClone = table.cloneNode(true);
+  
+    // Retirer la colonne "Actions" pour l'impression
+    const rows = tableClone.querySelectorAll('tr');
+    rows.forEach(row => {
+      const lastCell = row.lastElementChild;
+      if (lastCell) {
+        row.removeChild(lastCell);
+      }
+    });
+  
+    printWindow.document.write('<html><head><title>Impression du tableau</title>');
+    printWindow.document.write('<style>table { border-collapse: collapse; width: 100%; } th, td { text-align: left; padding: 8px; border: 1px solid #ddd; }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(tableClone.outerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+}
+
+// Ajout des gestionnaires d'événements pour l'exportation et l'impression
+document.querySelectorAll('.export-pdf-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const tableId = button.closest('.content-section').querySelector('.data-table').id;
+        const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
+        exportTableToPDF(tableId, `${sectionTitle}`);
+    });
+});
+
+document.querySelectorAll('.export-excel-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const tableId = button.closest('.content-section').querySelector('.data-table').id;
+        const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
+        exportTableToExcel(tableId, `${sectionTitle}`);
+    });
+});
+
+document.querySelectorAll('.print-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const tableId = button.closest('.content-section').querySelector('.data-table').id;
+        printTable(tableId);
+    });
+});
+
+// Fonction pour afficher la fenêtre modale avec les détails
+function showDetailsModal(details) {
+    const modal = document.getElementById("details-modal");
+    const detailsContent = document.getElementById("modal-details-content");
+    detailsContent.innerHTML = details;
+    modal.style.display = "block";
+}
+
+// Fonction pour récupérer et afficher les détails en fonction de l'ID et du type
+function fetchAndDisplayDetails(itemType, itemId) {
+    showLoading();
+    const itemRef = ref(database, `${itemType}/${itemId}`);
+    get(itemRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const item = snapshot.val();
+            let detailsHTML = '';
+
+            if (itemType === 'proprietaires') {
+                detailsHTML = `
+                    <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
+                    <p><strong>Nom:</strong> ${item.nom}</p>
+                    <p><strong>Prénom:</strong> ${item.prenom}</p>
+                    <p><strong>Contact:</strong> ${item.contact}</p>
+                    <p><strong>Email:</strong> ${item.email}</p>
+                    <p><strong>Adresse:</strong> ${item.adresse}</p>
+                `;
+            } else if (itemType === 'maisons') {
+                get(ref(database, `proprietaires/${item.proprietaire}`)).then((proprietaireSnapshot) => {
+                    const proprietaire = proprietaireSnapshot.val();
+                    detailsHTML = `
+                        <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
+                        <p><strong>Propriétaire:</strong> ${proprietaire ? proprietaire.nom + ' ' + proprietaire.prenom : 'Inconnu'}</p>
+                        <p><strong>Type:</strong> ${item.type}</p>
+                        <p><strong>Pièces:</strong> ${item.pieces}</p>
+                        <p><strong>Ville:</strong> ${item.ville}</p>
+                        <p><strong>Commune:</strong> ${item.commune}</p>
+                        <p><strong>Quartier:</strong> ${item.quartier}</p>
+                        <p><strong>Loyer:</strong> ${item.loyer}</p>
+                    `;
+                    showDetailsModal(detailsHTML);
+                });
+                return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
+            } else if (itemType === 'locataires') {
+                detailsHTML = `
+                    <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
+                    <p><strong>Nom:</strong> ${item.nom}</p>
+                    <p><strong>Prénom:</strong> ${item.prenom}</p>
+                    <p><strong>Contact:</strong> ${item.contact}</p>
+                    <p><strong>Email:</strong> ${item.email}</p>
+                `;
+            } else if (itemType === 'souscriptions') {
+                Promise.all([
+                    get(ref(database, `maisons/${item.maison}`)),
+                    get(ref(database, `locataires/${item.locataire}`))
+                ]).then(([maisonSnapshot, locataireSnapshot]) => {
+                    const maison = maisonSnapshot.val();
+                    const locataire = locataireSnapshot.val();
+                    detailsHTML = `
+                        <p><strong>ID Souscription:</strong> ${formatItemId(item.id)}</p>
+                        <p><strong>ID Maison:</strong> ${maison ? formatItemId(maison.id) : 'Inconnue'}</p>
+                        <p><strong>ID Locataire:</strong> ${locataire ? formatItemId(locataire.id) : 'Inconnu'}</p>
+                        <p><strong>Caution:</strong> ${item.caution}</p>
+                        <p><strong>Avance:</strong> ${item.avance}</p>
+                        <p><strong>Autres:</strong> ${item.autres}</p>
+                        <p><strong>Date d'entrée:</strong> ${item.dateDebut}</p>
+                        <p><strong>Loyer:</strong> ${item.loyer}</p>
+                    `;
+                    showDetailsModal(detailsHTML);
+                });
+                return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
+            } else if (itemType === 'recouvrements') {
+                get(ref(database, `souscriptions/${item.souscription}`)).then((souscriptionSnapshot) => {
+                    const souscription = souscriptionSnapshot.val();
+                    if (souscription) {
+                        Promise.all([
+                            get(ref(database, `maisons/${souscription.maison}`)),
+                            get(ref(database, `locataires/${souscription.locataire}`))
+                        ]).then(([maisonSnapshot, locataireSnapshot]) => {
+                            const maison = maisonSnapshot.val();
+                            const locataire = locataireSnapshot.val();
+                            detailsHTML = `
+                                <p><strong>ID Recouvrement:</strong> ${formatItemId(item.id)}</p>
+                                <p><strong>ID Souscription:</strong> ${formatItemId(souscription.id)}</p>
+                                <p><strong>ID Maison:</strong> ${maison ? formatItemId(maison.id) : 'Inconnue'}</p>
+                                <p><strong>ID Locataire:</strong> ${locataire ? formatItemId(locataire.id) : 'Inconnu'}</p>
+                                <p><strong>Mois:</strong> ${item.mois}</p>
+                                <p><strong>Montant:</strong> ${item.montant}</p>
+                                <p><strong>Statut:</strong> ${item.statut}</p>
+                            `;
+                            showDetailsModal(detailsHTML);
+                        });
+                    } else {
+                        detailsHTML = `<p>Souscription non trouvée.</p>`;
+                        showDetailsModal(detailsHTML);
+                    }
+                });
+                return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
+            }
+
+            showDetailsModal(detailsHTML);
+        } else {
+            showDetailsModal(`<p>Aucun détail trouvé pour cet ID.</p>`);
+        }
+    }).catch((error) => {
+        console.error("Erreur lors de la récupération des détails:", error);
+        showDetailsModal(`<p>Erreur lors de la récupération des détails.</p>`);
+    }).finally(() => {
+        hideLoading();
+    });
+}
+
+// Gestionnaire d'événement pour fermer la fenêtre modale
+document.querySelector(".close-modal").addEventListener("click", () => {
+    document.getElementById("details-modal").style.display = "none";
+});
+
+// Délégation d'événements pour les clics sur les IDs
+document.body.addEventListener("click", (event) => {
+    if (event.target.classList.contains("clickable-id")) {
+        const itemId = event.target.dataset.id;
+        const itemType = event.target.dataset.type;
+        fetchAndDisplayDetails(itemType, itemId);
+    }
+});
+
+// Initialisation du chargement des données
+function initializeDataLoad() {
+  if (isAuthenticated) {
+    checkUserRoleAndSubscription();
+    checkAndUpdateSubscriptionStatus()
+    loadDashboardData();
+    loadProprietaires();
+    loadMaisons();
+    loadLocataires();
+    loadSouscriptions();
+    loadRecouvrements();
+  }
+}
+
+// Appeler initializeDataLoad au chargement de la page
+initializeDataLoad();
