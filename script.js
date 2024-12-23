@@ -1302,7 +1302,7 @@ function logout() {
   isAuthenticated = false;
   currentUser = null;
   // Rediriger vers la page de connexion ou actualiser la page
-  window.location.href = 'Page en ligne.html'; // Redirection vers la page de connexion
+  window.location.href = 'index.html'; // Redirection vers la page de connexion
 }
 
 // Ajout d'un bouton de déconnexion (exemple)
