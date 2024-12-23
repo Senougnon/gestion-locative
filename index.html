@@ -270,8 +270,17 @@
             
             <form id="add-recouvrement-form" class="data-form">
                 <h3>Ajouter un Recouvrement</h3>
-                <select id="recouvrement-souscription" required>
-                    <option value="">Sélectionner Souscription</option>
+                <select id="recouvrement-proprietaire" required>
+                  <option value="">Sélectionner Propriétaire</option>
+                </select>
+                <select id="recouvrement-maison" required>
+                  <option value="">Sélectionner Maison</option>
+                </select>
+                <select id="recouvrement-locataire" required>
+                    <option value="">Sélectionner Locataire</option>
+                </select>
+                <select id="recouvrement-souscription" required style="display: none;">
+                  <option value="">Sélectionner Souscription</option>
                 </select>
                 <input type="month" id="recouvrement-mois" placeholder="Mois" required>
                 <input type="number" id="recouvrement-montant" placeholder="Montant" required>

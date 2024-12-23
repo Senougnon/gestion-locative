@@ -496,28 +496,54 @@ addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut)
 });
 
 // Gestion du formulaire d'ajout de recouvrement
-addRecouvrementForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    showLoading();
+addRecouvrementForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showLoading();
+
+  const proprietaireId = document.getElementById("recouvrement-proprietaire").value;
+  const maisonId = document.getElementById("recouvrement-maison").value;
+  const locataireId = document.getElementById("recouvrement-locataire").value;
+  const mois = document.getElementById("recouvrement-mois").value;
+  const montant = parseInt(document.getElementById("recouvrement-montant").value);
+  const statut = document.getElementById("recouvrement-statut").value;
+
+  try {
+    // Récupérer la souscription ID basée sur la maison et le locataire sélectionnés
+    const souscriptionId = await findSouscriptionIdByMaisonAndLocataire(maisonId, locataireId);
+
+    if (!souscriptionId) {
+      throw new Error("Aucune souscription trouvée pour la maison et le locataire sélectionnés.");
+    }
+
+    await addRecouvrement(souscriptionId, mois, montant, statut);
+    hideForm(addRecouvrementForm);
+    loadRecouvrements(); // Recharger la liste des recouvrements
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du recouvrement:", error);
+    alert(error.message || "Erreur lors de l'ajout du recouvrement.");
+  } finally {
+    hideLoading();
+  }
+});
+
+// Fonction pour rechercher l'ID de la souscription par maison et locataire
+async function findSouscriptionIdByMaisonAndLocataire(maisonId, locataireId) {
+    const souscriptionsRef = ref(database, 'souscriptions');
+    const snapshot = await get(souscriptionsRef);
   
-    const souscriptionId = document.getElementById("recouvrement-souscription").value;
-    const mois = document.getElementById("recouvrement-mois").value;
-    const montant = parseInt(document.getElementById("recouvrement-montant").value);
-    const statut = document.getElementById("recouvrement-statut").value;
+    if (snapshot.exists()) {
+      const souscriptions = snapshot.val();
+      for (const souscriptionId in souscriptions) {
+        const souscription = souscriptions[souscriptionId];
+        // Vérifier si la souscription appartient à l'utilisateur actuel et correspond à la maison et au locataire
+        if (souscription.userId === currentUser.id && souscription.maison === maisonId && souscription.locataire === locataireId) {
+          return souscriptionId;
+        }
+      }
+    }
   
-    addRecouvrement(souscriptionId, mois, montant, statut)
-      .then(() => {
-        hideForm(addRecouvrementForm);
-        loadRecouvrements(); // Recharger la liste des recouvrements
-      })
-      .catch((error) => {
-        console.error("Erreur lors de l'ajout du recouvrement:", error);
-        alert("Erreur lors de l'ajout du recouvrement.");
-      })
-      .finally(() => {
-        hideLoading();
-      });
-  });
+    return null; // Aucune souscription correspondante trouvée
+  }
 
 // ... (début du fichier script.js)
 
@@ -854,75 +880,129 @@ function loadSouscriptions() {
 }
 
 function loadRecouvrements() {
-  showLoading();
-  const recouvrementsList = document.querySelector("#recouvrements-list tbody");
-  recouvrementsList.innerHTML = "";
-
-  // Mettre à jour la liste déroulante des souscriptions
-  const souscriptionSelect = document.getElementById("recouvrement-souscription");
-  souscriptionSelect.innerHTML = '<option value="">Sélectionner Souscription</option>';
-  const souscriptionsRef = ref(database, 'souscriptions');
-  get(souscriptionsRef).then((souscriptionsSnapshot) => {
-    const souscriptions = souscriptionsSnapshot.val();
-    for (const souscriptionId in souscriptions) {
-      const souscription = souscriptions[souscriptionId];
-      // Vérifier si la souscription appartient à l'utilisateur actuel
-      if (souscription.userId === currentUser.id) {
-        // Récupérer les informations de la maison et du locataire
-        Promise.all([
-          get(ref(database, `maisons/${souscription.maison}`)),
-          get(ref(database, `locataires/${souscription.locataire}`))
-        ]).then(([maisonSnapshot, locataireSnapshot]) => {
-          const maison = maisonSnapshot.val();
-          const locataire = locataireSnapshot.val();
-
+    showLoading();
+    const recouvrementsList = document.querySelector("#recouvrements-list tbody");
+    recouvrementsList.innerHTML = "";
+  
+    // Mettre à jour les listes déroulantes du formulaire de recouvrement
+    const proprietaireSelect = document.getElementById("recouvrement-proprietaire");
+    const maisonSelect = document.getElementById("recouvrement-maison");
+    const locataireSelect = document.getElementById("recouvrement-locataire");
+  
+    proprietaireSelect.innerHTML = '<option value="">Sélectionner Propriétaire</option>';
+    maisonSelect.innerHTML = '<option value="">Sélectionner Maison</option>';
+    locataireSelect.innerHTML = '<option value="">Sélectionner Locataire</option>';
+  
+    const proprietairesRef = ref(database, 'proprietaires');
+    const maisonsRef = ref(database, 'maisons');
+    const locatairesRef = ref(database, 'locataires');
+  
+    get(proprietairesRef).then((proprietairesSnapshot) => {
+      const proprietaires = proprietairesSnapshot.val();
+      for (const proprietaireId in proprietaires) {
+        const proprietaire = proprietaires[proprietaireId];
+        if (proprietaire.userId === currentUser.id) {
           const option = document.createElement("option");
-          option.value = souscriptionId;
-          // Utiliser les IDs formatés pour l'affichage dans la liste déroulante
-          option.text = `SOUS-${formatItemId(souscription.id)} (Maison: MAIS-${formatItemId(maison.id)}, Locataire: LOC-${formatItemId(locataire.id)})`;
-          souscriptionSelect.appendChild(option);
+          option.value = proprietaireId;
+          option.text = `${proprietaire.nom} ${proprietaire.prenom}`;
+          proprietaireSelect.appendChild(option);
+        }
+      }
+    });
+  
+    // Écouter les changements de sélection du propriétaire
+    proprietaireSelect.addEventListener('change', () => {
+      const selectedProprietaireId = proprietaireSelect.value;
+      maisonSelect.innerHTML = '<option value="">Sélectionner Maison</option>'; // Réinitialiser la liste des maisons
+      locataireSelect.innerHTML = '<option value="">Sélectionner Locataire</option>'; // Réinitialiser la liste des locataires
+  
+      if (selectedProprietaireId) {
+        get(maisonsRef).then((maisonsSnapshot) => {
+          const maisons = maisonsSnapshot.val();
+          for (const maisonId in maisons) {
+            const maison = maisons[maisonId];
+            if (maison.userId === currentUser.id && maison.proprietaire === selectedProprietaireId) {
+              const option = document.createElement("option");
+              option.value = maisonId;
+              option.text = `MAIS-${formatItemId(maison.id)} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+              maisonSelect.appendChild(option);
+            }
+          }
         });
       }
-    }
-  });
-
-  const recouvrementsRef = ref(database, 'recouvrements');
-  onValue(recouvrementsRef, (snapshot) => {
-    const recouvrements = snapshot.val();
-    for (const recouvrementId in recouvrements) {
-      const recouvrement = recouvrements[recouvrementId];
-
-      // Vérifier si le recouvrement appartient à l'utilisateur actuel
-      if (recouvrement.userId === currentUser.id) {
-        // **Récupérer la souscription avant de formater son ID**
-        get(ref(database, `souscriptions/${recouvrement.souscription}`))
-          .then((souscriptionSnapshot) => {
-            const souscription = souscriptionSnapshot.val();
-
-            // Vérifier si la souscription existe (au cas où elle aurait été supprimée entre-temps)
-            if (souscription) {
-              const row = document.createElement("tr");
-              // Utiliser l'ID formaté de la souscription pour l'affichage dans le tableau
-              row.innerHTML = `
-                <td class="clickable-id" data-type="souscriptions" data-id="${recouvrement.souscription}">SOUS-${formatItemId(souscription.id)}</td>
-                <td>${recouvrement.mois}</td>
-                <td>${recouvrement.montant}</td>
-                <td>${recouvrement.statut}</td>
-                <td class="actions-cell">
-                  <button class="edit-btn" data-id="${recouvrementId}">Modifier</button>
-                  <button class="delete-btn" data-id="${recouvrementId}">Supprimer</button>
-                </td>
-              `;
-              recouvrementsList.appendChild(row);
+    });
+  
+ // Écouter les changements de sélection de la maison
+maisonSelect.addEventListener('change', () => {
+    const selectedMaisonId = maisonSelect.value;
+    locataireSelect.innerHTML = '<option value="">Sélectionner Locataire</option>'; // Réinitialiser la liste des locataires
+  
+    if (selectedMaisonId) {
+      // Récupérer les souscriptions pour la maison sélectionnée
+      const souscriptionsRef = ref(database, 'souscriptions');
+      get(souscriptionsRef).then((souscriptionsSnapshot) => {
+        const souscriptions = souscriptionsSnapshot.val();
+        const locatairesIds = new Set(); // Utiliser un Set pour éviter les doublons
+  
+        for (const souscriptionId in souscriptions) {
+          const souscription = souscriptions[souscriptionId];
+          if (souscription.userId === currentUser.id && souscription.maison === selectedMaisonId) {
+            locatairesIds.add(souscription.locataire);
+          }
+        }
+  
+        // Récupérer les informations des locataires uniques
+        get(locatairesRef).then((locatairesSnapshot) => {
+          const locataires = locatairesSnapshot.val();
+          locatairesIds.forEach(locataireId => {
+            const locataire = locataires[locataireId];
+            if (locataire) {
+              const option = document.createElement("option");
+              option.value = locataireId;
+              option.text = `${locataire.nom} ${locataire.prenom}`;
+              locataireSelect.appendChild(option);
             }
           });
-      }
+        });
+      });
     }
-    hideLoading();
-  }, {
-    onlyOnce: true
   });
-}
+  
+    const recouvrementsRef = ref(database, 'recouvrements');
+    onValue(recouvrementsRef, (snapshot) => {
+      const recouvrements = snapshot.val();
+      for (const recouvrementId in recouvrements) {
+        const recouvrement = recouvrements[recouvrementId];
+  
+        // Vérifier si le recouvrement appartient à l'utilisateur actuel
+        if (recouvrement.userId === currentUser.id) {
+          get(ref(database, `souscriptions/${recouvrement.souscription}`))
+            .then((souscriptionSnapshot) => {
+              const souscription = souscriptionSnapshot.val();
+  
+              // Vérifier si la souscription existe
+              if (souscription) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                  <td class="clickable-id" data-type="souscriptions" data-id="${recouvrement.souscription}">SOUS-${formatItemId(souscription.id)}</td>
+                  <td>${recouvrement.mois}</td>
+                  <td>${recouvrement.montant}</td>
+                  <td>${recouvrement.statut}</td>
+                  <td class="actions-cell">
+                    <button class="edit-btn" data-id="${recouvrementId}">Modifier</button>
+                    <button class="delete-btn" data-id="${recouvrementId}">Supprimer</button>
+                  </td>
+                `;
+                recouvrementsList.appendChild(row);
+              }
+            });
+        }
+      }
+      hideLoading();
+    }, {
+      onlyOnce: true
+    });
+  }
 
 // Délégation d'événements pour les boutons "Modifier" et "Supprimer"
 document.querySelector("#proprietaires-list tbody").addEventListener("click", handleEditDelete);
@@ -1121,7 +1201,6 @@ async function handleSubscription(subscriptionType) {
   }).open();
   hideLoading();
 }
-
 
 // Fonction pour charger les données du tableau de bord
 async function loadDashboardData() {
@@ -1331,108 +1410,112 @@ function showDetailsModal(details) {
     modal.style.display = "block";
 }
 
+// ... (autres fonctions)
+
 // Fonction pour récupérer et afficher les détails en fonction de l'ID et du type
 function fetchAndDisplayDetails(itemType, itemId) {
-    showLoading();
-    const itemRef = ref(database, `${itemType}/${itemId}`);
-    get(itemRef).then((snapshot) => {
-        if (snapshot.exists()) {
-            const item = snapshot.val();
-            let detailsHTML = '';
+  showLoading();
+  const itemRef = ref(database, `${itemType}/${itemId}`);
+  get(itemRef).then((snapshot) => {
+      if (snapshot.exists()) {
+          const item = snapshot.val();
+          let detailsHTML = '';
 
-            if (itemType === 'proprietaires') {
-                detailsHTML = `
-                    <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
-                    <p><strong>Nom:</strong> ${item.nom}</p>
-                    <p><strong>Prénom:</strong> ${item.prenom}</p>
-                    <p><strong>Contact:</strong> ${item.contact}</p>
-                    <p><strong>Email:</strong> ${item.email}</p>
-                    <p><strong>Adresse:</strong> ${item.adresse}</p>
-                `;
-            } else if (itemType === 'maisons') {
-                get(ref(database, `proprietaires/${item.proprietaire}`)).then((proprietaireSnapshot) => {
-                    const proprietaire = proprietaireSnapshot.val();
-                    detailsHTML = `
-                        <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
-                        <p><strong>Propriétaire:</strong> ${proprietaire ? proprietaire.nom + ' ' + proprietaire.prenom : 'Inconnu'}</p>
-                        <p><strong>Type:</strong> ${item.type}</p>
-                        <p><strong>Pièces:</strong> ${item.pieces}</p>
-                        <p><strong>Ville:</strong> ${item.ville}</p>
-                        <p><strong>Commune:</strong> ${item.commune}</p>
-                        <p><strong>Quartier:</strong> ${item.quartier}</p>
-                        <p><strong>Loyer:</strong> ${item.loyer}</p>
-                    `;
-                    showDetailsModal(detailsHTML);
-                });
-                return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
-            } else if (itemType === 'locataires') {
-                detailsHTML = `
-                    <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
-                    <p><strong>Nom:</strong> ${item.nom}</p>
-                    <p><strong>Prénom:</strong> ${item.prenom}</p>
-                    <p><strong>Contact:</strong> ${item.contact}</p>
-                    <p><strong>Email:</strong> ${item.email}</p>
-                `;
-            } else if (itemType === 'souscriptions') {
-                Promise.all([
-                    get(ref(database, `maisons/${item.maison}`)),
-                    get(ref(database, `locataires/${item.locataire}`))
-                ]).then(([maisonSnapshot, locataireSnapshot]) => {
-                    const maison = maisonSnapshot.val();
-                    const locataire = locataireSnapshot.val();
-                    detailsHTML = `
-                        <p><strong>ID Souscription:</strong> ${formatItemId(item.id)}</p>
-                        <p><strong>ID Maison:</strong> ${maison ? formatItemId(maison.id) : 'Inconnue'}</p>
-                        <p><strong>ID Locataire:</strong> ${locataire ? formatItemId(locataire.id) : 'Inconnu'}</p>
-                        <p><strong>Caution:</strong> ${item.caution}</p>
-                        <p><strong>Avance:</strong> ${item.avance}</p>
-                        <p><strong>Autres:</strong> ${item.autres}</p>
-                        <p><strong>Date d'entrée:</strong> ${item.dateDebut}</p>
-                        <p><strong>Loyer:</strong> ${item.loyer}</p>
-                    `;
-                    showDetailsModal(detailsHTML);
-                });
-                return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
-            } else if (itemType === 'recouvrements') {
-                get(ref(database, `souscriptions/${item.souscription}`)).then((souscriptionSnapshot) => {
-                    const souscription = souscriptionSnapshot.val();
-                    if (souscription) {
-                        Promise.all([
-                            get(ref(database, `maisons/${souscription.maison}`)),
-                            get(ref(database, `locataires/${souscription.locataire}`))
-                        ]).then(([maisonSnapshot, locataireSnapshot]) => {
-                            const maison = maisonSnapshot.val();
-                            const locataire = locataireSnapshot.val();
-                            detailsHTML = `
-                                <p><strong>ID Recouvrement:</strong> ${formatItemId(item.id)}</p>
-                                <p><strong>ID Souscription:</strong> ${formatItemId(souscription.id)}</p>
-                                <p><strong>ID Maison:</strong> ${maison ? formatItemId(maison.id) : 'Inconnue'}</p>
-                                <p><strong>ID Locataire:</strong> ${locataire ? formatItemId(locataire.id) : 'Inconnu'}</p>
-                                <p><strong>Mois:</strong> ${item.mois}</p>
-                                <p><strong>Montant:</strong> ${item.montant}</p>
-                                <p><strong>Statut:</strong> ${item.statut}</p>
-                            `;
-                            showDetailsModal(detailsHTML);
-                        });
-                    } else {
-                        detailsHTML = `<p>Souscription non trouvée.</p>`;
-                        showDetailsModal(detailsHTML);
-                    }
-                });
-                return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
-            }
+          if (itemType === 'proprietaires') {
+              detailsHTML = `
+                  <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
+                  <p><strong>Nom:</strong> ${item.nom}</p>
+                  <p><strong>Prénom:</strong> ${item.prenom}</p>
+                  <p><strong>Contact:</strong> ${item.contact}</p>
+                  <p><strong>Email:</strong> ${item.email}</p>
+                  <p><strong>Adresse:</strong> ${item.adresse}</p>
+              `;
+          } else if (itemType === 'maisons') {
+              get(ref(database, `proprietaires/${item.proprietaire}`)).then((proprietaireSnapshot) => {
+                  const proprietaire = proprietaireSnapshot.val();
+                  detailsHTML = `
+                      <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
+                      <p><strong>Propriétaire:</strong> ${proprietaire ? proprietaire.nom + ' ' + proprietaire.prenom : 'Inconnu'} (ID: ${proprietaire? formatItemId(proprietaire.id) : 'Inconnu'})</p>
+                      <p><strong>Type:</strong> ${item.type}</p>
+                      <p><strong>Pièces:</strong> ${item.pieces}</p>
+                      <p><strong>Ville:</strong> ${item.ville}</p>
+                      <p><strong>Commune:</strong> ${item.commune}</p>
+                      <p><strong>Quartier:</strong> ${item.quartier}</p>
+                      <p><strong>Loyer:</strong> ${item.loyer}</p>
+                  `;
+                  showDetailsModal(detailsHTML);
+              });
+              return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
+          } else if (itemType === 'locataires') {
+              detailsHTML = `
+                  <p><strong>ID:</strong> ${formatItemId(item.id)}</p>
+                  <p><strong>Nom:</strong> ${item.nom}</p>
+                  <p><strong>Prénom:</strong> ${item.prenom}</p>
+                  <p><strong>Contact:</strong> ${item.contact}</p>
+                  <p><strong>Email:</strong> ${item.email}</p>
+              `;
+          } else if (itemType === 'souscriptions') {
+              Promise.all([
+                  get(ref(database, `maisons/${item.maison}`)),
+                  get(ref(database, `locataires/${item.locataire}`))
+              ]).then(([maisonSnapshot, locataireSnapshot]) => {
+                  const maison = maisonSnapshot.val();
+                  const locataire = locataireSnapshot.val();
+                  detailsHTML = `
+                      <p><strong>ID Souscription:</strong> ${formatItemId(item.id)}</p>
+                      <p><strong>Maison:</strong> ${maison ? maison.ville + ', ' + maison.commune + ', ' + maison.quartier : 'Inconnue'} (ID: ${maison ? formatItemId(maison.id): 'Inconnue'})</p>
+                      <p><strong>Locataire:</strong> ${locataire ? locataire.nom + ' ' + locataire.prenom : 'Inconnu'} (ID: ${locataire ? formatItemId(locataire.id) : 'Inconnu'})</p>
+                      <p><strong>Caution:</strong> ${item.caution}</p>
+                      <p><strong>Avance:</strong> ${item.avance}</p>
+                      <p><strong>Autres:</strong> ${item.autres}</p>
+                      <p><strong>Date d'entrée:</strong> ${item.dateDebut}</p>
+                      <p><strong>Loyer:</strong> ${item.loyer}</p>
+                  `;
+                  showDetailsModal(detailsHTML);
+              });
+              return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
+          } else if (itemType === 'recouvrements') {
+              get(ref(database, `souscriptions/${item.souscription}`)).then((souscriptionSnapshot) => {
+                  const souscription = souscriptionSnapshot.val();
+                  if (souscription) {
+                      Promise.all([
+                          get(ref(database, `maisons/${souscription.maison}`)),
+                          get(ref(database, `locataires/${souscription.locataire}`))
+                      ]).then(([maisonSnapshot, locataireSnapshot]) => {
+                          const maison = maisonSnapshot.val();
+                          const locataire = locataireSnapshot.val();
+                          detailsHTML = `
+                              <p><strong>ID Recouvrement:</strong> ${formatItemId(item.id)}</p>
+                              <p><strong>Souscription:</strong>  (ID: ${formatItemId(souscription.id)})</p>
+                              <p><strong>Maison:</strong> ${maison ? maison.ville + ', ' + maison.commune + ', ' + maison.quartier : 'Inconnue'} (ID: ${maison ? formatItemId(maison.id): 'Inconnue'})</p>
+                              <p><strong>Locataire:</strong> ${locataire ? locataire.nom + ' ' + locataire.prenom : 'Inconnu'} (ID: ${locataire ? formatItemId(locataire.id) : 'Inconnu'})</p>
+                              <p><strong>Mois:</strong> ${item.mois}</p>
+                              <p><strong>Montant:</strong> ${item.montant}</p>
+                              <p><strong>Statut:</strong> ${item.statut}</p>
+                          `;
+                          showDetailsModal(detailsHTML);
+                      });
+                  } else {
+                      detailsHTML = `<p>Souscription non trouvée.</p>`;
+                      showDetailsModal(detailsHTML);
+                  }
+              });
+              return; // Arrêter l'exécution ici pour éviter d'appeler showDetailsModal deux fois
+          }
 
-            showDetailsModal(detailsHTML);
-        } else {
-            showDetailsModal(`<p>Aucun détail trouvé pour cet ID.</p>`);
-        }
-    }).catch((error) => {
-        console.error("Erreur lors de la récupération des détails:", error);
-        showDetailsModal(`<p>Erreur lors de la récupération des détails.</p>`);
-    }).finally(() => {
-        hideLoading();
-    });
+          showDetailsModal(detailsHTML);
+      } else {
+          showDetailsModal(`<p>Aucun détail trouvé pour cet ID.</p>`);
+      }
+  }).catch((error) => {
+      console.error("Erreur lors de la récupération des détails:", error);
+      showDetailsModal(`<p>Erreur lors de la récupération des détails.</p>`);
+  }).finally(() => {
+      hideLoading();
+  });
 }
+
+// ... (autres fonctions)
 
 // Gestionnaire d'événement pour fermer la fenêtre modale
 document.querySelector(".close-modal").addEventListener("click", () => {
