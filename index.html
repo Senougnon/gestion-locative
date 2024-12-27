@@ -57,7 +57,7 @@
             </button>
             <button class="nav-button" data-target="souscriptions">
                 <span class="nav-button-icon">📝</span>
-                Souscriptions
+                Souscriptions            
             </button>
             <button class="nav-button" data-target="recouvrements">
                 <span class="nav-button-icon">💰</span>
@@ -66,10 +66,9 @@
             <button class="nav-button" data-target="abonnements">
                 <span class="nav-button-icon">💳</span>
                 Abonnements
-              </button>
-              
+            </button>
         </nav>
-
+    
         <div id="dashboard" class="content-section active">
             <div class="dashboard-header">
                 <h2>Tableau de Bord</h2>
@@ -92,15 +91,19 @@
                     <span id="dashboard-souscriptions-count">0</span>
                 </div>
                 <div class="dashboard-item">
+                        <label>Recouvrements:</label>
+                        <span id="dashboard-recouvrements-count">0</span>
+                    </div>
+                <div class="dashboard-item">
                     <label>Abonnements Actifs:</label>
                     <span id="dashboard-abonnements-count">0</span>
                   </div>
                   
             </div>
         </div>
-
-
-
+    
+    
+    
         <div id="proprietaires" class="content-section">
             <div class="content-header">
                 <h2>Propriétaires</h2>
@@ -111,7 +114,7 @@
                 <input type="text" id="proprietaire-nom" placeholder="Nom" required>
                 <input type="text" id="proprietaire-prenom" placeholder="Prénom" required>
                 <input type="tel" id="proprietaire-contact" placeholder="Contact" required>
-                <input type="email" id="proprietaire-email" placeholder="Email"> <!-- 'required' supprimé -->
+                <input type="email" id="proprietaire-email" placeholder="Email">
                 <input type="text" id="proprietaire-adresse" placeholder="Adresse" required>
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-proprietaire-btn" class="cancel-btn">Annuler</button>
@@ -119,7 +122,7 @@
             <table id="proprietaires-list" class="data-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Contact</th>
@@ -137,7 +140,7 @@
                 <button class="print-btn">Imprimer</button>
             </div>
         </div>
-
+    
         <div id="maisons" class="content-section">
             <div class="content-header">
                 <h2>Maisons</h2>
@@ -150,6 +153,7 @@
                     <option value="">Sélectionner Propriétaire</option>
                 </select>
                 <input type="text" id="maison-type" placeholder="Type de construction" required>
+                <input type="text" id="maison-numero" placeholder="Numéro" required>
                 <input type="number" id="maison-pieces" placeholder="Nombre de pièces" required>
                 <input type="text" id="maison-ville" placeholder="Ville" required>
                 <input type="text" id="maison-commune" placeholder="Commune" required>
@@ -161,9 +165,10 @@
             <table id="maisons-list" class="data-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Propriétaire</th>
                         <th>Type</th>
+                        <th>Numéro</th>
                         <th>Pièces</th>
                         <th>Ville, Commune, Quartier</th>
                         <th>Loyer</th>
@@ -179,7 +184,7 @@
                 <button class="print-btn">Imprimer</button>
             </div>
         </div>
-
+    
         <div id="locataires" class="content-section">
             <div class="content-header">
                 <h2>Locataires</h2>
@@ -191,7 +196,7 @@
                 <input type="text" id="locataire-nom" placeholder="Nom" required>
                 <input type="text" id="locataire-prenom" placeholder="Prénom" required>
                 <input type="tel" id="locataire-contact" placeholder="Contact" required>
-                <input type="email" id="locataire-email" placeholder="Email"> <!-- 'required' supprimé -->
+                <input type="email" id="locataire-email" placeholder="Email">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-locataire-btn" class="cancel-btn">Annuler</button>
             </form>
@@ -199,7 +204,7 @@
             <table id="locataires-list" class="data-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Contact</th>
@@ -216,7 +221,7 @@
                 <button class="print-btn">Imprimer</button>
             </div>
         </div>
-
+    
         <div id="souscriptions" class="content-section">
             <div class="content-header">
                 <h2>Souscriptions</h2>
@@ -242,8 +247,8 @@
             <table id="souscriptions-list" class="data-table">
                 <thead>
                     <tr>
-                        <th>ID Maison</th>
-                        <th>ID Locataire</th>
+                        <th>Maison</th>
+                        <th>Locataire</th>
                         <th>Caution</th>
                         <th>Avance</th>
                         <th>Autres Frais</th>
@@ -265,42 +270,35 @@
         <div id="recouvrements" class="content-section">
             <div class="content-header">
                 <h2>Recouvrements</h2>
-                <button id="add-recouvrement-btn" class="add-btn">Ajouter un recouvrement</button>
+                <button id="add-recouvrement-btn" class="add-btn">Ajouter</button>
             </div>
-            
             <form id="add-recouvrement-form" class="data-form">
                 <h3>Ajouter un Recouvrement</h3>
-                <select id="recouvrement-proprietaire" required>
-                  <option value="">Sélectionner Propriétaire</option>
+                <select id="recouvrement-souscription" required>
+                    <option value="">Sélectionner Souscription</option>
                 </select>
-                <select id="recouvrement-maison" required>
-                  <option value="">Sélectionner Maison</option>
-                </select>
-                <select id="recouvrement-locataire" required>
-                    <option value="">Sélectionner Locataire</option>
-                </select>
-                <select id="recouvrement-souscription" required style="display: none;">
-                  <option value="">Sélectionner Souscription</option>
-                </select>
-                <input type="month" id="recouvrement-mois" placeholder="Mois" required>
                 <input type="number" id="recouvrement-montant" placeholder="Montant" required>
-                <input type="text" id="recouvrement-statut" placeholder="Statut (Payé, Impayé, Partiel)" required>
+                <input type="date" id="recouvrement-date" placeholder="Date" required>
+                <input type="text" id="recouvrement-periode" placeholder="Période (ex: Juillet 2024)" required>
+                <input type="text" id="recouvrement-commentaire" placeholder="Commentaire (ex: Payé)">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-recouvrement-btn" class="cancel-btn">Annuler</button>
             </form>
-
             <table id="recouvrements-list" class="data-table">
                 <thead>
                     <tr>
-                        <th>ID Souscription</th>
-                        <th>Mois</th>
-                        <th>Montant Payé</th>
-                        <th>Statut</th>
+                        <th>N°</th>
+                        <th>Locataire</th>
+                        <th>Numéro</th>
+                        <th>Loyer</th>
+                        <th>Période</th>
+                        <th>Montant</th>
+                        <th>Date</th>
+                        <th>Commentaire</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Les données de recouvrement seront ajoutées ici -->
                 </tbody>
             </table>
             <div class="table-actions">
@@ -309,7 +307,8 @@
                 <button class="print-btn">Imprimer</button>
             </div>
         </div>
-
+    
+        
         <div id="abonnements" class="content-section">
             <h2>Abonnements</h2>
             <p>Abonnez-vous pour une gestion simplifiée et un accès illimité à toutes les fonctionnalités.</p>

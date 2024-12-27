@@ -613,3 +613,44 @@ footer {
 .clickable-id:hover {
     color: rgb(139, 0, 0); /* Ou une couleur légèrement différente */
 }
+
+/* Styles spécifiques pour la section Recouvrements */
+#recouvrements .data-table th:nth-child(1),
+#recouvrements .data-table td:nth-child(1) {
+    width: 5%; /* N° */
+}
+
+#recouvrements .data-table th:nth-child(2),
+#recouvrements .data-table td:nth-child(2) {
+    width: 20%; /* Locataire */
+}
+
+#recouvrements .data-table th:nth-child(3),
+#recouvrements .data-table td:nth-child(3) {
+    width: 15%; /* Numéro */
+}
+
+#recouvrements .data-table th:nth-child(4),
+#recouvrements .data-table td:nth-child(4) {
+    width: 10%; /* Loyer */
+}
+
+#recouvrements .data-table th:nth-child(5),
+#recouvrements .data-table td:nth-child(5) {
+    width: 15%; /* Période */
+}
+
+#recouvrements .data-table th:nth-child(6),
+#recouvrements .data-table td:nth-child(6) {
+    width: 10%; /* Montant */
+}
+
+#recouvrements .data-table th:nth-child(7),
+#recouvrements .data-table td:nth-child(7) {
+    width: 10%; /* Date */
+}
+
+#recouvrements .data-table th:nth-child(8),
+#recouvrements .data-table td:nth-child(8) {
+    width: 15%; /* Commentaire */
+}
