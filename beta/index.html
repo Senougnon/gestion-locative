@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestion Locative</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <div class="container">
+        <div id="auth-section">
+            <div class="auth-form-container" id="login-form-container">
+              <h2>Connexion</h2>
+              <form id="login-form">
+                <input type="text" id="login-username" placeholder="Pseudo" required>
+                <input type="password" id="login-password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+                <p class="auth-switch">Pas encore inscrit ? <a href="#" id="show-register">S'inscrire</a></p>
+              </form>
+            </div>
+      
+            <div class="auth-form-container" id="register-form-container" style="display: none;">
+              <h2>Inscription</h2>
+              <form id="register-form">
+                <input type="text" id="register-username" placeholder="Pseudo" required>
+                <input type="password" id="register-password" placeholder="Mot de passe" required>
+                <button type="submit">S'inscrire</button>
+                <p class="auth-switch">Déjà inscrit ? <a href="#" id="show-login">Se connecter</a></p>
+              </form>
+            </div>
+          </div>
+
+        <header>
+            <h1 class="logo">Gestion Locative</h1>
+        </header>
+
+        <nav>
+            <button class="nav-button active" data-target="dashboard">
+                <span class="nav-button-icon">🏠</span>
+                Tableau de Bord
+            </button>
+            <button class="nav-button" data-target="proprietaires">
+                <span class="nav-button-icon">👤</span>
+                Propriétaires
+            </button>
+            <button class="nav-button" data-target="maisons">
+                <span class="nav-button-icon">🏘️</span>
+                Maisons
+            </button>
+            <button class="nav-button" data-target="locataires">
+                <span class="nav-button-icon">👥</span>
+                Locataires
+            </button>
+            <button class="nav-button" data-target="souscriptions">
+                <span class="nav-button-icon">📝</span>
+                Souscriptions            
+            </button>
+            <button class="nav-button" data-target="recouvrements">
+                <span class="nav-button-icon">💰</span>
+                Recouvrements
+            </button>
+            <button class="nav-button" data-target="abonnements">
+                <span class="nav-button-icon">💳</span>
+                Abonnements
+            </button>
+            <button class="nav-button" data-target="agence">
+                <span class="nav-button-icon">🏢</span>
+                Mon agence
+            </button>
+        </nav>
+    
+        <div id="dashboard" class="content-section active">
+            <div class="dashboard-header">
+                <h2>Tableau de Bord</h2>
+            </div>
+            <div class="dashboard-content">
+                <div class="dashboard-item">
+                    <label>Propriétaires:</label>
+                    <span id="dashboard-proprietaires-count">0</span>
+                </div>
+                <div class="dashboard-item">
+                    <label>Locataires:</label>
+                    <span id="dashboard-locataires-count">0</span>
+                </div>
+                <div class="dashboard-item">
+                    <label>Maisons:</label>
+                    <span id="dashboard-maisons-count">0</span>
+                </div>
+                <div class="dashboard-item">
+                    <label>Souscriptions:</label>
+                    <span id="dashboard-souscriptions-count">0</span>
+                </div>
+                <div class="dashboard-item">
+                        <label>Recouvrements:</label>
+                        <span id="dashboard-recouvrements-count">0</span>
+                    </div>
+                <div class="dashboard-item">
+                    <label>Abonnements Actifs:</label>
+                    <span id="dashboard-abonnements-count">0</span>
+                  </div>
+                  
+            </div>
+        </div>
+    
+    
+    
+        <div id="proprietaires" class="content-section">
+            <div class="content-header">
+                <h2>Propriétaires</h2>
+                <button id="add-proprietaire-btn" class="add-btn">Ajouter</button>
+            </div>
+            <form id="add-proprietaire-form" class="data-form">
+                <h3>Ajouter un Propriétaire</h3>
+                <input type="text" id="proprietaire-nom" placeholder="Nom" required>
+                <input type="text" id="proprietaire-prenom" placeholder="Prénom" required>
+                <input type="tel" id="proprietaire-contact" placeholder="Contact" required>
+                <input type="email" id="proprietaire-email" placeholder="Email">
+                <input type="text" id="proprietaire-adresse" placeholder="Adresse" required>
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-proprietaire-btn" class="cancel-btn">Annuler</button>
+            </form>
+            <table id="proprietaires-list" class="data-table">
+                <thead>
+                    <tr>
+                        
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+            <div class="table-actions">
+                <button class="export-pdf-btn">Exporter en PDF</button>
+                <button class="export-excel-btn">Exporter en Excel</button>
+                <button class="print-btn">Imprimer</button>
+            </div>
+        </div>
+    
+        <div id="maisons" class="content-section">
+            <div class="content-header">
+                <h2>Maisons</h2>
+                <button id="add-maison-btn" class="add-btn">Ajouter</button>
+            </div>
+            
+            <form id="add-maison-form" class="data-form">
+                <h3>Ajouter une Maison</h3>
+                <select id="maison-proprietaire" required>
+                    <option value="">Sélectionner Propriétaire</option>
+                </select>
+                <select id="maison-type" required>
+                    <option value="">Sélectionner le type</option>
+                    <option value="studio">Studio</option>
+                    <option value="appartement">Appartement</option>
+                    <option value="maison">Maison</option>
+                    </select>
+                <input type="text" id="maison-type" placeholder="Type de construction" required>
+                <input type="text" id="maison-numero" placeholder="Numéro" required>
+                <input type="number" id="maison-pieces" placeholder="Nombre de pièces" required>
+                <input type="text" id="maison-ville" placeholder="Ville" required>
+                <input type="text" id="maison-commune" placeholder="Commune" required>
+                <input type="text" id="maison-quartier" placeholder="Quartier" required>
+                <input type="number" id="maison-loyer" placeholder="Loyer" required>
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-maison-btn" class="cancel-btn">Annuler</button>
+            </form>
+            <table id="maisons-list" class="data-table">
+                <thead>
+                    <tr>
+                        
+                        <th>Propriétaire</th>
+                        <th>Type</th>
+                        <th>Numéro</th>
+                        <th>Pièces</th>
+                        <th>Ville, Commune, Quartier</th>
+                        <th>Loyer</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="table-actions">
+                <button class="export-pdf-btn">Exporter en PDF</button>
+                <button class="export-excel-btn">Exporter en Excel</button>
+                <button class="print-btn">Imprimer</button>
+            </div>
+        </div>
+    
+        <div id="locataires" class="content-section">
+            <div class="content-header">
+                <h2>Locataires</h2>
+                <button id="add-locataire-btn" class="add-btn">Ajouter</button>
+            </div>
+            
+            <form id="add-locataire-form" class="data-form">
+                <h3>Ajouter un Locataire</h3>
+                <input type="text" id="locataire-nom" placeholder="Nom" required>
+                <input type="text" id="locataire-prenom" placeholder="Prénom" required>
+                <input type="tel" id="locataire-contact" placeholder="Contact" required>
+                <input type="email" id="locataire-email" placeholder="Email">
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-locataire-btn" class="cancel-btn">Annuler</button>
+            </form>
+
+            <table id="locataires-list" class="data-table">
+                <thead>
+                    <tr>
+                        
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="table-actions">
+                <button class="export-pdf-btn">Exporter en PDF</button>
+                <button class="export-excel-btn">Exporter en Excel</button>
+                <button class="print-btn">Imprimer</button>
+            </div>
+        </div>
+    
+        <div id="souscriptions" class="content-section">
+            <div class="content-header">
+                <h2>Souscriptions</h2>
+                <button id="add-souscription-btn" class="add-btn">Ajouter</button>
+            </div>
+            
+            <form id="add-souscription-form" class="data-form">
+                <h3>Ajouter une Souscription</h3>
+                <select id="souscription-maison" required>
+                    <option value="">Sélectionner Maison</option>
+                </select>
+                <select id="souscription-locataire" required>
+                    <option value="">Sélectionner Locataire</option>
+                </select>
+                <input type="number" id="souscription-caution" placeholder="Caution" required>
+                <input type="number" id="souscription-avance" placeholder="Avance" required>
+                <input type="text" id="souscription-autres" placeholder="Autres frais" required>
+                <input type="date" id="souscription-date-debut" placeholder="Date d'entrée" required>
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-souscription-btn" class="cancel-btn">Annuler</button>
+            </form>
+
+            <table id="souscriptions-list" class="data-table">
+                <thead>
+                    <tr>
+                        <th>Maison</th>
+                        <th>Locataire</th>
+                        <th>Caution</th>
+                        <th>Avance</th>
+                        <th>Autres Frais</th>
+                        <th>Date d'entrée</th>
+                        <th>Loyer Mensuel</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="table-actions">
+                <button class="export-pdf-btn">Exporter en PDF</button>
+                <button class="export-excel-btn">Exporter en Excel</button>
+                <button class="print-btn">Imprimer</button>
+            </div>
+        </div>
+
+        <div id="recouvrements" class="content-section">
+            <div class="content-header">
+                <h2>Recouvrements</h2>
+                <button id="add-recouvrement-btn" class="add-btn">Ajouter</button>
+            </div>
+            <form id="add-recouvrement-form" class="data-form">
+                <h3>Ajouter un Recouvrement</h3>
+                <select id="recouvrement-souscription" required>
+                    <option value="">Sélectionner Souscription</option>
+                </select>
+                <input type="number" id="recouvrement-montant" placeholder="Montant" required>
+                <input type="date" id="recouvrement-date" placeholder="Date" required>
+                <input type="text" id="recouvrement-periode" placeholder="Période (ex: Juillet 2024)" required>
+                <input type="text" id="recouvrement-commentaire" placeholder="Commentaire (ex: Payé)">
+                <button type="submit" class="submit-btn">Ajouter</button>
+                <button type="button" id="cancel-recouvrement-btn" class="cancel-btn">Annuler</button>
+            </form>
+            <table id="recouvrements-list" class="data-table">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Locataire</th>
+                        <th>Numéro</th>
+                        <th>Loyer</th>
+                        <th>Période</th>
+                        <th>Montant</th>
+                        <th>Date</th>
+                        <th>Commentaire</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="table-actions">
+                <button class="export-pdf-btn">Exporter en PDF</button>
+                <button class="export-excel-btn">Exporter en Excel</button>
+                <button class="print-btn">Imprimer</button>
+            </div>
+        </div>
+    
+        
+        <div id="abonnements" class="content-section">
+            <h2>Abonnements</h2>
+            <p>Abonnez-vous pour une gestion simplifiée et un accès illimité à toutes les fonctionnalités.</p>
+            
+            <div id="abonnement-status">
+              Statut de l'abonnement: <span id="abonnement-status-text"></span>
+            </div>
+            
+            <button id="start-trial-btn" class="subscribe-btn">Démarrer l'essai gratuit (7 jours)</button>
+            <button id="subscribe-monthly-btn" class="subscribe-btn">S'abonner (1 000 FCFA/mois)</button>
+            <button id="subscribe-yearly-btn" class="subscribe-btn">S'abonner (10 000 FCFA/an)</button>
+            <button id="cancel-subscription-btn" class="cancel-subscription-btn" style="display: none;">Annuler l'abonnement</button>
+            <p id="trial-info">Profitez d'une période d'essai gratuite de 7 jours !</p>
+          </div>
+          <div id="agence" class="content-section">
+            <div class="content-header">
+                <h2>Informations de l'Agence</h2>
+                <button id="edit-agence-btn" class="edit-btn">Modifier</button>
+            </div>
+            <div id="agence-info">
+                <!-- Les informations de l'agence seront affichées ici -->
+            </div>
+            <form id="edit-agence-form" class="data-form" style="display: none;">
+                <h3>Modifier les informations de l'agence</h3>
+                <input type="text" id="agence-nom" placeholder="Nom de l'agence" required>
+                <input type="text" id="agence-prenom" placeholder="Prénom" required>
+                <input type="tel" id="agence-telephone" placeholder="Téléphone" required>
+                <input type="email" id="agence-email" placeholder="Email" required>
+                <input type="text" id="agence-adresse" placeholder="Adresse" required>
+                <input type="text" id="agence-api-key" placeholder="Clé API publique FedaPay" required>
+                <button type="submit" class="submit-btn">Enregistrer</button>
+                <button type="button" id="cancel-agence-btn" class="cancel-btn">Annuler</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h2>Détails</h2>
+            <div id="modal-details-content"></div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script>
+      document.getElementById('download-offline-btn').addEventListener('click', () => {
+        window.location.href = 'https://www.mediafire.com/file/n7kg3ot3iwoiykz/Page+hors+ligne.html/file';
+      });
+    </script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+</body>
+</html>
