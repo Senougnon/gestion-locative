@@ -1,4 +1,3 @@
-/* styles-client.css - Pas de modifications majeures, juste des ajustements pour les nouvelles icônes */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 * {
@@ -24,17 +23,21 @@ header {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap; /* Allow header items to wrap on smaller screens */
 }
 
 .logo {
-    font-size: 2.5em;
+    font-size: 2em; /* Adjusted for smaller screens */
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px; /* Added some spacing below logo */
 }
 
 nav {
     display: flex;
     gap: 10px;
+    width: 100%; /* Take up full width on smaller screens */
+    justify-content: center; /* Center navigation items */
 }
 
 #search-input {
@@ -44,6 +47,7 @@ nav {
     background-color: rgba(255, 255, 255, 0.8);
     color: #333;
     font-size: 16px;
+    flex: 1; /* Allow search input to take available space */
 }
 
 #search-button {
@@ -74,6 +78,7 @@ h2 {
     color: white;
     margin-bottom: 15px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 1.5em; /* Adjusted for smaller screens */
 }
 
 #filters {
@@ -110,7 +115,7 @@ h2 {
 
 #houses-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted minmax for smaller cards */
     gap: 20px;
 }
 
@@ -121,7 +126,7 @@ h2 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.house-card img, .house-card video {
+.house-card img, .house-card iframe { /* Updated for iframe */
     width: 100%;
     height: 200px;
     object-fit: cover;
@@ -132,6 +137,7 @@ h2 {
 .house-card h3 {
     color: #fdbb2d;
     margin-bottom: 5px;
+    font-size: 1.2em; /* Adjusted for smaller screens */
 }
 
 .house-card .location, .house-card .price {
@@ -229,7 +235,7 @@ footer {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 90%; /* Adjusted for smaller screens */
     max-width: 500px;
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -266,8 +272,51 @@ footer {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Styles pour l'icône de maison souscrite */
-.house-card .subscribed-icon {
-  color: #ccc; /* Couleur grisée pour l'icône */
-  margin-right: 5px;
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) { 
+    .logo {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.3em;
+    }
+
+    #houses-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Further adjust for smaller cards */
+    }
+
+    .house-card img, .house-card iframe {
+        height: 150px; /* Adjust height for smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    header {
+        flex-direction: column; /* Stack header items vertically */
+    }
+
+    .logo {
+        font-size: 1.5em;
+    }
+
+    #search-input {
+        font-size: 14px;
+    }
+
+    #search-button {
+        font-size: 14px;
+    }
+
+    #houses-container {
+        grid-template-columns: 1fr; /* Single column layout on very small screens */
+    }
+
+    .house-card img, .house-card iframe {
+        height: auto; /* Allow height to adjust based on content */
+    }
+
+    .modal-content {
+        margin: 30% auto; /* Adjust modal position for smaller screens */
+    }
 }
