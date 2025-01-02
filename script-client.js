@@ -32,16 +32,33 @@ const closeModalButton = document.querySelector(".close-modal");
 let selectedHouse = null;
 let housesData = {}; // Store fetched houses data
 
-// Load Construction Types from Firebase
+// Load Construction Types from Firebase and Populate Filter
 function loadConstructionTypes() {
-  const typesRef = ref(database, 'typesConstruction');
-  onValue(typesRef, (snapshot) => {
-    const types = snapshot.val();
-    for (const typeId in types) {
-      const type = types[typeId];
+  const housesRef = ref(database, 'maisons'); // Reference to the 'maisons' node
+
+  onValue(housesRef, (snapshot) => {
+    const houses = snapshot.val();
+    const uniqueTypes = new Set(); // Use a Set to store unique types
+
+    // Iterate through all houses
+    for (const houseId in houses) {
+      const house = houses[houseId];
+      if (house.type) {
+        uniqueTypes.add(house.type); // Add the type to the Set (duplicates are automatically ignored)
+      }
+    }
+
+    // Get the type filter select element
+    const typeFilter = document.getElementById("type-filter");
+
+    // Clear existing options in the filter
+    typeFilter.innerHTML = '<option value="">Tous</option>';
+
+    // Add unique types to the filter
+    for (const type of uniqueTypes) {
       const option = document.createElement("option");
-      option.value = type.nom;
-      option.text = type.nom;
+      option.value = type;
+      option.text = type;
       typeFilter.add(option);
     }
   }, {
