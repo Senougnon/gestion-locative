@@ -67,6 +67,10 @@
                 <span class="nav-button-icon">💳</span>
                 Abonnements
             </button>
+            <button class="nav-button" data-target="agence">
+                <span class="nav-button-icon">🏢</span>
+                Mon agence
+            </button>
         </nav>
     
         <div id="dashboard" class="content-section active">
@@ -152,13 +156,20 @@
                 <select id="maison-proprietaire" required>
                     <option value="">Sélectionner Propriétaire</option>
                 </select>
-                <input type="text" id="maison-type" placeholder="Type de construction" required>
+                <select id="maison-type" required>
+                    <option value="">Sélectionner le type</option>
+
+                    <option value="autre">Autre</option>
+                    </select>
+                    <!-- Champ pour un nouveau type, visible si "Autre" est sélectionné -->
+                    <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
                 <input type="text" id="maison-numero" placeholder="Numéro" required>
                 <input type="number" id="maison-pieces" placeholder="Nombre de pièces" required>
                 <input type="text" id="maison-ville" placeholder="Ville" required>
                 <input type="text" id="maison-commune" placeholder="Commune" required>
                 <input type="text" id="maison-quartier" placeholder="Quartier" required>
                 <input type="number" id="maison-loyer" placeholder="Loyer" required>
+                <input type="text" id="maison-media" placeholder="Lien vidéo YouTube ou image (optionnel)">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-maison-btn" class="cancel-btn">Annuler</button>
             </form>
@@ -278,8 +289,7 @@
                     <option value="">Sélectionner Souscription</option>
                 </select>
                 <input type="number" id="recouvrement-montant" placeholder="Montant" required>
-                <input type="date" id="recouvrement-date" placeholder="Date" required>
-                <input type="text" id="recouvrement-periode" placeholder="Période (ex: Juillet 2024)" required>
+                <input type="month" id="recouvrement-periode" placeholder="Période" required>
                 <input type="text" id="recouvrement-commentaire" placeholder="Commentaire (ex: Payé)">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-recouvrement-btn" class="cancel-btn">Annuler</button>
@@ -317,12 +327,30 @@
               Statut de l'abonnement: <span id="abonnement-status-text"></span>
             </div>
             
-            <button id="start-trial-btn" class="subscribe-btn">Démarrer l'essai gratuit (7 jours)</button>
             <button id="subscribe-monthly-btn" class="subscribe-btn">S'abonner (1 000 FCFA/mois)</button>
             <button id="subscribe-yearly-btn" class="subscribe-btn">S'abonner (10 000 FCFA/an)</button>
             <button id="cancel-subscription-btn" class="cancel-subscription-btn" style="display: none;">Annuler l'abonnement</button>
-            <p id="trial-info">Profitez d'une période d'essai gratuite de 7 jours !</p>
           </div>
+          <div id="agence" class="content-section">
+            <div class="content-header">
+                <h2>Informations de l'Agence</h2>
+                <button id="edit-agence-btn" class="edit-btn">Modifier</button>
+            </div>
+            <div id="agence-info">
+                <!-- Les informations de l'agence seront affichées ici -->
+            </div>
+            <form id="edit-agence-form" class="data-form" style="display: none;">
+                <h3>Modifier les informations de l'agence</h3>
+                <input type="text" id="agence-nom" placeholder="Nom de l'agence" required>
+                <input type="text" id="agence-prenom" placeholder="Prénom" required>
+                <input type="tel" id="agence-telephone" placeholder="Téléphone" required>
+                <input type="email" id="agence-email" placeholder="Email" required>
+                <input type="text" id="agence-adresse" placeholder="Adresse" required>
+                <input type="text" id="agence-api-key" placeholder="Clé API publique FedaPay" required>
+                <button type="submit" class="submit-btn">Enregistrer</button>
+                <button type="button" id="cancel-agence-btn" class="cancel-btn">Annuler</button>
+            </form>
+        </div>
     </div>
 
     <div id="details-modal" class="modal">
@@ -330,6 +358,17 @@
             <span class="close-modal">×</span>
             <h2>Détails</h2>
             <div id="modal-details-content"></div>
+        </div>
+    </div>
+
+    <!-- Edit Modal Structure -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">×</span>
+            <h2>Modifier</h2>
+            <form id="edit-form">
+                <!-- Form fields will be added here -->
+            </form>
         </div>
     </div>
 

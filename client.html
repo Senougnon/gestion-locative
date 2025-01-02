@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Immo Facile - Trouvez votre logement</title>
+    <link rel="stylesheet" href="styles-client.css">
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <header>
+        <h1 class="logo">Immo Facile</h1>
+        <nav>
+            <input type="text" id="search-input" placeholder="Rechercher par ville, commune, quartier...">
+            <button id="search-button">Rechercher</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="filters">
+            <h2>Filtres</h2>
+            <div class="filter-group">
+                <label for="type-filter">Type de bien :</label>
+                <select id="type-filter">
+                    <option value="">Tous</option>
+                    </select>
+            </div>
+            <div class="filter-group">
+                <label for="price-filter">Loyer maximum :</label>
+                <input type="number" id="price-filter" min="0">
+            </div>
+            <button id="apply-filters-button">Appliquer les filtres</button>
+        </section>
+
+        <section id="house-list">
+            <h2>Chambres et maisons disponibles</h2>
+            <div id="houses-container">
+                </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Immo Facile</p>
+    </footer>
+
+    <!-- Fenêtre modale de paiement -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h2>Paiement</h2>
+            <div id="payment-details"></div>
+            <button id="pay-button">Payer avec FedaPay</button>
+        </div>
+    </div>
+
+    <script type="module" src="script-client.js"></script>
+    <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</body>
+</html>
