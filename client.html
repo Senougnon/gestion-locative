@@ -2,8 +2,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    <title>Immo Facile - Trouvez votre logement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    
+    <title>Immo Facile - Trouvez votre logement</title>
     <link rel="stylesheet" href="styles-client.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
     <div id="loading-overlay">
@@ -12,33 +15,82 @@
 
     <header>
         <h1 class="logo">Immo Facile</h1>
-        <nav>
-            <input type="text" id="search-input" placeholder="Rechercher par ville, commune, quartier...">
-            <button id="search-button">Rechercher</button>
-        </nav>
     </header>
 
     <main>
-        <section id="filters">
-            <h2>Filtres</h2>
-            <div class="filter-group">
-                <label for="type-filter">Type de bien :</label>
-                <select id="type-filter">
-                    <option value="">Tous</option>
+        <!-- Section de recherche et filtrage -->
+        <section class="search-section">
+            <h2>Recherche et Filtrage</h2>
+            <div id="filters">
+                <div class="filter-group">
+                    <label for="type-filter">Type de bien :</label>
+                    <select id="type-filter">
+                        <option value="">Tous</option>
                     </select>
+                </div>
+                <div class="filter-group">
+                    <label for="price-filter">Loyer maximum :</label>
+                    <input type="number" id="price-filter" min="0">
+                </div>
+                <div class="filter-group">
+                    <label for="search-input">Rechercher par ville, commune, quartier...</label>
+                    <input type="text" id="search-input" placeholder="Rechercher...">
+                </div>
             </div>
-            <div class="filter-group">
-                <label for="price-filter">Loyer maximum :</label>
-                <input type="number" id="price-filter" min="0">
-            </div>
-            <button id="apply-filters-button">Appliquer les filtres</button>
         </section>
 
         <section id="house-list">
             <h2>Chambres et maisons disponibles</h2>
             <div id="houses-container">
-                </div>
+                <!-- Les maisons seront affichées ici -->
+            </div>
         </section>
+
+        <!-- New Product Details Page -->
+        <section id="product-details-page">
+            <button class="back-to-purchases-button">Retour à Mes achats</button>
+            <h2>Détails du Produit</h2>
+            <div id="product-details-content">
+                </div>
+            <div id="payment-history">
+                <h3>Historique des Paiements</h3>
+                <table id="payment-history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+            <div id="make-payment-form">
+                <h3>Effectuer un Paiement Supplémentaire</h3>
+                <input type="number" id="payment-amount" placeholder="Montant" required>
+                <input type="text" id="payment-description" placeholder="Description" required>
+                <button id="make-payment-button">Payer avec FedaPay</button>
+            </div>
+        </section>
+
+        <!-- Floating Action Button (FAB) -->
+        <div id="fab-container">
+            <div id="fab-main" class="fab">
+                <i class="fas fa-plus"></i>
+            </div>
+            <div id="fab-options" class="fab-options">
+                <a href="#" id="fab-my-purchases" class="fab-option" title="Mes achats">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+                <a href="#" id="fab-login-register" class="fab-option" title="Connexion/Inscription">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="#" id="fab-search" class="fab-option" title="Rechercher">
+                    <i class="fas fa-search"></i>
+                </a>
+            </div>
+        </div>
     </main>
 
     <footer>
@@ -55,9 +107,58 @@
         </div>
     </div>
 
+    <!-- Fenêtre modale de details -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h2>Détails</h2>
+            <div id="house-details-content"></div>
+            <div id="house-map"></div>
+        </div>
+    </div>
+
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <div id="auth-forms">
+                <div id="login-form-container">
+                    <h2>Connexion</h2>
+                    <form id="login-form">
+                        <input type="text" id="login-username" placeholder="Nom d'utilisateur" required>
+                        <input type="password" id="login-password" placeholder="Mot de passe" required>
+                        <button type="submit">Se connecter</button>
+                    </form>
+                    <p>Pas encore de compte ? <a href="#" id="show-register">S'inscrire</a></p>
+                </div>
+                <div id="register-form-container" style="display: none;">
+                    <h2>Inscription</h2>
+                    <form id="register-form">
+                        <input type="text" id="register-username" placeholder="Nom d'utilisateur" required>
+                        <input type="password" id="register-password" placeholder="Mot de passe" required>
+                        <button type="submit">S'inscrire</button>
+                    </form>
+                    <p>Déjà inscrit ? <a href="#" id="show-login">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Purchases Modal -->
+    <div id="my-purchases-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <h2>Mes achats</h2>
+            <div id="purchased-houses-container">
+                <!-- Purchased houses will be displayed here -->
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="script-client.js"></script>
     <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </body>
 </html>
