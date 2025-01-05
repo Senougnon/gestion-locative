@@ -414,9 +414,21 @@ function filterHouses() {
 
 // Show Payment Modal
 function showPaymentModal(house) {
+    let totalPrice = house.loyer; // Start with the base rent
+
+    if (house.avance && house.avance > 0) {
+        totalPrice = house.loyer * house.avance;
+    }
+
+    if (house.frais_supplementaire) {
+        totalPrice += parseInt(house.frais_supplementaire); // Assuming frais_supplementaire is a string representing a number
+    }
     paymentDetails.innerHTML = `
         <p><strong>Maison:</strong> ${house.ville}, ${house.commune}, ${house.quartier}</p>
         <p><strong>Loyer:</strong> ${house.loyer} FCFA</p>
+        ${house.avance > 0 ? `<p><strong>Avance:</strong> ${house.avance} mois</p>` : ''}
+        ${house.frais_supplementaire ? `<p><strong>Frais Supplémentaires:</strong> ${house.frais_supplementaire} FCFA</p>` : ''}
+        <p><strong>Montant Total à Payer:</strong> ${totalPrice} FCFA</p>
     `;
     paymentModal.style.display = "block";
 }
@@ -450,7 +462,15 @@ payButton.addEventListener("click", async () => {
     return;
   }
 
-  const amount = selectedHouse.loyer;
+  // Calculate the total amount to pay
+  let amount = selectedHouse.loyer;
+  if (selectedHouse.avance && selectedHouse.avance > 0) {
+      amount = selectedHouse.loyer * selectedHouse.avance;
+  }
+  if (selectedHouse.frais_supplementaire) {
+      amount += parseInt(selectedHouse.frais_supplementaire);
+  }
+
   const description = `Loyer pour ${selectedHouse.ville}, ${selectedHouse.commune}, ${selectedHouse.quartier}`;
 
   showLoading();
