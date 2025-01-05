@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gestion Locative</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <div id="loading-overlay">
@@ -38,42 +41,9 @@
             <h1 class="logo">Gestion Locative</h1>
         </header>
 
-        <nav>
-            <button class="nav-button active" data-target="dashboard">
-                <span class="nav-button-icon">🏠</span>
-                Tableau de Bord
-            </button>
-            <button class="nav-button" data-target="proprietaires">
-                <span class="nav-button-icon">👤</span>
-                Propriétaires
-            </button>
-            <button class="nav-button" data-target="maisons">
-                <span class="nav-button-icon">🏘️</span>
-                Maisons
-            </button>
-            <button class="nav-button" data-target="locataires">
-                <span class="nav-button-icon">👥</span>
-                Locataires
-            </button>
-            <button class="nav-button" data-target="souscriptions">
-                <span class="nav-button-icon">📝</span>
-                Souscriptions            
-            </button>
-            <button class="nav-button" data-target="recouvrements">
-                <span class="nav-button-icon">💰</span>
-                Recouvrements
-            </button>
-            <button class="nav-button" data-target="abonnements">
-                <span class="nav-button-icon">💳</span>
-                Abonnements
-            </button>
-            <button class="nav-button" data-target="agence">
-                <span class="nav-button-icon">🏢</span>
-                Mon agence
-            </button>
-        </nav>
-    
-        <div id="dashboard" class="content-section active">
+        <!-- Contenu principal -->
+        <main>
+          <div id="dashboard" class="content-section active">
             <div class="dashboard-header">
                 <h2>Tableau de Bord</h2>
             </div>
@@ -158,17 +128,34 @@
                 </select>
                 <select id="maison-type" required>
                     <option value="">Sélectionner le type</option>
-                    <option value="studio">Studio</option>
-                    <option value="appartement">Appartement</option>
-                    <option value="maison">Maison</option>
+
+                    <option value="autre">Autre</option>
                     </select>
-                <input type="text" id="maison-type" placeholder="Type de construction" required>
+                    <!-- Champ pour un nouveau type, visible si "Autre" est sélectionné -->
+                    <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
                 <input type="text" id="maison-numero" placeholder="Numéro" required>
                 <input type="number" id="maison-pieces" placeholder="Nombre de pièces" required>
                 <input type="text" id="maison-ville" placeholder="Ville" required>
                 <input type="text" id="maison-commune" placeholder="Commune" required>
                 <input type="text" id="maison-quartier" placeholder="Quartier" required>
                 <input type="number" id="maison-loyer" placeholder="Loyer" required>
+                <input type="text" id="maison-media" placeholder="Lien vidéo YouTube ou image (optionnel)">
+                <div class="gps-options">
+                    <label>Coordonnées GPS:</label>
+                    <label for="manual-gps">
+                        <input type="radio" name="gps-option" id="manual-gps" value="manual" checked> Entrer manuellement
+                    </label>
+                    <label for="auto-gps">
+                        <input type="radio" name="gps-option" id="auto-gps" value="auto"> Utiliser la carte
+                    </label>
+                </div>
+                
+                <div id="manual-gps-fields">
+                    <input type="text" id="maison-latitude" placeholder="Latitude">
+                    <input type="text" id="maison-longitude" placeholder="Longitude">
+                </div>
+                
+                <div id="auto-gps-map" style="height: 300px; display: none;"></div>
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-maison-btn" class="cancel-btn">Annuler</button>
             </form>
@@ -288,8 +275,7 @@
                     <option value="">Sélectionner Souscription</option>
                 </select>
                 <input type="number" id="recouvrement-montant" placeholder="Montant" required>
-                <input type="date" id="recouvrement-date" placeholder="Date" required>
-                <input type="text" id="recouvrement-periode" placeholder="Période (ex: Juillet 2024)" required>
+                <input type="month" id="recouvrement-periode" placeholder="Période" required>
                 <input type="text" id="recouvrement-commentaire" placeholder="Commentaire (ex: Payé)">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-recouvrement-btn" class="cancel-btn">Annuler</button>
@@ -327,11 +313,9 @@
               Statut de l'abonnement: <span id="abonnement-status-text"></span>
             </div>
             
-            <button id="start-trial-btn" class="subscribe-btn">Démarrer l'essai gratuit (7 jours)</button>
             <button id="subscribe-monthly-btn" class="subscribe-btn">S'abonner (1 000 FCFA/mois)</button>
             <button id="subscribe-yearly-btn" class="subscribe-btn">S'abonner (10 000 FCFA/an)</button>
             <button id="cancel-subscription-btn" class="cancel-subscription-btn" style="display: none;">Annuler l'abonnement</button>
-            <p id="trial-info">Profitez d'une période d'essai gratuite de 7 jours !</p>
           </div>
           <div id="agence" class="content-section">
             <div class="content-header">
@@ -353,6 +337,41 @@
                 <button type="button" id="cancel-agence-btn" class="cancel-btn">Annuler</button>
             </form>
         </div>
+        </main>
+
+        <!-- Bouton flottant (FAB) -->
+        <div id="fab-container">
+            <div class="fab-button">
+              <i class="fas fa-bars"></i> <!-- Icône pour le menu -->
+            </div>
+            <div class="fab-options">
+              <a href="#" class="fab-option" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+              </a>
+              <a href="#" class="fab-option" data-section="proprietaires">
+                <i class="fas fa-user-tie"></i>
+              </a>
+              <a href="#" class="fab-option" data-section="maisons">
+                <i class="fas fa-home"></i>
+              </a>
+              <a href="#" class="fab-option" data-section="locataires">
+                <i class="fas fa-users"></i>
+              </a>
+              <a href="#" class="fab-option" data-section="souscriptions">
+                <i class="fas fa-file-contract"></i>
+              </a>
+              <a href="#" class="fab-option" data-section="recouvrements">
+                <i class="fas fa-hand-holding-usd"></i>
+              </a>
+              <a href="#" class="fab-option" data-section="abonnements">
+                <i class="fas fa-credit-card"></i>
+              </a>
+              <a href="#" class="fab-option" data-section="agence">
+                <i class="fas fa-building"></i>
+              </a>
+            </div>
+          </div>
+
     </div>
 
     <div id="details-modal" class="modal">
@@ -363,14 +382,18 @@
         </div>
     </div>
 
+    <!-- Edit Modal Structure -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">×</span>
+            <h2>Modifier</h2>
+            <form id="edit-form">
+                <!-- Form fields will be added here -->
+            </form>
+        </div>
+    </div>
+
     <script type="module" src="script.js"></script>
-    <script>
-      document.getElementById('download-offline-btn').addEventListener('click', () => {
-        window.location.href = 'https://www.mediafire.com/file/n7kg3ot3iwoiykz/Page+hors+ligne.html/file';
-      });
-    </script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
