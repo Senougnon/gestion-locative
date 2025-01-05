@@ -418,6 +418,7 @@ footer {
     cursor: pointer;
 }
 
+
 /* Floating Action Button (FAB) Styles */
 #fab-container {
     position: fixed;
@@ -438,6 +439,19 @@ footer {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: all 0.3s ease;
+        /* Ajout de la propriété pour centrer l'icône */
+        position: relative; 
+
+}
+/* Styles pour l'icône à l'intérieur du FAB */
+.fab i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em; /* Ajustez la taille de l'icône si besoin */
+    width: 1em; /* Largeur fixe pour éviter le décalage */
+    text-align: center; /* Centrer le texte (l'icône) horizontalement */
 }
 
 .fab:hover {
@@ -629,3 +643,4 @@ footer {
     font-size: 16px;
     font-weight: bold;
 }
+
