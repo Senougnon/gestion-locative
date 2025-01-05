@@ -1758,11 +1758,41 @@ function populateProprietaireForm(form, itemData, itemId) {
     }
   }
   
-  // Gestion du bouton flottant pour afficher les sections
-  const fabButton = document.querySelector(".fab-button");
-  const fabOptions = document.querySelector(".fab-options");
-  const contentSections = document.querySelectorAll(".content-section");
-  const navLinks = document.querySelectorAll(".fab-option");
+// Gestion du bouton flottant pour afficher les sections
+const fabButton = document.querySelector(".fab-button");
+const fabOptions = document.querySelector(".fab-options");
+const contentSections = document.querySelectorAll(".content-section");
+const navLinks = document.querySelectorAll(".fab-option");
+
+// Animation pour l'icône du menu (FAB)
+let isAnimating = false;
+let currentIconIndex = 0;
+const icons = ["fas fa-tachometer-alt", "fas fa-user-tie", "fas fa-home", "fas fa-users", "fas fa-file-contract", "fas fa-hand-holding-usd", "fas fa-credit-card", "fas fa-building" ]; // Add more icons if needed
+
+fabButton.addEventListener("click", () => {
+    fabOptions.classList.toggle("show");
+    // Reset to default icon when closing
+    if (!fabOptions.classList.contains("show")) {
+        currentIconIndex = 0; // Set to the first icon index
+        fabButton.querySelector("i").className = icons[currentIconIndex];
+    }
+});
+
+function animateFABIcon() {
+    if (!isAnimating && !fabOptions.classList.contains("show")) { // Only animate when menu is closed
+        isAnimating = true;
+        fabButton.querySelector("i").className = icons[currentIconIndex];
+
+        currentIconIndex = (currentIconIndex + 1) % icons.length; // Move to the next icon (loop back to the beginning)
+
+        setTimeout(() => {
+            isAnimating = false;
+        }, 500); // Adjust the animation duration as needed
+    }
+}
+
+// Start the FAB icon animation loop (e.g., every 2 seconds)
+setInterval(animateFABIcon, 2000);
   
   fabButton.addEventListener("click", () => {
     fabOptions.classList.toggle("show");
