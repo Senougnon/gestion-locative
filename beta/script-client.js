@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, get, set, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, get, set, push, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // Firebase Configuration (Replace with your config)
 const firebaseConfig = {
@@ -436,13 +436,11 @@ function showPaymentModal(house) {
 // Handle Payment
 payButton.addEventListener("click", async () => {
   if (!currentUser) {
-    // Vérifie si l'utilisateur est connecté
     alert("Veuillez vous connecter ou vous inscrire pour effectuer un paiement.");
     showAuthModal();
     return;
   }
 
-  // Si l'utilisateur est connecté, le reste du code s'exécute normalement
   if (!selectedHouse) {
     alert("Veuillez sélectionner une maison à louer.");
     return;
@@ -462,7 +460,6 @@ payButton.addEventListener("click", async () => {
     return;
   }
 
-  // Calculate the total amount to pay
   let amount = selectedHouse.loyer;
   if (selectedHouse.avance && selectedHouse.avance > 0) {
       amount = selectedHouse.loyer * selectedHouse.avance;
@@ -481,7 +478,7 @@ payButton.addEventListener("click", async () => {
       description: description,
     },
     customer: {
-      email: "user@example.com", // Replace with the user's email (you need to collect this)
+      email: "user@example.com", 
     },
     onComplete: async function(transaction) {
       if (transaction.reason === FedaPay.CHECKOUT_COMPLETED) {
@@ -489,10 +486,15 @@ payButton.addEventListener("click", async () => {
           "Paiement réussi! Vous allez recevoir un reçu par email."
         );
         paymentModal.style.display = "none";
-        // Marque la maison comme achetée
         await markHouseAsPurchased(selectedHouse.id, currentUser.id);
         paymentStatus[selectedHouse.id] = true;
-        // Show the details modal directly after successful payment
+
+         // Ajouter le locataire dans la liste des locataires sur la page de l'agence avec le nom de l'utilisateur
+         await addTenant(currentUser.username, selectedHouse.userId);
+
+         // Enregistrer la souscription sur la page de l'agence avec l'ID de l'utilisateur
+         await addSubscription(selectedHouse.id, currentUser.id, selectedHouse.userId);
+
         showDetailsModal(selectedHouse);
       } else if (transaction.reason === FedaPay.DIALOG_DISMISSED) {
         alert("Paiement annulé.");
@@ -504,6 +506,77 @@ payButton.addEventListener("click", async () => {
   }).open();
   hideLoading();
 });
+
+// Mettre à jour la fonction addTenant pour inclure le nom de l'utilisateur et l'ID de l'agence
+async function addTenant(username, agenceUserId) {
+    const locatairesRef = ref(database, 'locataires');
+    const newLocataireRef = push(locatairesRef);
+    await set(newLocataireRef, {
+        id: newLocataireRef.key,
+        userId: agenceUserId,
+        nom: username, // Utiliser le nom d'utilisateur
+        prenom: "", // Vous pouvez ajouter un champ pour le prénom si nécessaire
+        contact: "", 
+        email: "" 
+    });
+}
+
+// Mettre à jour la fonction addSubscription pour inclure l'ID de l'agence
+async function addSubscription(maisonId, locataireId, agenceUserId) {
+    const souscriptionsRef = ref(database, 'souscriptions');
+    const newSouscriptionRef = push(souscriptionsRef);
+    const maisonRef = ref(database, `maisons/${maisonId}`);
+    const maisonSnapshot = await get(maisonRef);
+    const loyer = maisonSnapshot.val().loyer;
+
+    await set(newSouscriptionRef, {
+        id: newSouscriptionRef.key,
+        userId: agenceUserId, // Lier la souscription à l'ID de l'agence
+        maison: maisonId,
+        locataire: locataireId,
+        caution: 0, 
+        avance: 0, 
+        autres: "", 
+        dateDebut: new Date().toISOString().split('T')[0], 
+        loyer: loyer
+    });
+}
+
+// Mettre à jour la fonction addRecovery pour utiliser l'ID de l'utilisateur et la date actuelle
+async function addRecovery(maisonId, locataireId, amount, agenceUserId) {
+    const recouvrementsRef = ref(database, 'recouvrements');
+    const newRecouvrementRef = push(recouvrementsRef);
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    // Fetch the subscription associated with the house
+    const souscriptionsRef = ref(database, 'souscriptions');
+    const souscriptionsSnapshot = await get(souscriptionsRef);
+    const souscriptions = souscriptionsSnapshot.val();
+    let souscriptionId = null;
+
+    for (const subId in souscriptions) {
+        if (souscriptions[subId].maison === maisonId && souscriptions[subId].locataire === locataireId) {
+            souscriptionId = subId;
+            break;
+        }
+    }
+
+    if (!souscriptionId) {
+        console.error("Aucune souscription trouvée pour cette maison et ce locataire.");
+        return;
+    }
+
+    // Utiliser l'ID de l'utilisateur comme nom du locataire et la date actuelle
+    await set(newRecouvrementRef, {
+        id: newRecouvrementRef.key,
+        userId: agenceUserId,
+        souscription: souscriptionId,
+        montant: amount,
+        periode: currentDate.slice(0, 7), // Mois et année actuels
+        date: currentDate,
+        commentaire: `Paiement de ${currentUser.username}`
+    });
+}
 
 async function markHouseAsPurchased(houseId, userId) {
     const houseRef = ref(database, `maisons/${houseId}`);
@@ -710,6 +783,9 @@ async function handleAdditionalPayment(houseId, amount, description) {
                 const paymentRef = push(ref(database, `payments/${houseId}`)); // Assuming you store payments under a 'payments' node
                 await set(paymentRef, paymentData);
 
+                // Enregistrer le recouvrement sur la page de l'agence avec l'ID de l'utilisateur
+                await addRecovery(selectedHouse.id, currentUser.id, amount, selectedHouse.userId);
+
                 // Reload the payment history
                 loadPaymentHistory(houseId);
             } else if (transaction.reason === FedaPay.DIALOG_DISMISSED) {
@@ -787,7 +863,6 @@ const fabSearch = document.getElementById("fab-search");
 let isAnimating = false;
 let currentIconIndex = 0;
 const icons = ["fas fa-shopping-cart", "fas fa-user", "fas fa-search", "fas fa-plus"]; // Add more icons if needed
-
 fabMain.addEventListener("click", () => {
     fabOptions.classList.toggle("show");
     // Reset to default icon when closing
