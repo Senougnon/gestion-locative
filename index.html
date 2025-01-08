@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gestion Locative</title>
+    <title>Mon logement</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" href="img1.png" type="image/jpg">
 </head>
 <body>
     <div id="loading-overlay">
@@ -37,46 +38,39 @@
             </div>
           </div>
 
- <!--       <header>
-            <h1 class="logo">Gestion Locative</h1>
-        </header>-->
-
-        <!-- Contenu principal -->
         <main>
           <div id="dashboard" class="content-section active">
             <div class="dashboard-header">
                 <h2>Tableau de Bord</h2>
             </div>
             <div class="dashboard-content">
-                <div class="dashboard-item">
+                <div class="dashboard-item" data-section="proprietaires">
                     <label>Propriétaires:</label>
                     <span id="dashboard-proprietaires-count">0</span>
                 </div>
-                <div class="dashboard-item">
+                <div class="dashboard-item" data-section="locataires">
                     <label>Locataires:</label>
                     <span id="dashboard-locataires-count">0</span>
                 </div>
-                <div class="dashboard-item">
+                <div class="dashboard-item" data-section="maisons">
                     <label>Maisons:</label>
                     <span id="dashboard-maisons-count">0</span>
                 </div>
-                <div class="dashboard-item">
+                <div class="dashboard-item" data-section="souscriptions">
                     <label>Souscriptions:</label>
                     <span id="dashboard-souscriptions-count">0</span>
                 </div>
-                <div class="dashboard-item">
+                <div class="dashboard-item" data-section="recouvrements">
                         <label>Recouvrements:</label>
                         <span id="dashboard-recouvrements-count">0</span>
                     </div>
-                <div class="dashboard-item">
+                <div class="dashboard-item" data-section="abonnements">
                     <label>Abonnements Actifs:</label>
                     <span id="dashboard-abonnements-count">0</span>
                   </div>
                   
             </div>
         </div>
-    
-    
     
         <div id="proprietaires" class="content-section">
             <div class="content-header">
@@ -87,9 +81,9 @@
                 <h3>Ajouter un Propriétaire</h3>
                 <input type="text" id="proprietaire-nom" placeholder="Nom" required>
                 <input type="text" id="proprietaire-prenom" placeholder="Prénom" required>
-                <input type="tel" id="proprietaire-contact" placeholder="Contact" required>
-                <input type="email" id="proprietaire-email" placeholder="Email">
-                <input type="text" id="proprietaire-adresse" placeholder="Adresse" required>
+                <input type="tel" id="proprietaire-contact" placeholder="Contact (optionnel)">
+                <input type="email" id="proprietaire-email" placeholder="Email (optionnel)">
+                <input type="text" id="proprietaire-adresse" placeholder="Adresse (optionnel)">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-proprietaire-btn" class="cancel-btn">Annuler</button>
             </form>
@@ -133,17 +127,17 @@
                     </select>
                     <!-- Champ pour un nouveau type, visible si "Autre" est sélectionné -->
                     <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
-                <input type="text" id="maison-numero" placeholder="Numéro" required>
-                <input type="number" id="maison-pieces" placeholder="Nombre de pièces" required>
-                <input type="text" id="maison-ville" placeholder="Ville" required>
-                <input type="text" id="maison-commune" placeholder="Commune" required>
-                <input type="text" id="maison-quartier" placeholder="Quartier" required>
-                <input type="number" id="maison-loyer" placeholder="Loyer" required>
+                <input type="text" id="maison-numero" placeholder="Numéro (optionnel)">
+                <input type="number" id="maison-pieces" placeholder="Nombre de pièces (optionnel)">
+                <input type="text" id="maison-ville" placeholder="Ville (optionnel)">
+                <input type="text" id="maison-commune" placeholder="Commune (optionnel)">
+                <input type="text" id="maison-quartier" placeholder="Quartier (optionnel)">
+                <input type="number" id="maison-loyer" placeholder="Loyer (optionnel)">
                 <input type="number" id="maison-avance" placeholder="Nombre d'avance (optionnel)">
                 <input type="text" id="maison-frais-supplementaire" placeholder="Frais supplémentaires (optionnel)">
                 <input type="text" id="maison-media" placeholder="Lien vidéo YouTube ou image (optionnel)">
                 <div class="gps-options">
-                    <label>Coordonnées GPS:</label>
+                    <label>Coordonnées GPS (optionnel):</label>
                     <label for="manual-gps">
                         <input type="radio" name="gps-option" id="manual-gps" value="manual" checked> Entrer manuellement
                     </label>
@@ -153,8 +147,8 @@
                 </div>
                 
                 <div id="manual-gps-fields">
-                    <input type="text" id="maison-latitude" placeholder="Latitude">
-                    <input type="text" id="maison-longitude" placeholder="Longitude">
+                    <input type="text" id="maison-latitude" placeholder="Latitude (optionnel)">
+                    <input type="text" id="maison-longitude" placeholder="Longitude (optionnel)">
                 </div>
                 
                 <div id="auto-gps-map" style="height: 300px; display: none;"></div>
@@ -196,8 +190,8 @@
                 <h3>Ajouter un Locataire</h3>
                 <input type="text" id="locataire-nom" placeholder="Nom" required>
                 <input type="text" id="locataire-prenom" placeholder="Prénom" required>
-                <input type="tel" id="locataire-contact" placeholder="Contact" required>
-                <input type="email" id="locataire-email" placeholder="Email">
+                <input type="tel" id="locataire-contact" placeholder="Contact (optionnel)">
+                <input type="email" id="locataire-email" placeholder="Email (optionnel)">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-locataire-btn" class="cancel-btn">Annuler</button>
             </form>
@@ -237,9 +231,9 @@
                 <select id="souscription-locataire" required>
                     <option value="">Sélectionner Locataire</option>
                 </select>
-                <input type="number" id="souscription-caution" placeholder="Caution" required>
-                <input type="number" id="souscription-avance" placeholder="Avance" required>
-                <input type="text" id="souscription-autres" placeholder="Autres frais" required>
+                <input type="number" id="souscription-caution" placeholder="Caution (optionnel)">
+                <input type="number" id="souscription-avance" placeholder="Avance (optionnel)">
+                <input type="text" id="souscription-autres" placeholder="Autres frais (optionnel)">
                 <input type="date" id="souscription-date-debut" placeholder="Date d'entrée" required>
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-souscription-btn" class="cancel-btn">Annuler</button>
@@ -278,9 +272,9 @@
                 <select id="recouvrement-souscription" required>
                     <option value="">Sélectionner Souscription</option>
                 </select>
-                <input type="number" id="recouvrement-montant" placeholder="Montant" required>
-                <input type="month" id="recouvrement-periode" placeholder="Période" required>
-                <input type="text" id="recouvrement-commentaire" placeholder="Commentaire (ex: Payé)">
+                <input type="number" id="recouvrement-montant" placeholder="Montant (optionnel)">
+                <input type="month" id="recouvrement-periode" placeholder="Période (optionnel)">
+                <input type="text" id="recouvrement-commentaire" placeholder="Commentaire (optionnel)">
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-recouvrement-btn" class="cancel-btn">Annuler</button>
             </form>
