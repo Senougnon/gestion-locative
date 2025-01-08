@@ -265,12 +265,18 @@
         <div id="recouvrements" class="content-section">
             <div class="content-header">
                 <h2>Recouvrements</h2>
+                <select id="proprietaire-filter">
+                    <!-- Les options seront ajoutées ici par le script -->
+                </select>
                 <button id="add-recouvrement-btn" class="add-btn">Ajouter</button>
             </div>
             <form id="add-recouvrement-form" class="data-form">
                 <h3>Ajouter un Recouvrement</h3>
                 <select id="recouvrement-souscription" required>
                     <option value="">Sélectionner Souscription</option>
+                </select>
+                <select id="recouvrement-proprietaire" required>
+                  <option value="">Sélectionner Propriétaire</option>
                 </select>
                 <input type="number" id="recouvrement-montant" placeholder="Montant (optionnel)">
                 <input type="month" id="recouvrement-periode" placeholder="Période (optionnel)">
@@ -289,6 +295,7 @@
                         <th>Montant</th>
                         <th>Date</th>
                         <th>Commentaire</th>
+                        <th>Proprietaire</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

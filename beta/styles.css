@@ -713,3 +713,8 @@ footer {
     color: #1a2a6c;
     text-decoration: none;
 }
+
+#recouvrements .data-table th:nth-child(9),
+#recouvrements .data-table td:nth-child(9) {
+    width: 10%; /* Propriétaire */
+}

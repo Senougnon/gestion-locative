@@ -483,27 +483,29 @@ hideLoading();
 });
 
 // Gestion de la soumission du formulaire de recouvrement
+// Gestion de la soumission du formulaire de recouvrement
 addRecouvrementForm.addEventListener("submit", (event) => {
-event.preventDefault();
-showLoading();
+  event.preventDefault();
+  showLoading();
 
-const souscriptionId = document.getElementById("recouvrement-souscription").value;
-const montant = parseInt(document.getElementById("recouvrement-montant").value);
-const periode = document.getElementById("recouvrement-periode").value;
-const commentaire = document.getElementById("recouvrement-commentaire").value;
+  const souscriptionId = document.getElementById("recouvrement-souscription").value;
+  const montant = parseInt(document.getElementById("recouvrement-montant").value);
+  const periode = document.getElementById("recouvrement-periode").value;
+  const commentaire = document.getElementById("recouvrement-commentaire").value;
 
-addRecouvrement(souscriptionId, montant, periode, commentaire)
-  .then(() => {
+  addRecouvrement(souscriptionId, montant, periode, commentaire)
+    .then(() => {
       hideForm(addRecouvrementForm);
       loadRecouvrements(); // Recharger la liste des recouvrements
-  })
-  .catch((error) => {
+      loadProprietairesForFilter();
+    })
+    .catch((error) => {
       console.error("Erreur lors de l'ajout du recouvrement:", error);
       alert("Erreur lors de l'ajout du recouvrement.");
-  })
-  .finally(() => {
+    })
+    .finally(() => {
       hideLoading();
-  });
+    });
 });
 
 // Function to add a landlord
@@ -578,16 +580,28 @@ loyer: loyer
 
 // Fonction pour ajouter un recouvrement
 async function addRecouvrement(souscriptionId, montant, periode, commentaire) {
-const recouvrementsRef = ref(database, 'recouvrements');
-const newRecouvrementRef = push(recouvrementsRef);
-await set(newRecouvrementRef, {
-  id: newRecouvrementRef.key,
-  userId: currentUser.id,
-  souscription: souscriptionId,
-  montant: montant || 0,
-  periode: periode || "",
-  commentaire: commentaire || ""
-});
+  const recouvrementsRef = ref(database, 'recouvrements');
+  const newRecouvrementRef = push(recouvrementsRef);
+
+  // Récupérer l'ID du propriétaire à partir de la souscription
+  const souscriptionRef = ref(database, `souscriptions/${souscriptionId}`);
+  const souscriptionSnapshot = await get(souscriptionRef);
+  const souscription = souscriptionSnapshot.val();
+  const maisonId = souscription.maison;
+  const maisonRef = ref(database, `maisons/${maisonId}`);
+  const maisonSnapshot = await get(maisonRef);
+  const maison = maisonSnapshot.val();
+  const proprietaireId = maison.proprietaire;
+
+  await set(newRecouvrementRef, {
+    id: newRecouvrementRef.key,
+    userId: currentUser.id,
+    souscription: souscriptionId,
+    montant: montant || 0,
+    periode: periode || "",
+    commentaire: commentaire || "",
+    proprietaire: proprietaireId // Stocker l'ID du propriétaire
+  });
 }
 
 function loadProprietaires() {
@@ -818,81 +832,175 @@ onlyOnce: true
 });
 }
 
-// Fonction pour charger les recouvrements
 function loadRecouvrements() {
-showLoading();
-const recouvrementsList = document.querySelector("#recouvrements-list tbody");
-recouvrementsList.innerHTML = "";
+  showLoading();
+  const recouvrementsList = document.querySelector("#recouvrements-list tbody");
+  recouvrementsList.innerHTML = "";
 
-// Mettre à jour la liste déroulante des souscriptions
-const souscriptionSelect = document.getElementById("recouvrement-souscription");
-souscriptionSelect.innerHTML = '<option value="">Sélectionner Souscription</option>';
-const souscriptionsRef = ref(database, 'souscriptions');
-get(souscriptionsRef).then((souscriptionsSnapshot) => {
+  // Mettre à jour la liste déroulante des souscriptions
+  const souscriptionSelect = document.getElementById("recouvrement-souscription");
+  souscriptionSelect.innerHTML = '<option value="">Sélectionner Souscription</option>';
+  const souscriptionsRef = ref(database, 'souscriptions');
+  get(souscriptionsRef).then((souscriptionsSnapshot) => {
     const souscriptions = souscriptionsSnapshot.val();
     for (const souscriptionId in souscriptions) {
-        const souscription = souscriptions[souscriptionId];
-        if (souscription.userId === currentUser.id) {
-            const option = document.createElement("option");
-            option.value = souscriptionId;
-            get(ref(database, `maisons/${souscription.maison}`)).then((maisonSnapshot) => {
-                const maison = maisonSnapshot.val();
-                get(ref(database, `locataires/${souscription.locataire}`)).then((locataireSnapshot) => {
-                    const locataire = locataireSnapshot.val();
-                    option.text = `${locataire.nom} ${locataire.prenom} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
-                    souscriptionSelect.appendChild(option);
-                });
-            });
-        }
+      const souscription = souscriptions[souscriptionId];
+      if (souscription.userId === currentUser.id) {
+        const option = document.createElement("option");
+        option.value = souscriptionId;
+        get(ref(database, `maisons/${souscription.maison}`)).then((maisonSnapshot) => {
+          const maison = maisonSnapshot.val();
+          get(ref(database, `locataires/${souscription.locataire}`)).then((locataireSnapshot) => {
+            const locataire = locataireSnapshot.val();
+            option.text = `${locataire.nom} ${locataire.prenom} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+            souscriptionSelect.appendChild(option);
+          });
+        });
+      }
     }
-});
+  });
 
-const recouvrementsRef = ref(database, 'recouvrements');
-onValue(recouvrementsRef, (snapshot) => {
+  // Ajouter un écouteur d'événement pour le changement de sélection de la souscription
+  souscriptionSelect.addEventListener("change", async () => {
+    const selectedSouscriptionId = souscriptionSelect.value;
+    if (selectedSouscriptionId) {
+      // Récupérer l'ID du propriétaire à partir de la souscription sélectionnée
+      const souscriptionRef = ref(database, `souscriptions/${selectedSouscriptionId}`);
+      const souscriptionSnapshot = await get(souscriptionRef);
+      const souscription = souscriptionSnapshot.val();
+      const maisonId = souscription.maison;
+      const maisonRef = ref(database, `maisons/${maisonId}`);
+      const maisonSnapshot = await get(maisonRef);
+      const maison = maisonSnapshot.val();
+      const proprietaireId = maison.proprietaire;
+
+      // Récupérer le nom du propriétaire à partir de son ID
+      const proprietaireRef = ref(database, `proprietaires/${proprietaireId}`);
+      const proprietaireSnapshot = await get(proprietaireRef);
+      const proprietaire = proprietaireSnapshot.val();
+      const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Propriétaire inconnu';
+
+      // Mettre à jour le champ de sélection du propriétaire
+      const proprietaireSelect = document.getElementById("recouvrement-proprietaire");
+      proprietaireSelect.innerHTML = `<option value="${proprietaireId}">${proprietaireNom}</option>`;
+    } else {
+      // Réinitialiser le champ de sélection du propriétaire si aucune souscription n'est sélectionnée
+      const proprietaireSelect = document.getElementById("recouvrement-proprietaire");
+      proprietaireSelect.innerHTML = '<option value="">Sélectionner Propriétaire</option>';
+    }
+  });
+
+  const recouvrementsRef = ref(database, 'recouvrements');
+  onValue(recouvrementsRef, (snapshot) => {
     const recouvrements = snapshot.val();
     let recouvrementCount = 0;
     let numero = 1;
     for (const recouvrementId in recouvrements) {
-        const recouvrement = recouvrements[recouvrementId];
-        if (recouvrement.userId === currentUser.id) {
-            recouvrementCount++;
-            get(ref(database, `souscriptions/${recouvrement.souscription}`)).then((souscriptionSnapshot) => {
-                const souscription = souscriptionSnapshot.val();
-                if (souscription) {
-                    Promise.all([
-                        get(ref(database, `locataires/${souscription.locataire}`)),
-                        get(ref(database, `maisons/${souscription.maison}`))
-                    ]).then(([locataireSnapshot, maisonSnapshot]) => {
-                        const locataire = locataireSnapshot.val();
-                        const maison = maisonSnapshot.val();
-                        const row = document.createElement("tr");
-                        row.innerHTML = `
-                            <td>${numero}</td>
-                            <td>${locataire ? locataire.nom + ' ' + locataire.prenom : 'Inconnu'}</td>
-                            <td>${maison && maison.numero ? maison.numero : 'N/A'}</td>
-                            <td>${souscription.loyer}</td>
-                            <td>${recouvrement.periode}</td>
-                            <td>${recouvrement.montant}</td>
-                            <td>${recouvrement.date}</td>
-                            <td>${recouvrement.commentaire}</td>
-                            <td class="actions-cell">
-                                <button class="edit-btn" data-id="${recouvrement.id}">Modifier</button>
-                                <button class="delete-btn" data-id="${recouvrement.id}">Supprimer</button>
-                            </td>
-                        `;
-                        recouvrementsList.appendChild(row);
-                        numero++;
-                    });
-                }
+      const recouvrement = recouvrements[recouvrementId];
+      if (recouvrement.userId === currentUser.id) {
+        recouvrementCount++;
+        get(ref(database, `souscriptions/${recouvrement.souscription}`)).then((souscriptionSnapshot) => {
+          const souscription = souscriptionSnapshot.val();
+          if (souscription) {
+            Promise.all([
+              get(ref(database, `locataires/${souscription.locataire}`)),
+              get(ref(database, `maisons/${souscription.maison}`)),
+              get(ref(database, `proprietaires/${recouvrement.proprietaire}`))
+            ]).then(([locataireSnapshot, maisonSnapshot, proprietaireSnapshot]) => {
+              const locataire = locataireSnapshot.val();
+              const maison = maisonSnapshot.val();
+              const proprietaire = proprietaireSnapshot.val();
+              const proprietaireId = proprietaire ? proprietaire.id : 'inconnu'; // Récupérer l'ID du propriétaire
+              const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Inconnu';
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${numero}</td>
+                <td>${locataire ? locataire.nom + ' ' + locataire.prenom : 'Inconnu'}</td>
+                <td>${maison && maison.numero ? maison.numero : 'N/A'}</td>
+                <td>${souscription.loyer}</td>
+                <td>${recouvrement.periode}</td>
+                <td>${recouvrement.montant}</td>
+                <td>${recouvrement.date}</td>
+                <td>${recouvrement.commentaire}</td>
+                <td data-proprietaire-id="${proprietaireId}">${proprietaireNom}</td>
+                <td class="actions-cell">
+                  <button class="edit-btn" data-id="${recouvrement.id}">Modifier</button>
+                  <button class="delete-btn" data-id="${recouvrement.id}">Supprimer</button>
+                </td>
+              `;
+              recouvrementsList.appendChild(row);
+              numero++;
             });
-        }
+          }
+        });
+      }
     }
     document.getElementById('dashboard-recouvrements-count').textContent = recouvrementCount;
     hideLoading();
-}, {
+  }, {
     onlyOnce: true
+  });
+}
+
+// Fonction pour charger les propriétaires pour le filtre
+function loadProprietairesForFilter() {
+const proprietaireFilter = document.getElementById("proprietaire-filter");
+proprietaireFilter.innerHTML = '<option value="">Tous</option>'; // Option "Tous" par défaut
+
+const recouvrementsRef = ref(database, 'recouvrements');
+get(recouvrementsRef).then((recouvrementsSnapshot) => {
+  const recouvrements = recouvrementsSnapshot.val();
+  const proprietairesIds = new Set(); // Utilisation d'un Set pour éviter les doublons
+
+  for (const recouvrementId in recouvrements) {
+    const recouvrement = recouvrements[recouvrementId];
+    if (recouvrement.userId === currentUser.id && recouvrement.proprietaire) {
+      proprietairesIds.add(recouvrement.proprietaire);
+    }
+  }
+
+  // Récupérer les noms des propriétaires à partir des IDs
+  proprietairesIds.forEach(proprietaireId => {
+    const proprietaireRef = ref(database, `proprietaires/${proprietaireId}`);
+    get(proprietaireRef).then((proprietaireSnapshot) => {
+      const proprietaire = proprietaireSnapshot.val();
+      if (proprietaire) {
+        const option = document.createElement("option");
+        option.value = proprietaireId;
+        option.text = `${proprietaire.nom} ${proprietaire.prenom}`;
+        proprietaireFilter.appendChild(option);
+      }
+    });
+  });
 });
 }
+
+function filterRecouvrementsByProprietaire() {
+  const selectedProprietaireId = document.getElementById("proprietaire-filter").value;
+  const recouvrementsRows = document.querySelectorAll("#recouvrements-list tbody tr");
+
+  recouvrementsRows.forEach(row => {
+    const proprietaireCell = row.querySelector("td:nth-child(9)"); // Colonne "Propriétaire" (9ème cellule)
+    
+    // Récupérer l'ID du propriétaire à partir de l'attribut data-
+    const proprietaireId = proprietaireCell.dataset.proprietaireId;
+
+    if (!selectedProprietaireId || proprietaireId === selectedProprietaireId) {
+      row.style.display = ""; // Afficher la ligne
+    } else {
+      row.style.display = "none"; // Masquer la ligne
+    }
+  });
+}
+
+// Appeler loadProprietairesForFilter au chargement de la page et après l'ajout d'un recouvrement
+window.addEventListener('load', () => {
+// ...
+loadProprietairesForFilter();
+ // Ajouter un écouteur d'événement pour le filtre des propriétaires
+ const proprietaireFilter = document.getElementById("proprietaire-filter");
+ proprietaireFilter.addEventListener("change", filterRecouvrementsByProprietaire);
+});
 
 // Function to open the edit modal
 function openEditModal(itemId, itemType) {
@@ -904,27 +1012,27 @@ form.innerHTML = ''; // Clear previous form fields
 const itemRef = ref(database, `${itemType}/${itemId}`);
 get(itemRef).then((snapshot) => {
 if (snapshot.exists()) {
-  const itemData = snapshot.val();
-  switch (itemType) {
-    case 'proprietaires':
-      populateProprietaireForm(form, itemData, itemId);
-      break;
-    case 'maisons':
-      populateMaisonForm(form, itemData, itemId);
-      break;
-    case 'locataires':
-      populateLocataireForm(form, itemData, itemId);
-      break;
-    case 'souscriptions':
-      populateSouscriptionForm(form, itemData, itemId);
-      break;
-    case 'recouvrements':
-      populateRecouvrementForm(form, itemData, itemId);
-      break;
-    // Add cases for other item types as needed
-  }
+const itemData = snapshot.val();
+switch (itemType) {
+  case 'proprietaires':
+    populateProprietaireForm(form, itemData, itemId);
+    break;
+  case 'maisons':
+    populateMaisonForm(form, itemData, itemId);
+    break;
+  case 'locataires':
+    populateLocataireForm(form, itemData, itemId);
+    break;
+  case 'souscriptions':
+    populateSouscriptionForm(form, itemData, itemId);
+    break;
+  case 'recouvrements':
+    populateRecouvrementForm(form, itemData, itemId);
+    break;
+  // Add cases for other item types as needed
+}
 } else {
-  console.log("No data available for editing");
+console.log("No data available for editing");
 }
 }).catch((error) => {
 console.error("Error fetching item data:", error);
@@ -950,11 +1058,11 @@ form.innerHTML = `
 form.onsubmit = (event) => {
 event.preventDefault();
 const updatedData = {
-  nom: document.getElementById("edit-nom").value,
-  prenom: document.getElementById("edit-prenom").value,
-  contact: document.getElementById("edit-contact").value,
-  email: document.getElementById("edit-email").value,
-  adresse: document.getElementById("edit-adresse").value
+nom: document.getElementById("edit-nom").value,
+prenom: document.getElementById("edit-prenom").value,
+contact: document.getElementById("edit-contact").value,
+email: document.getElementById("edit-email").value,
+adresse: document.getElementById("edit-adresse").value
 };
 updateItem('proprietaires', itemId, updatedData);
 };
@@ -976,68 +1084,68 @@ const typesConstruction = typesSnapshot.val();
 // Create landlord select options
 let proprietaireOptions = '';
 for (const proprietaireId in proprietaires) {
-  const proprietaire = proprietaires[proprietaireId];
-  if (proprietaire.userId === currentUser.id) {
-    const selected = proprietaireId === itemData.proprietaire ? 'selected' : '';
-    proprietaireOptions += `<option value="${proprietaireId}" ${selected}>${proprietaire.nom} ${proprietaire.prenom}</option>`;
-  }
+const proprietaire = proprietaires[proprietaireId];
+if (proprietaire.userId === currentUser.id) {
+  const selected = proprietaireId === itemData.proprietaire ? 'selected' : '';
+  proprietaireOptions += `<option value="${proprietaireId}" ${selected}>${proprietaire.nom} ${proprietaire.prenom}</option>`;
+}
 }
 
 // Create construction type select options
 let typeOptions = '<option value="autre">Autre</option>';
 for (const typeId in typesConstruction) {
-  const type = typesConstruction[typeId];
-  const selected = type.nom === itemData.type ? 'selected' : '';
-  typeOptions += `<option value="${type.nom}" ${selected}>${type.nom}</option>`;
+const type = typesConstruction[typeId];
+const selected = type.nom === itemData.type ? 'selected' : '';
+typeOptions += `<option value="${type.nom}" ${selected}>${type.nom}</option>`;
 }
 
 // Populate the form
 form.innerHTML = `
-  <h3>Modifier la maison</h3>
-  <select id="edit-proprietaire">${proprietaireOptions}</select>
-  <select id="edit-type">${typeOptions}</select>
-  <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
-  <input type="text" id="edit-numero" value="${itemData.numero}" required>
-  <input type="number" id="edit-pieces" value="${itemData.pieces}" required>
-  <input type="text" id="edit-ville" value="${itemData.ville}" required>
-  <input type="text" id="edit-commune" value="${itemData.commune}" required>
-  <input type="text" id="edit-quartier" value="${itemData.quartier}" required>
-  <input type="number" id="edit-loyer" value="${itemData.loyer}" required>
-  <input type="number" id="edit-avance" value="${itemData.avance || ''}" placeholder="Nombre d'avance (optionnel)">
-  <input type="text" id="edit-frais-supplementaire" value="${itemData.frais_supplementaire || ''}" placeholder="Frais supplémentaires (optionnel)">
-  <input type="text" id="edit-media" value="${itemData.media || ''}" placeholder="Lien vidéo YouTube ou image (optionnel)">
-  <button type="submit" class="submit-btn">Enregistrer</button>
-  <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+<h3>Modifier la maison</h3>
+<select id="edit-proprietaire">${proprietaireOptions}</select>
+<select id="edit-type">${typeOptions}</select>
+<input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
+<input type="text" id="edit-numero" value="${itemData.numero}" required>
+<input type="number" id="edit-pieces" value="${itemData.pieces}" required>
+<input type="text" id="edit-ville" value="${itemData.ville}" required>
+<input type="text" id="edit-commune" value="${itemData.commune}" required>
+<input type="text" id="edit-quartier" value="${itemData.quartier}" required>
+<input type="number" id="edit-loyer" value="${itemData.loyer}" required>
+<input type="number" id="edit-avance" value="${itemData.avance || ''}" placeholder="Nombre d'avance (optionnel)">
+<input type="text" id="edit-frais-supplementaire" value="${itemData.frais_supplementaire || ''}" placeholder="Frais supplémentaires (optionnel)">
+<input type="text" id="edit-media" value="${itemData.media || ''}" placeholder="Lien vidéo YouTube ou image (optionnel)">
+<button type="submit" class="submit-btn">Enregistrer</button>
+<button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
 `;
 
 // Show/hide new construction type input based on selection
 const typeSelect = document.getElementById("edit-type");
 const nouveauTypeInput = document.getElementById("nouveau-type-construction");
 if (typeSelect.value !== "autre") {
-  nouveauTypeInput.style.display = "none";
+nouveauTypeInput.style.display = "none";
 }
 typeSelect.addEventListener("change", () => {
-  nouveauTypeInput.style.display = typeSelect.value === "autre" ? "block" : "none";
+nouveauTypeInput.style.display = typeSelect.value === "autre" ? "block" : "none";
 });
 
 // Handle form submission
 form.onsubmit = (event) => {
-  event.preventDefault();
-  const typeConstruction = typeSelect.value === "autre" ? nouveauTypeInput.value : typeSelect.value;
-  const updatedData = {
-    proprietaire: document.getElementById("edit-proprietaire").value,
-    type: typeConstruction,
-    numero: document.getElementById("edit-numero").value,
-    pieces: parseInt(document.getElementById("edit-pieces").value),
-    ville: document.getElementById("edit-ville").value,
-    commune: document.getElementById("edit-commune").value,
-    quartier: document.getElementById("edit-quartier").value,
-    loyer: parseInt(document.getElementById("edit-loyer").value),
-    avance: parseInt(document.getElementById("edit-avance").value),
-    frais_supplementaire: document.getElementById("edit-frais-supplementaire").value,
-    media: document.getElementById("edit-media").value
-  };
-  updateItem('maisons', itemId, updatedData);
+event.preventDefault();
+const typeConstruction = typeSelect.value === "autre" ? nouveauTypeInput.value : typeSelect.value;
+const updatedData = {
+  proprietaire: document.getElementById("edit-proprietaire").value,
+  type: typeConstruction,
+  numero: document.getElementById("edit-numero").value,
+  pieces: parseInt(document.getElementById("edit-pieces").value),
+  ville: document.getElementById("edit-ville").value,
+  commune: document.getElementById("edit-commune").value,
+  quartier: document.getElementById("edit-quartier").value,
+  loyer: parseInt(document.getElementById("edit-loyer").value),
+  avance: parseInt(document.getElementById("edit-avance").value),
+  frais_supplementaire: document.getElementById("edit-frais-supplementaire").value,
+  media: document.getElementById("edit-media").value
+};
+updateItem('maisons', itemId, updatedData);
 };
 });
 }
@@ -1058,10 +1166,10 @@ form.innerHTML = `
 form.onsubmit = (event) => {
 event.preventDefault();
 const updatedData = {
-  nom: document.getElementById("edit-nom").value,
-  prenom: document.getElementById("edit-prenom").value,
-  contact: document.getElementById("edit-contact").value,
-  email: document.getElementById("edit-email").value
+nom: document.getElementById("edit-nom").value,
+prenom: document.getElementById("edit-prenom").value,
+contact: document.getElementById("edit-contact").value,
+email: document.getElementById("edit-email").value
 };
 updateItem('locataires', itemId, updatedData);
 };
@@ -1083,48 +1191,48 @@ const locataires = locatairesSnapshot.val();
 // Create house select options
 let maisonOptions = '';
 for (const maisonId in maisons) {
-  const maison = maisons[maisonId];
-  if (maison.userId === currentUser.id) {
-    const selected = maisonId === itemData.maison ? 'selected' : '';
-    maisonOptions += `<option value="${maisonId}" ${selected}>${maison.ville}, ${maison.commune}, ${maison.quartier}</option>`;
-  }
+const maison = maisons[maisonId];
+if (maison.userId === currentUser.id) {
+  const selected = maisonId === itemData.maison ? 'selected' : '';
+  maisonOptions += `<option value="${maisonId}" ${selected}>${maison.ville}, ${maison.commune}, ${maison.quartier}</option>`;
+}
 }
 
 // Create tenant select options
 let locataireOptions = '';
 for (const locataireId in locataires) {
-  const locataire = locataires[locataireId];
-  if (locataire.userId === currentUser.id) {
-    const selected = locataireId === itemData.locataire ? 'selected' : '';
-    locataireOptions += `<option value="${locataireId}" ${selected}>${locataire.nom} ${locataire.prenom}</option>`;
-  }
+const locataire = locataires[locataireId];
+if (locataire.userId === currentUser.id) {
+  const selected = locataireId === itemData.locataire ? 'selected' : '';
+  locataireOptions += `<option value="${locataireId}" ${selected}>${locataire.nom} ${locataire.prenom}</option>`;
+}
 }
 
 // Populate the form
 form.innerHTML = `
-  <h3>Modifier la souscription</h3>
-  <select id="edit-maison">${maisonOptions}</select>
-  <select id="edit-locataire">${locataireOptions}</select>
-  <input type="number" id="edit-caution" value="${itemData.caution}" required>
-  <input type="number" id="edit-avance" value="${itemData.avance}" required>
-  <input type="text" id="edit-autres" value="${itemData.autres}" required>
-  <input type="date" id="edit-dateDebut" value="${itemData.dateDebut}" required>
-  <button type="submit" class="submit-btn">Enregistrer</button>
-  <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+<h3>Modifier la souscription</h3>
+<select id="edit-maison">${maisonOptions}</select>
+<select id="edit-locataire">${locataireOptions}</select>
+<input type="number" id="edit-caution" value="${itemData.caution}" required>
+<input type="number" id="edit-avance" value="${itemData.avance}" required>
+<input type="text" id="edit-autres" value="${itemData.autres}" required>
+<input type="date" id="edit-dateDebut" value="${itemData.dateDebut}" required>
+<button type="submit" class="submit-btn">Enregistrer</button>
+<button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
 `;
 
 // Handle form submission
 form.onsubmit = (event) => {
-  event.preventDefault();
-  const updatedData = {
-    maison: document.getElementById("edit-maison").value,
-    locataire: document.getElementById("edit-locataire").value,
-    caution: parseInt(document.getElementById("edit-caution").value),
-    avance: parseInt(document.getElementById("edit-avance").value),
-    autres: document.getElementById("edit-autres").value,
-    dateDebut: document.getElementById("edit-dateDebut").value
-  };
-  updateItem('souscriptions', itemId, updatedData);
+event.preventDefault();
+const updatedData = {
+  maison: document.getElementById("edit-maison").value,
+  locataire: document.getElementById("edit-locataire").value,
+  caution: parseInt(document.getElementById("edit-caution").value),
+  avance: parseInt(document.getElementById("edit-avance").value),
+  autres: document.getElementById("edit-autres").value,
+  dateDebut: document.getElementById("edit-dateDebut").value
+};
+updateItem('souscriptions', itemId, updatedData);
 };
 });
 }
@@ -1140,34 +1248,34 @@ const souscriptions = souscriptionsSnapshot.val();
 // Create subscription select options
 let souscriptionOptions = '';
 for (const souscriptionId in souscriptions) {
-  const souscription = souscriptions[souscriptionId];
-  if (souscription.userId === currentUser.id) {
-    const selected = souscriptionId === itemData.souscription ? 'selected' : '';
-    souscriptionOptions += `<option value="${souscriptionId}" ${selected}>ID: ${souscriptionId}</option>`; // Replace with relevant details
-  }
+const souscription = souscriptions[souscriptionId];
+if (souscription.userId === currentUser.id) {
+  const selected = souscriptionId === itemData.souscription ? 'selected' : '';
+  souscriptionOptions += `<option value="${souscriptionId}" ${selected}>ID: ${souscriptionId}</option>`; // Replace with relevant details
+}
 }
 
 // Populate the form
 form.innerHTML = `
-  <h3>Modifier le recouvrement</h3>
-  <select id="edit-souscription">${souscriptionOptions}</select>
-  <input type="number" id="edit-montant" value="${itemData.montant}" required>
-  <input type="month" id="edit-periode" value="${itemData.periode}" required>
-  <input type="text" id="edit-commentaire" value="${itemData.commentaire}" placeholder="Commentaire (ex: Payé)">
-  <button type="submit" class="submit-btn">Enregistrer</button>
-  <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+<h3>Modifier le recouvrement</h3>
+<select id="edit-souscription">${souscriptionOptions}</select>
+<input type="number" id="edit-montant" value="${itemData.montant}" required>
+<input type="month" id="edit-periode" value="${itemData.periode}" required>
+<input type="text" id="edit-commentaire" value="${itemData.commentaire}" placeholder="Commentaire (ex: Payé)">
+<button type="submit" class="submit-btn">Enregistrer</button>
+<button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
 `;
 
 // Handle form submission
 form.onsubmit = (event) => {
-  event.preventDefault();
-  const updatedData = {
-    souscription: document.getElementById("edit-souscription").value,
-    montant: parseInt(document.getElementById("edit-montant").value),
-    periode: document.getElementById("edit-periode").value,
-    commentaire: document.getElementById("edit-commentaire").value
-  };
-  updateItem('recouvrements', itemId, updatedData);
+event.preventDefault();
+const updatedData = {
+  souscription: document.getElementById("edit-souscription").value,
+  montant: parseInt(document.getElementById("edit-montant").value),
+  periode: document.getElementById("edit-periode").value,
+  commentaire: document.getElementById("edit-commentaire").value
+};
+updateItem('recouvrements', itemId, updatedData);
 };
 });
 }
@@ -1186,34 +1294,34 @@ showLoading();
 const itemRef = ref(database, `${itemType}/${itemId}`);
 update(itemRef, updatedData)
 .then(() => {
-  // Reload the data after editing
-  switch (itemType) {
-    case 'proprietaires':
-      loadProprietaires();
-      break;
-    case 'maisons':
-      loadMaisons();
-      break;
-    case 'locataires':
-      loadLocataires();
-      break;
-    case 'souscriptions':
-      loadSouscriptions();
-      break;
-    case 'recouvrements':
-      loadRecouvrements();
-      break;
-    // Add cases for other item types as needed
-  }
-  alert(`${itemType.charAt(0).toUpperCase() + itemType.slice(1, -1)} modifié avec succès !`);
-  closeEditModal();
+// Reload the data after editing
+switch (itemType) {
+  case 'proprietaires':
+    loadProprietaires();
+    break;
+  case 'maisons':
+    loadMaisons();
+    break;
+  case 'locataires':
+    loadLocataires();
+    break;
+  case 'souscriptions':
+    loadSouscriptions();
+    break;
+  case 'recouvrements':
+    loadRecouvrements();
+    break;
+  // Add cases for other item types as needed
+}
+alert(`${itemType.charAt(0).toUpperCase() + itemType.slice(1, -1)} modifié avec succès !`);
+closeEditModal();
 })
 .catch((error) => {
-  console.error(`Erreur lors de la modification de ${itemType}:`, error);
-  alert(`Erreur lors de la modification de ${itemType}.`);
+console.error(`Erreur lors de la modification de ${itemType}:`, error);
+alert(`Erreur lors de la modification de ${itemType}.`);
 })
 .finally(() => {
-  hideLoading();
+hideLoading();
 });
 }
 
@@ -1233,7 +1341,7 @@ openEditModal(itemId, itemType);
 const itemId = target.dataset.id;
 const confirmationText = `Êtes-vous sûr de vouloir supprimer ce ${itemType.slice(0, -1)} ?`;
 if (confirm(confirmationText)) {
-  deleteItem(itemType, itemId);
+deleteItem(itemType, itemId);
 }
 }
 }
@@ -1308,8 +1416,8 @@ return;
 const amount = subscriptionType === "monthly" ? 1000 : 10000;
 const description =
 subscriptionType === "monthly"
-  ? "Abonnement mensuel à la plateforme de gestion locative"
-  : "Abonnement annuel à la plateforme de gestion locative";
+? "Abonnement mensuel à la plateforme de gestion locative"
+: "Abonnement annuel à la plateforme de gestion locative";
 
 showLoading();
 
@@ -1317,52 +1425,52 @@ showLoading();
 FedaPay.init({
 public_key: publicKey,
 transaction: {
-  amount: amount,
-  description: description,
+amount: amount,
+description: description,
 },
 customer: {
-  email: agenceData.email || "email@default.com", // Use agency email or a default email
+email: agenceData.email || "email@default.com", // Use agency email or a default email
 },
 onComplete: async function (transaction) {
-  if (transaction.reason === FedaPay.CHECKOUT_COMPLETED) {
-    // Calculate the expiration date
-    const startDate = new Date();
-    const endDate = new Date(
-      subscriptionType === "monthly"
-        ? startDate.getTime() + 30 * 24 * 60 * 60 * 1000
-        : startDate.getTime() + 365 * 24 * 60 * 60 * 1000
-    );
+if (transaction.reason === FedaPay.CHECKOUT_COMPLETED) {
+  // Calculate the expiration date
+  const startDate = new Date();
+  const endDate = new Date(
+    subscriptionType === "monthly"
+      ? startDate.getTime() + 30 * 24 * 60 * 60 * 1000
+      : startDate.getTime() + 365 * 24 * 60 * 60 * 1000
+  );
 
-    // Save the subscription in the Firebase database
-    const subscriptionData = {
-      status: "active",
-      type: subscriptionType,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    };
-    await update(
-      ref(database, `users/${currentUser.id}/subscription`),
-      subscriptionData
-    );
+  // Save the subscription in the Firebase database
+  const subscriptionData = {
+    status: "active",
+    type: subscriptionType,
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
+  };
+  await update(
+    ref(database, `users/${currentUser.id}/subscription`),
+    subscriptionData
+  );
 
-    // Update the current user's status
-    if (currentUser) {
-      currentUser.subscription = subscriptionData;
-      // Update localStorage
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    }
-
-    checkUserRoleAndSubscription();
-    alert(
-      `Abonnement ${subscriptionType === "monthly" ? "mensuel" : "annuel"} réussi !`
-    );
-    loadDashboardData();
-  } else if (transaction.reason === FedaPay.DIALOG_DISMISSED) {
-    alert("Paiement annulé.");
-  } else {
-    console.log("Transaction : ", transaction);
-    alert("Erreur lors du paiement. Veuillez réessayer.");
+  // Update the current user's status
+  if (currentUser) {
+    currentUser.subscription = subscriptionData;
+    // Update localStorage
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
   }
+
+  checkUserRoleAndSubscription();
+  alert(
+    `Abonnement ${subscriptionType === "monthly" ? "mensuel" : "annuel"} réussi !`
+  );
+  loadDashboardData();
+} else if (transaction.reason === FedaPay.DIALOG_DISMISSED) {
+  alert("Paiement annulé.");
+} else {
+  console.log("Transaction : ", transaction);
+  alert("Erreur lors du paiement. Veuillez réessayer.");
+}
 },
 }).open();
 
@@ -1380,7 +1488,7 @@ const proprietaires = snapshot.val();
 let proprietairesCount = 0;
 for (const proprietaireId in proprietaires) {
 if (proprietaires[proprietaireId].userId === currentUser.id) {
-  proprietairesCount++;
+proprietairesCount++;
 }
 }
 document.getElementById('dashboard-proprietaires-count').textContent = proprietairesCount;
@@ -1393,7 +1501,7 @@ const locataires = snapshot.val();
 let locatairesCount = 0;
 for (const locataireId in locataires) {
 if (locataires[locataireId].userId === currentUser.id) {
-  locatairesCount++;
+locatairesCount++;
 }
 }
 document.getElementById('dashboard-locataires-count').textContent = locatairesCount;
@@ -1402,460 +1510,460 @@ document.getElementById('dashboard-locataires-count').textContent = locatairesCo
 // Load the number of houses
 const maisonsRef = ref(database, 'maisons');
 onValue(maisonsRef, (snapshot) => {
-  const maisons = snapshot.val();
-  let maisonsCount = 0;
-  for (const maisonId in maisons) {
-    if (maisons[maisonId].userId === currentUser.id) {
-      maisonsCount++;
-    }
+const maisons = snapshot.val();
+let maisonsCount = 0;
+for (const maisonId in maisons) {
+  if (maisons[maisonId].userId === currentUser.id) {
+    maisonsCount++;
   }
-  document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
+}
+document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
 });
-  
-  // Load the number of subscriptions
-  const souscriptionsRef = ref(database, 'souscriptions');
-  onValue(souscriptionsRef, (snapshot) => {
-  const souscriptions = snapshot.val();
-  let souscriptionsCount = 0;
-  for (const souscriptionId in souscriptions) {
-  if (souscriptions[souscriptionId].userId === currentUser.id) {
-    souscriptionsCount++;
-  }
-  }
-  document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
-  });
-  
-  // Load the number of recouvremets
-  const recouvrementsRef = ref(database, 'recouvrements');
-  onValue(recouvrementsRef, (snapshot) => {
-      const recouvrements = snapshot.val();
-      let recouvrementCount = 0;
-      for (const recouvrementId in recouvrements) {
-          if (recouvrements[recouvrementId].userId === currentUser.id) {
-              recouvrementCount++;
-          }
-      }
-      document.getElementById('dashboard-recouvrements-count').textContent = recouvrementCount;
-  });
-  
-  // Load the number of active subscriptions
-  const usersRef = ref(database, 'users');
-  onValue(usersRef, (snapshot) => {
-  const users = snapshot.val();
-  let activeSubscriptionsCount = 0;
-  for (const userId in users) {
-  const user = users[userId];
-  if (user.subscription && user.subscription.status === 'active') {
-    activeSubscriptionsCount++;
-  }
-  }
-  document.getElementById('dashboard-abonnements-count').textContent = activeSubscriptionsCount;
-  });
-  }
-  
-  cancelSubscriptionBtn.addEventListener("click", async() => {
-  if (currentUser && currentUser.subscription) {
-  if (confirm("Êtes-vous sûr de vouloir annuler votre abonnement ?")) {
-    // Update the subscription status in Firebase
-    await update(ref(database, `users/${currentUser.id}/subscription`), { status: 'cancelled' });
-  
-    // Update the current user's status
-    currentUser.subscription.status = 'cancelled';
-    
-    // Update localStorage
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  
-    checkUserRoleAndSubscription();
-  
-    alert('Abonnement annulé.');
-    loadDashboardData(); // Reload data to update subscription status
-  }
-  } else {
-  alert('Vous n\'avez pas d\'abonnement actif à annuler.');
-  }
-  });
-  
-  // Logout function
-  function logout() {
-  localStorage.removeItem('currentUser');
-  localStorage.removeItem('isAuthenticated'); // Remove connection status
-  isAuthenticated = false;
-  currentUser = null;
-  // Redirect to login page or refresh the page
-  window.location.href = 'index.html'; // Redirect to login page
-  }
-  
-  // Add a logout button (example)
-  const logoutButton = document.createElement('button');
-  logoutButton.id = 'logout-btn';
-  logoutButton.textContent = 'Déconnexion';
-  document.body.appendChild(logoutButton); // Add it to the appropriate place in your HTML
-  
-  // Event handler for logout
-  document.getElementById('logout-btn').addEventListener('click', logout);
-  
-  function checkUserAccess(targetSectionId = null) {
-  // Removed subscription check for "agence"
-  if (currentUser && 
-      currentUser.subscription && 
-      (currentUser.subscription.status === 'active') ||
-      targetSectionId === "agence") { // Allow access to "agence" regardless of subscription
-    // Authorized user - do nothing
-    if (targetSectionId) {
-      // Display the target section
-      contentSections.forEach(s => s.classList.remove("active"));
-      document.getElementById(targetSectionId).classList.add("active");
-    }
-  } else {
-    // Unauthorized user - redirect to the subscription section
-    alert("Vous devez avoir un abonnement actif pour accéder à cette section.");
-    contentSections.forEach(s => s.classList.remove("active"));
-    document.getElementById("abonnements").classList.add("active"); // Display the subscription section
-  
-    // Update the status of the "Subscriptions" navigation button
-    tabs.forEach(t => t.classList.remove("active"));
-    const abonnementTab = document.querySelector('[data-target="abonnements"]');
-    if (abonnementTab) {
-      abonnementTab.classList.add("active");
-    }
-  }
-  }
-  
-  // Functions to export tables
-  function exportTableToPDF(tableId, fileName) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const table = document.getElementById(tableId);
-  
-  doc.autoTable({ html: `#${tableId}` });
-  doc.save(`${fileName}.pdf`);
-  }
-  
-  function exportTableToExcel(tableId, fileName) {
-  const table = document.getElementById(tableId);
-  const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet 1" });
-  XLSX.writeFile(wb, `${fileName}.xlsx`);
-  }
-  
-  function printTable(tableId) {
-  const printWindow = window.open('', '_blank');
-  const table = document.getElementById(tableId);
-  const tableClone = table.cloneNode(true);
-  
-  // Remove the "Actions" column for printing
-  const rows = tableClone.querySelectorAll('tr');
-  rows.forEach(row => {
-    const lastCell = row.lastElementChild;
-    if (lastCell) {
-      row.removeChild(lastCell);
-    }
-  });
-  
-  printWindow.document.write('<html><head><title>Impression du tableau</title>');
-  printWindow.document.write('<style>table { border-collapse: collapse; width: 100%; } th, td { text-align: left; padding: 8px; border: 1px solid #ddd; }</style>');
-  printWindow.document.write('</head><body>');
-  printWindow.document.write(tableClone.outerHTML);
-  printWindow.document.write('</body></html>');
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
-  printWindow.close();
-  }
-  
-  // Add event handlers for export and print
-  document.querySelectorAll('.export-pdf-btn').forEach(button => {
-  button.addEventListener('click', () => {
-      const tableId = button.closest('.content-section').querySelector('.data-table').id;
-      const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
-      exportTableToPDF(tableId, `${sectionTitle}`);
-  });
-  });
-  
-  document.querySelectorAll('.export-excel-btn').forEach(button => {
-  button.addEventListener('click', () => {
-      const tableId = button.closest('.content-section').querySelector('.data-table').id;
-      const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
-      exportTableToExcel(tableId, `${sectionTitle}`);
-  });
-  });
-  
-  document.querySelectorAll('.print-btn').forEach(button => {
-  button.addEventListener('click', () => {
-      const tableId = button.closest('.content-section').querySelector('.data-table').id;
-      printTable(tableId);
-    });
-  });
-  
-  // Function to display the modal window with details
-  function showDetailsModal(details) {
-    const modal = document.getElementById("details-modal");
-    const detailsContent = document.getElementById("modal-details-content");
-    detailsContent.innerHTML = details;
-    modal.style.display = "block";
-  }
-  
-  // Event handler to close the modal window
-  document.querySelector(".close-modal").addEventListener("click", () => {
-    document.getElementById("details-modal").style.display = "none";
-  });
-  
-  // Gestion des informations de l'agence
-  const editAgenceBtn = document.getElementById("edit-agence-btn");
-  const editAgenceForm = document.getElementById("edit-agence-form");
-  const cancelAgenceBtn = document.getElementById("cancel-agence-btn");
-  const agenceInfoDiv = document.getElementById("agence-info");
-  
-  editAgenceBtn.addEventListener("click", () => {
-      editAgenceForm.style.display = "block";
-      agenceInfoDiv.style.display = "none";
-      editAgenceBtn.style.display = "none";
-  });
-  
-  cancelAgenceBtn.addEventListener("click", () => {
-      editAgenceForm.style.display = "none";
-      agenceInfoDiv.style.display = "block";
-      editAgenceBtn.style.display = "block";
-  });
-  
-  editAgenceForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const agenceNom = document.getElementById("agence-nom").value;
-      const agencePrenom = document.getElementById("agence-prenom").value;
-      const agenceTelephone = document.getElementById("agence-telephone").value;
-      const agenceEmail = document.getElementById("agence-email").value;
-      const agenceAdresse = document.getElementById("agence-adresse").value;
-      const agenceApiKey = document.getElementById("agence-api-key").value;
-  
-      if (currentUser) {
-          const agenceData = {
-              nom: agenceNom,
-              prenom: agencePrenom,
-              telephone: agenceTelephone,
-              email: agenceEmail,
-              adresse: agenceAdresse,
-              apiKey: agenceApiKey
-          };
-  
-          try {
-              await update(ref(database, `users/${currentUser.id}/agence`), agenceData);
-              alert("Informations de l'agence mises à jour avec succès !");
-              loadAgenceData(); // Recharger les données de l'agence
-              editAgenceForm.style.display = "none";
-              agenceInfoDiv.style.display = "block";
-              editAgenceBtn.style.display = "block";
-          } catch (error) {
-              console.error("Erreur lors de la mise à jour des informations de l'agence :", error);
-              alert("Erreur lors de la mise à jour des informations de l'agence.");
-          }
-      } else {
-          alert("Utilisateur non connecté.");
-      }
-  });
-  
-  function loadAgenceData() {
-      if (currentUser) {
-          const agenceRef = ref(database, `users/${currentUser.id}/agence`);
-          get(agenceRef).then((snapshot) => {
-              if (snapshot.exists()) {
-                  const agenceData = snapshot.val();
-                  agenceInfoDiv.innerHTML = `
-                      <p><strong>Nom:</strong> ${agenceData.nom}</p>
-                      <p><strong>Prénom:</strong> ${agenceData.prenom}</p>
-                      <p><strong>Téléphone:</strong> ${agenceData.telephone}</p>
-                      <p><strong>Email:</strong> ${agenceData.email}</p>
-                      <p><strong>Adresse:</strong> ${agenceData.adresse}</p>
-                      <p><strong>Clé API publique FedaPay:</strong> ${agenceData.apiKey}</p>
-                  `;
-                  // Pré-remplir le formulaire avec les données existantes
-                  document.getElementById("agence-nom").value = agenceData.nom || '';
-                  document.getElementById("agence-prenom").value = agenceData.prenom || '';
-                  document.getElementById("agence-telephone").value = agenceData.telephone || '';
-                  document.getElementById("agence-email").value = agenceData.email || '';
-                  document.getElementById("agence-adresse").value = agenceData.adresse || '';
-                  document.getElementById("agence-api-key").value = agenceData.apiKey || '';
-              } else {
-                  agenceInfoDiv.innerHTML = "<p>Aucune information d'agence disponible.</p>";
-              }
-          }).catch((error) => {
-              console.error("Erreur lors du chargement des informations de l'agence :", error);
-              agenceInfoDiv.innerHTML = "<p>Erreur lors du chargement des informations de l'agence.</p>";
-          });
-      }
-  }
-  
-  // Gestion des options GPS pour le formulaire d'ajout de maison
-  const manualGpsOption = document.getElementById("manual-gps");
-  const autoGpsOption = document.getElementById("auto-gps");
-  const manualGpsFields = document.getElementById("manual-gps-fields");
-  const autoGpsMapDiv = document.getElementById("auto-gps-map");
-  
-  manualGpsOption.addEventListener("change", () => {
-  manualGpsFields.style.display = "block";
-  autoGpsMapDiv.style.display = "none";
-  });
-  
-  autoGpsOption.addEventListener("change", () => {
-  manualGpsFields.style.display = "none";
-  autoGpsMapDiv.style.display = "block";
-  initMap();
-  });
-  
-  let map, marker;
-  
-  function initMap() {
-  if (!map) {
-    map = L.map('auto-gps-map');
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
-  
-    // Get user's current location
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => { // Success callback
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-  
-                map.setView([lat, lng], 13); // Center map on user's location
-  
-                if (!marker) {
-                    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
-                } else {
-                    marker.setLatLng([lat, lng]);
-                }
-                
-                document.getElementById("maison-latitude").value = lat;
-                document.getElementById("maison-longitude").value = lng;
-  
-                marker.on('dragend', function (event) {
-                    const position = marker.getLatLng();
-                    document.getElementById("maison-latitude").value = position.lat;
-                    document.getElementById("maison-longitude").value = position.lng;
-                });
-  
-            },
-            (error) => { // Error callback
-                console.error("Erreur de géolocalisation:", error);
-                alert("Impossible d'obtenir votre position actuelle. Veuillez autoriser la géolocalisation ou entrer les coordonnées manuellement.");
-                map.setView([51.505, -0.09], 13); // Set to a default location
-  
-                if (!marker) {
-                    marker = L.marker([51.505, -0.09], { draggable: true }).addTo(map);
-                } else {
-                    marker.setLatLng([51.505, -0.09]);
-                }
-            }
-        );
-    } else {
-        console.error("La géolocalisation n'est pas supportée par votre navigateur.");
-        alert("Votre navigateur ne supporte pas la géolocalisation. Veuillez entrer les coordonnées manuellement.");
-        map.setView([51.505, -0.09], 13); // Set to a default location
-        if (!marker) {
-            marker = L.marker([51.505, -0.09], { draggable: true }).addTo(map);
-        } else {
-            marker.setLatLng([51.505, -0.09]);
+
+// Load the number of subscriptions
+const souscriptionsRef = ref(database, 'souscriptions');
+onValue(souscriptionsRef, (snapshot) => {
+const souscriptions = snapshot.val();
+let souscriptionsCount = 0;
+for (const souscriptionId in souscriptions) {
+if (souscriptions[souscriptionId].userId === currentUser.id) {
+  souscriptionsCount++;
+}
+}
+document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
+});
+
+// Load the number of recouvremets
+const recouvrementsRef = ref(database, 'recouvrements');
+onValue(recouvrementsRef, (snapshot) => {
+    const recouvrements = snapshot.val();
+    let recouvrementCount = 0;
+    for (const recouvrementId in recouvrements) {
+        if (recouvrements[recouvrementId].userId === currentUser.id) {
+            recouvrementCount++;
         }
     }
-     map.on('click', function (event) {
-        marker.setLatLng(event.latlng);
-        document.getElementById("maison-latitude").value = event.latlng.lat;
-        document.getElementById("maison-longitude").value = event.latlng.lng;
-    });
+    document.getElementById('dashboard-recouvrements-count').textContent = recouvrementCount;
+});
+
+// Load the number of active subscriptions
+const usersRef = ref(database, 'users');
+onValue(usersRef, (snapshot) => {
+const users = snapshot.val();
+let activeSubscriptionsCount = 0;
+for (const userId in users) {
+const user = users[userId];
+if (user.subscription && user.subscription.status === 'active') {
+  activeSubscriptionsCount++;
+}
+}
+document.getElementById('dashboard-abonnements-count').textContent = activeSubscriptionsCount;
+});
+}
+
+cancelSubscriptionBtn.addEventListener("click", async() => {
+if (currentUser && currentUser.subscription) {
+if (confirm("Êtes-vous sûr de vouloir annuler votre abonnement ?")) {
+  // Update the subscription status in Firebase
+  await update(ref(database, `users/${currentUser.id}/subscription`), { status: 'cancelled' });
+
+  // Update the current user's status
+  currentUser.subscription.status = 'cancelled';
+  
+  // Update localStorage
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+  checkUserRoleAndSubscription();
+
+  alert('Abonnement annulé.');
+  loadDashboardData(); // Reload data to update subscription status
+}
+} else {
+alert('Vous n\'avez pas d\'abonnement actif à annuler.');
+}
+});
+
+// Logout function
+function logout() {
+localStorage.removeItem('currentUser');
+localStorage.removeItem('isAuthenticated'); // Remove connection status
+isAuthenticated = false;
+currentUser = null;
+// Redirect to login page or refresh the page
+window.location.href = 'index.html'; // Redirect to login page
+}
+
+// Add a logout button (example)
+const logoutButton = document.createElement('button');
+logoutButton.id = 'logout-btn';
+logoutButton.textContent = 'Déconnexion';
+document.body.appendChild(logoutButton); // Add it to the appropriate place in your HTML
+
+// Event handler for logout
+document.getElementById('logout-btn').addEventListener('click', logout);
+
+function checkUserAccess(targetSectionId = null) {
+// Removed subscription check for "agence"
+if (currentUser && 
+    currentUser.subscription && 
+    (currentUser.subscription.status === 'active') ||
+    targetSectionId === "agence") { // Allow access to "agence" regardless of subscription
+  // Authorized user - do nothing
+  if (targetSectionId) {
+    // Display the target section
+    contentSections.forEach(s => s.classList.remove("active"));
+    document.getElementById(targetSectionId).classList.add("active");
   }
+} else {
+  // Unauthorized user - redirect to the subscription section
+  alert("Vous devez avoir un abonnement actif pour accéder à cette section.");
+  contentSections.forEach(s => s.classList.remove("active"));
+  document.getElementById("abonnements").classList.add("active"); // Display the subscription section
+
+  // Update the status of the "Subscriptions" navigation button
+  tabs.forEach(t => t.classList.remove("active"));
+  const abonnementTab = document.querySelector('[data-target="abonnements"]');
+  if (abonnementTab) {
+    abonnementTab.classList.add("active");
   }
-  
-  // Gestion du bouton flottant pour afficher les sections
-  const fabButton = document.querySelector(".fab-button");
-  const fabOptions = document.querySelector(".fab-options");
-  const contentSections = document.querySelectorAll(".content-section");
-  const navLinks = document.querySelectorAll(".fab-option");
-  
-  // Animation pour l'icône du menu (FAB)
-  let isAnimating = false;
-  let currentIconIndex = 0;
-  const icons = ["fas fa-tachometer-alt", "fas fa-user-tie", "fas fa-home", "fas fa-users", "fas fa-file-contract", "fas fa-hand-holding-usd", "fas fa-credit-card", "fas fa-building" ]; // Add more icons if needed
-  
-  fabButton.addEventListener("click", () => {
-  fabOptions.classList.toggle("show");
-  // Reset to default icon when closing
-  if (!fabOptions.classList.contains("show")) {
-    currentIconIndex = 0; // Set to the first icon index
-    fabButton.querySelector("i").className = icons[currentIconIndex];
+}
+}
+
+// Functions to export tables
+function exportTableToPDF(tableId, fileName) {
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+const table = document.getElementById(tableId);
+
+doc.autoTable({ html: `#${tableId}` });
+doc.save(`${fileName}.pdf`);
+}
+
+function exportTableToExcel(tableId, fileName) {
+const table = document.getElementById(tableId);
+const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet 1" });
+XLSX.writeFile(wb, `${fileName}.xlsx`);
+}
+
+function printTable(tableId) {
+const printWindow = window.open('', '_blank');
+const table = document.getElementById(tableId);
+const tableClone = table.cloneNode(true);
+
+// Remove the "Actions" column for printing
+const rows = tableClone.querySelectorAll('tr');
+rows.forEach(row => {
+  const lastCell = row.lastElementChild;
+  if (lastCell) {
+    row.removeChild(lastCell);
   }
+});
+
+printWindow.document.write('<html><head><title>Impression du tableau</title>');
+printWindow.document.write('<style>table { border-collapse: collapse; width: 100%; } th, td { text-align: left; padding: 8px; border: 1px solid #ddd; }</style>');
+printWindow.document.write('</head><body>');
+printWindow.document.write(tableClone.outerHTML);
+printWindow.document.write('</body></html>');
+printWindow.document.close();
+printWindow.focus();
+printWindow.print();
+printWindow.close();
+}
+
+// Add event handlers for export and print
+document.querySelectorAll('.export-pdf-btn').forEach(button => {
+button.addEventListener('click', () => {
+    const tableId = button.closest('.content-section').querySelector('.data-table').id;
+    const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
+    exportTableToPDF(tableId, `${sectionTitle}`);
+});
+});
+
+document.querySelectorAll('.export-excel-btn').forEach(button => {
+button.addEventListener('click', () => {
+    const tableId = button.closest('.content-section').querySelector('.data-table').id;
+    const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
+    exportTableToExcel(tableId, `${sectionTitle}`);
+});
+});
+
+document.querySelectorAll('.print-btn').forEach(button => {
+button.addEventListener('click', () => {
+    const tableId = button.closest('.content-section').querySelector('.data-table').id;
+    printTable(tableId);
   });
-  
-  function animateFABIcon() {
-  if (!isAnimating && !fabOptions.classList.contains("show")) { // Only animate when menu is closed
-    isAnimating = true;
-    fabButton.querySelector("i").className = icons[currentIconIndex];
-  
-    currentIconIndex = (currentIconIndex + 1) % icons.length; // Move to the next icon (loop back to the beginning)
-  
-    setTimeout(() => {
-        isAnimating = false;
-    }, 500); // Adjust the animation duration as needed
-  }
-  }
-  
-  // Start the FAB icon animation loop (e.g., every 2 seconds)
-  setInterval(animateFABIcon, 2000);
-  
-  fabButton.addEventListener("click", () => {
-  fabOptions.classList.toggle("show");
-  });
-  
-  navLinks.forEach((link) => {
-  link.addEventListener("click", (event) => {
-  event.preventDefault();
-  const targetSectionId = link.dataset.section;
-  contentSections.forEach((section) => {
-    section.classList.remove("active");
-  });
-  
-  const targetSection = document.getElementById(targetSectionId);
-  if (targetSection) {
-    targetSection.classList.add("active");
-    fabOptions.classList.remove("show");
-  }
-  // Check user access based on the clicked section
-  checkUserAccess(targetSectionId);
-  });
-  });
-  
-  // Rendre les éléments du tableau de bord cliquables
-  const dashboardItems = document.querySelectorAll('.dashboard-item');
-  
-  dashboardItems.forEach(item => {
-      item.addEventListener('click', () => {
-          const targetSectionId = item.dataset.section;
-          contentSections.forEach(section => {
-              section.classList.remove('active');
-          });
-  
-          const targetSection = document.getElementById(targetSectionId);
-          if (targetSection) {
-              targetSection.classList.add('active');
-          }
-      });
-  });
-  
-  // Data loading initialization
-  function initializeDataLoad() {
-  if (isAuthenticated) {
-    checkUserRoleAndSubscription();
-    setInterval(checkAndUpdateSubscriptionStatus, 60 * 60 * 1000);
-    loadDashboardData();
-    loadProprietaires();
-    loadMaisons();
-    loadLocataires();
-    loadSouscriptions();
-    loadRecouvrements();
-    loadAgenceData();
+});
+
+// Function to display the modal window with details
+function showDetailsModal(details) {
+  const modal = document.getElementById("details-modal");
+  const detailsContent = document.getElementById("modal-details-content");
+  detailsContent.innerHTML = details;
+  modal.style.display = "block";
+}
+
+// Event handler to close the modal window
+document.querySelector(".close-modal").addEventListener("click", () => {
+  document.getElementById("details-modal").style.display = "none";
+});
+
+// Gestion des informations de l'agence
+const editAgenceBtn = document.getElementById("edit-agence-btn");
+const editAgenceForm = document.getElementById("edit-agence-form");
+const cancelAgenceBtn = document.getElementById("cancel-agence-btn");
+const agenceInfoDiv = document.getElementById("agence-info");
+
+editAgenceBtn.addEventListener("click", () => {
+    editAgenceForm.style.display = "block";
+    agenceInfoDiv.style.display = "none";
+    editAgenceBtn.style.display = "none";
+});
+
+cancelAgenceBtn.addEventListener("click", () => {
+    editAgenceForm.style.display = "none";
+    agenceInfoDiv.style.display = "block";
+    editAgenceBtn.style.display = "block";
+});
+
+editAgenceForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const agenceNom = document.getElementById("agence-nom").value;
+    const agencePrenom = document.getElementById("agence-prenom").value;
+    const agenceTelephone = document.getElementById("agence-telephone").value;
+    const agenceEmail = document.getElementById("agence-email").value;
+    const agenceAdresse = document.getElementById("agence-adresse").value;
+    const agenceApiKey = document.getElementById("agence-api-key").value;
+
     if (currentUser) {
-        loadConstructionTypesForUser(currentUser.id);
+        const agenceData = {
+            nom: agenceNom,
+            prenom: agencePrenom,
+            telephone: agenceTelephone,
+            email: agenceEmail,
+            adresse: agenceAdresse,
+            apiKey: agenceApiKey
+        };
+
+        try {
+            await update(ref(database, `users/${currentUser.id}/agence`), agenceData);
+            alert("Informations de l'agence mises à jour avec succès !");
+            loadAgenceData(); // Recharger les données de l'agence
+            editAgenceForm.style.display = "none";
+            agenceInfoDiv.style.display = "block";
+            editAgenceBtn.style.display = "block";
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour des informations de l'agence :", error);
+            alert("Erreur lors de la mise à jour des informations de l'agence.");
+        }
+    } else {
+        alert("Utilisateur non connecté.");
+    }
+});
+
+function loadAgenceData() {
+    if (currentUser) {
+        const agenceRef = ref(database, `users/${currentUser.id}/agence`);
+        get(agenceRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const agenceData = snapshot.val();
+                agenceInfoDiv.innerHTML = `
+                    <p><strong>Nom:</strong> ${agenceData.nom}</p>
+                    <p><strong>Prénom:</strong> ${agenceData.prenom}</p>
+                    <p><strong>Téléphone:</strong> ${agenceData.telephone}</p>
+                    <p><strong>Email:</strong> ${agenceData.email}</p>
+                    <p><strong>Adresse:</strong> ${agenceData.adresse}</p>
+                    <p><strong>Clé API publique FedaPay:</strong> ${agenceData.apiKey}</p>
+                `;
+                // Pré-remplir le formulaire avec les données existantes
+                document.getElementById("agence-nom").value = agenceData.nom || '';
+                document.getElementById("agence-prenom").value = agenceData.prenom || '';
+                document.getElementById("agence-telephone").value = agenceData.telephone || '';
+                document.getElementById("agence-email").value = agenceData.email || '';
+                document.getElementById("agence-adresse").value = agenceData.adresse || '';
+                document.getElementById("agence-api-key").value = agenceData.apiKey || '';
+            } else {
+                agenceInfoDiv.innerHTML = "<p>Aucune information d'agence disponible.</p>";
+            }
+        }).catch((error) => {
+            console.error("Erreur lors du chargement des informations de l'agence :", error);
+            agenceInfoDiv.innerHTML = "<p>Erreur lors du chargement des informations de l'agence.</p>";
+        });
+    }
+}
+
+// Gestion des options GPS pour le formulaire d'ajout de maison
+const manualGpsOption = document.getElementById("manual-gps");
+const autoGpsOption = document.getElementById("auto-gps");
+const manualGpsFields = document.getElementById("manual-gps-fields");
+const autoGpsMapDiv = document.getElementById("auto-gps-map");
+
+manualGpsOption.addEventListener("change", () => {
+manualGpsFields.style.display = "block";
+autoGpsMapDiv.style.display = "none";
+});
+
+autoGpsOption.addEventListener("change", () => {
+manualGpsFields.style.display = "none";
+autoGpsMapDiv.style.display = "block";
+initMap();
+});
+
+let map, marker;
+
+function initMap() {
+if (!map) {
+  map = L.map('auto-gps-map');
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+  }).addTo(map);
+
+  // Get user's current location
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+          (position) => { // Success callback
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+
+              map.setView([lat, lng], 13); // Center map on user's location
+
+              if (!marker) {
+                  marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+              } else {
+                  marker.setLatLng([lat, lng]);
+              }
+              
+              document.getElementById("maison-latitude").value = lat;
+              document.getElementById("maison-longitude").value = lng;
+
+              marker.on('dragend', function (event) {
+                  const position = marker.getLatLng();
+                  document.getElementById("maison-latitude").value = position.lat;
+                  document.getElementById("maison-longitude").value = position.lng;
+              });
+
+          },
+          (error) => { // Error callback
+              console.error("Erreur de géolocalisation:", error);
+              alert("Impossible d'obtenir votre position actuelle. Veuillez autoriser la géolocalisation ou entrer les coordonnées manuellement.");
+              map.setView([51.505, -0.09], 13); // Set to a default location
+
+              if (!marker) {
+                  marker = L.marker([51.505, -0.09], { draggable: true }).addTo(map);
+              } else {
+                  marker.setLatLng([51.505, -0.09]);
+              }
+          }
+      );
+  } else {
+      console.error("La géolocalisation n'est pas supportée par votre navigateur.");
+      alert("Votre navigateur ne supporte pas la géolocalisation. Veuillez entrer les coordonnées manuellement.");
+      map.setView([51.505, -0.09], 13); // Set to a default location
+      if (!marker) {
+          marker = L.marker([51.505, -0.09], { draggable: true }).addTo(map);
+      } else {
+          marker.setLatLng([51.505, -0.09]);
       }
   }
-  }
-  
-  // Call initializeDataLoad on page load
-  initializeDataLoad();
+   map.on('click', function (event) {
+      marker.setLatLng(event.latlng);
+      document.getElementById("maison-latitude").value = event.latlng.lat;
+      document.getElementById("maison-longitude").value = event.latlng.lng;
+  });
+}
+}
+
+// Gestion du bouton flottant pour afficher les sections
+const fabButton = document.querySelector(".fab-button");
+const fabOptions = document.querySelector(".fab-options");
+const contentSections = document.querySelectorAll(".content-section");
+const navLinks = document.querySelectorAll(".fab-option");
+
+// Animation pour l'icône du menu (FAB)
+let isAnimating = false;
+let currentIconIndex = 0;
+const icons = ["fas fa-tachometer-alt", "fas fa-user-tie", "fas fa-home", "fas fa-users", "fas fa-file-contract", "fas fa-hand-holding-usd", "fas fa-credit-card", "fas fa-building" ]; // Add more icons if needed
+
+fabButton.addEventListener("click", () => {
+fabOptions.classList.toggle("show");
+// Reset to default icon when closing
+if (!fabOptions.classList.contains("show")) {
+  currentIconIndex = 0; // Set to the first icon index
+  fabButton.querySelector("i").className = icons[currentIconIndex];
+}
+});
+
+function animateFABIcon() {
+if (!isAnimating && !fabOptions.classList.contains("show")) { // Only animate when menu is closed
+  isAnimating = true;
+  fabButton.querySelector("i").className = icons[currentIconIndex];
+
+  currentIconIndex = (currentIconIndex + 1) % icons.length; // Move to the next icon (loop back to the beginning)
+
+  setTimeout(() => {
+      isAnimating = false;
+  }, 500); // Adjust the animation duration as needed
+}
+}
+
+// Start the FAB icon animation loop (e.g., every 2 seconds)
+setInterval(animateFABIcon, 2000);
+
+fabButton.addEventListener("click", () => {
+fabOptions.classList.toggle("show");
+});
+
+navLinks.forEach((link) => {
+link.addEventListener("click", (event) => {
+event.preventDefault();
+const targetSectionId = link.dataset.section;
+contentSections.forEach((section) => {
+  section.classList.remove("active");
+});
+
+const targetSection = document.getElementById(targetSectionId);
+if (targetSection) {
+  targetSection.classList.add("active");
+  fabOptions.classList.remove("show");
+}
+// Check user access based on the clicked section
+checkUserAccess(targetSectionId);
+});
+});
+
+// Rendre les éléments du tableau de bord cliquables
+const dashboardItems = document.querySelectorAll('.dashboard-item');
+
+dashboardItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const targetSectionId = item.dataset.section;
+        contentSections.forEach(section => {
+            section.classList.remove('active');
+        });
+
+        const targetSection = document.getElementById(targetSectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+    });
+});
+
+// Data loading initialization
+function initializeDataLoad() {
+if (isAuthenticated) {
+  checkUserRoleAndSubscription();
+  setInterval(checkAndUpdateSubscriptionStatus, 60 * 60 * 1000);
+  loadDashboardData();
+  loadProprietaires();
+  loadMaisons();
+  loadLocataires();
+  loadSouscriptions();
+  loadRecouvrements();
+  loadAgenceData();
+  if (currentUser) {
+      loadConstructionTypesForUser(currentUser.id);
+    }
+}
+}
+
+// Call initializeDataLoad on page load
+initializeDataLoad();
