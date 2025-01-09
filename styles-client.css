@@ -642,3 +642,39 @@ footer {
     font-size: 16px;
     font-weight: bold;
 }
+
+/* Styles pour le placeholder de chargement */
+.loading-placeholder {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 10px;
+    margin-bottom: 20px; /* Espacement entre les placeholders */
+    overflow: hidden;
+}
+
+.loading-placeholder .shine-line {
+    height: 200px; /* Hauteur du placeholder, ajustez selon vos besoins */
+    width: 100%;
+    background-image: linear-gradient(to right, #eee 0%, #ddd 50%, #eee 100%);
+    animation: placeholderShimmer 2s linear infinite;
+}
+
+.loading-placeholder .text-line {
+    height: 10px;
+    margin-top: 10px;
+    background-color: #ddd;
+    width: 80%; /* Ajustez la largeur des lignes de texte */
+}
+
+.loading-placeholder .text-line:nth-child(3) {
+    width: 40%; /* Une ligne plus courte pour simuler une fin de paragraphe */
+}
+
+@keyframes placeholderShimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
