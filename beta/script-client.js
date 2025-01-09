@@ -246,17 +246,34 @@ function loadConstructionTypes() {
     });
 }
 
-// Load Houses from Firebase
-function loadHouses() {
-    showLoading();
+// Load Houses from Firebase (using async/await)
+async function loadHouses() {
+    showLoading("Chargement des types de construction...");
+    try {
+        await loadConstructionTypes();
+    } catch (error) {
+        console.error("Erreur lors du chargement des types de construction:", error);
+        hideLoading();
+        return;
+    }
+
+    updateLoadingMessage("Chargement des maisons...");
     const housesRef = ref(database, 'maisons');
-    onValue(housesRef, (snapshot) => {
-        housesData = snapshot.val();
-        // Apply filters and display houses
-        applyFiltersAndDisplayHouses();
-    }, {
-        onlyOnce: true
-    });
+
+    try {
+        const snapshot = await get(housesRef);
+        if (snapshot.exists()) {
+            housesData = snapshot.val();
+            applyFiltersAndDisplayHouses();
+        } else {
+            console.log("Aucune donnée disponible");
+            displayHouses({}); // Affiche une liste vide s'il n'y a pas de données
+        }
+    } catch (error) {
+        console.error("Erreur lors du chargement des maisons:", error);
+    } finally {
+        hideLoading();
+    }
 }
 
 // Function to apply filters and display houses
@@ -280,90 +297,120 @@ function getRecentHouses(houses, count) {
     return recentHouses;
 }
 
-// Display Houses
 async function displayHouses(houses) {
-  housesContainer.innerHTML = ""; // Clear the container
-  for (const houseId in houses) {
-      const house = houses[houseId];
-      // Check if the house has been purchased
-      const isPurchased = house.purchasedBy && house.purchasedBy.length > 0;
+    housesContainer.innerHTML = "";
+    const totalHouses = Object.keys(houses).length;
+    const imagePromises = [];
 
-      if (house) {
-          try {
-              const proprietaireSnapshot = await get(ref(database, `proprietaires/${house.proprietaire}`));
-              const proprietaire = proprietaireSnapshot.val();
+    for (const houseId in houses) {
+        const house = houses[houseId];
 
-              const userSnapshot = await get(ref(database, `users/${house.userId}`));
-              const user = userSnapshot.val();
-              const agence = user.agence;
+        // Vérifie si la maison est déjà achetée
+        const isPurchased = house.purchasedBy && house.purchasedBy.length > 0;
 
-              const houseDiv = document.createElement("div");
-              houseDiv.className = "house-card";
+        // Affiche la maison même si certaines données essentielles sont manquantes
+        try {
+            const houseDiv = document.createElement("div");
+            houseDiv.className = "house-card";
 
-              // Embed YouTube video using iframe
-              let mediaElement = '';
-              if (house.media) {
-                  if (house.media.includes("youtube")) {
-                      const videoId = getYoutubeVideoId(house.media);
-                      mediaElement = `<iframe width="100%" height="200px" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                  } else {
-                      mediaElement = `<img src="${house.media}" alt="Image de la maison">`;
-                  }
-              }
+            // Construit le contenu HTML de la carte de la maison
+            houseDiv.innerHTML = `
+                <h3>${house.type || 'Type inconnu'} à louer</h3>
+                <p class="location"><strong>Localisation:</strong> ${house.ville || 'Ville inconnue'}, ${house.commune || 'Commune inconnue'}, ${house.quartier || 'Quartier inconnu'}</p>
+                <p class="price"><strong>Loyer:</strong> ${house.loyer ? house.loyer + ' FCFA' : 'Loyer inconnu'}</p>
+                <button class="rent-button" data-house-id="${houseId}" ${isPurchased ? 'disabled' : ''}>
+                    ${isPurchased ? 'Indisponible' : 'LOUER'}
+                </button>
+            `;
+            housesContainer.appendChild(houseDiv);
 
-              houseDiv.innerHTML = `
-                  <h3>${house.type} à louer</h3>
-                  ${mediaElement}
-                  <p class="location"><strong>Localisation:</strong> ${house.ville}, ${house.commune}, ${house.quartier}</p>
-                  <p class="price"><strong>Loyer:</strong> ${house.loyer} FCFA</p>
-                  <div class="more-info">Plus d'infos</div>
-                  <div class="hidden-info">
-                      <p><strong>Agence:</strong> ${agence ? agence.nom + ' ' + agence.prenom : "Inconnue"}</p>
-                      <p><strong>Contact Agence:</strong> ${agence ? agence.telephone : "Inconnu"}</p>
-                      <p><strong>Propriétaire:</strong> ${proprietaire ? proprietaire.nom + " " + proprietaire.prenom : "Inconnu"}</p>
-                      <p><strong>Nombre de pièces:</strong> ${house.pieces}</p>
-                  </div>
-                  <button class="rent-button" data-house-id="${houseId}" ${isPurchased ? 'disabled' : ''}>
-                      ${isPurchased ? 'Indisponible' : 'LOUER'}
-                  </button>
-                `;
-              housesContainer.appendChild(houseDiv);
+            // Gestion du chargement de l'image (si présente et n'est pas une URL YouTube)
+            if (house.media && !house.media.includes("youtube")) {
+                const img = new Image();
+                const imageLoadPromise = new Promise((resolve, reject) => {
+                    img.onload = () => {
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                resolve();
+                            });
+                        });
+                    };
+                    img.onerror = () => {
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                reject(new Error(`Erreur de chargement de l'image pour la maison ${houseId}`));
+                            });
+                        });
+                    };
+                    img.src = house.media;
+                });
+                imagePromises.push(imageLoadPromise);
+            }
 
-              const moreInfoButton = houseDiv.querySelector(".more-info");
-              const hiddenInfo = houseDiv.querySelector(".hidden-info");
-              moreInfoButton.addEventListener("click", () => {
-                  hiddenInfo.style.display = hiddenInfo.style.display === "none" ? "block" : "none";
-              });
+            // Écouteur d'événement pour le bouton "LOUER"
+            const rentButton = houseDiv.querySelector(".rent-button");
+            rentButton.addEventListener("click", async () => {
+                // Récupère les détails supplémentaires uniquement si l'utilisateur clique sur "LOUER"
+                try {
+                    const proprietaireSnapshot = await get(ref(database, `proprietaires/${house.proprietaire}`));
+                    const proprietaire = proprietaireSnapshot.val();
 
-              const rentButton = houseDiv.querySelector(".rent-button");
-              rentButton.addEventListener("click", () => {
-                  selectedHouse = { id: houseId, ...house, userId: house.userId };
-                  if (currentUser) {
-                      // User is logged in
-                      const housePaid = paymentStatus[houseId];
-                      if (housePaid) {
-                          // House has been paid for, show details directly
-                          showDetailsModal(selectedHouse);
-                      } else {
-                          // House not paid for, show payment modal
-                          showPaymentModal(selectedHouse);
-                      }
-                  } else {
-                      // User is not logged in, prompt them to log in or register
-                      alert("Veuillez vous connecter pour louer une maison.");
-                      showAuthModal();
-                  }
-              });
-          } catch (error) {
-              console.error("Error fetching details:", error);
-          } finally {
-              hideLoading();
-          }
-      } else {
-          console.log("House data is null for ID:", houseId);
-          hideLoading();
-      }
-  }
+                    const userSnapshot = await get(ref(database, `users/${house.userId}`));
+                    const user = userSnapshot.val();
+                    const agence = user.agence;
+
+                    selectedHouse = { id: houseId, ...house, userId: house.userId };
+
+                    let additionalDetails = '';
+                    if (agence) {
+                        additionalDetails += `<p><strong>Agence:</strong> ${agence.nom} ${agence.prenom}</p>`;
+                        additionalDetails += `<p><strong>Contact Agence:</strong> ${agence.telephone}</p>`;
+                    }
+                    if (proprietaire) {
+                        additionalDetails += `<p><strong>Propriétaire:</strong> ${proprietaire.nom} ${proprietaire.prenom}</p>`;
+                    }
+                    additionalDetails += `<p><strong>Nombre de pièces:</strong> ${house.pieces}</p>`;
+
+                    // Ajoute un élément média (vidéo ou image) si disponible
+                    if (house.media) {
+                        if (house.media.includes("youtube")) {
+                            const videoId = getYoutubeVideoId(house.media);
+                            additionalDetails += `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                        } else {
+                            additionalDetails += `<img src="${house.media}" alt="Image de la maison" style="width: 100%; height: auto;">`;
+                        }
+                    }
+
+                    // Affiche la modale appropriée en fonction de l'état de connexion et du statut de paiement
+                    if (currentUser) {
+                        const housePaid = paymentStatus[houseId];
+                        if (housePaid) {
+                            showDetailsModal(selectedHouse);
+                        } else {
+                            showPaymentModal(selectedHouse, additionalDetails);
+                        }
+                    } else {
+                        alert("Veuillez vous connecter pour louer une maison.");
+                        showAuthModal();
+                    }
+                } catch (error) {
+                    console.error("Erreur lors du chargement des détails supplémentaires:", error);
+                    // Gérer l'affichage d'un message d'erreur ou d'une modale d'erreur ici
+                }
+            });
+        } catch (error) {
+            console.error("Erreur lors de la création de la carte de la maison:", error);
+        }
+    }
+
+    // Attend que toutes les images soient chargées
+    try {
+        await Promise.all(imagePromises);
+    } catch (error) {
+        console.error("Erreur lors du chargement des images:", error);
+    } finally {
+        hideLoading();
+    }
 }
 
 // Extract YouTube video ID from URL (helper function for embedding)
@@ -413,7 +460,7 @@ function filterHouses() {
 }
 
 // Show Payment Modal
-function showPaymentModal(house) {
+function showPaymentModal(house, additionalDetails = '') {
     let totalPrice = house.loyer; // Start with the base rent
 
     if (house.avance && house.avance > 0) {
@@ -423,12 +470,14 @@ function showPaymentModal(house) {
     if (house.frais_supplementaire) {
         totalPrice += parseInt(house.frais_supplementaire); // Assuming frais_supplementaire is a string representing a number
     }
+
     paymentDetails.innerHTML = `
         <p><strong>Maison:</strong> ${house.ville}, ${house.commune}, ${house.quartier}</p>
         <p><strong>Loyer:</strong> ${house.loyer} FCFA</p>
         ${house.avance > 0 ? `<p><strong>Avance:</strong> ${house.avance} mois</p>` : ''}
         ${house.frais_supplementaire ? `<p><strong>Frais Supplémentaires:</strong> ${house.frais_supplementaire} FCFA</p>` : ''}
         <p><strong>Montant Total à Payer:</strong> ${totalPrice} FCFA</p>
+        ${additionalDetails}
     `;
     paymentModal.style.display = "block";
 }
@@ -599,12 +648,32 @@ async function markHouseAsPurchased(houseId, userId) {
 }
 
 // Functions to show/hide loading
-function showLoading() {
-    document.getElementById("loading-overlay").style.display = "flex";
+function showLoading(message = "Chargement en cours...") {
+    const loadingOverlay = document.getElementById("loading-overlay");
+    const loadingMessage = document.createElement("p"); // Crée un élément pour le message
+    loadingMessage.id = "loading-message"; // Attribue un ID pour pouvoir le modifier plus tard
+    loadingMessage.textContent = message;
+    loadingOverlay.innerHTML = ''; // Efface le contenu existant
+    loadingOverlay.appendChild(loadingMessage); // Ajoute le message
+    loadingOverlay.appendChild(createLoader()); // Ajoute le loader
+    loadingOverlay.style.display = "flex";
 }
 
 function hideLoading() {
     document.getElementById("loading-overlay").style.display = "none";
+}
+
+function createLoader() {
+    const loader = document.createElement("div");
+    loader.className = "loader";
+    return loader;
+}
+
+function updateLoadingMessage(newMessage) {
+    const loadingMessage = document.getElementById("loading-message");
+    if (loadingMessage) {
+        loadingMessage.textContent = newMessage;
+    }
 }
 
 // Function to show the details modal
@@ -823,15 +892,21 @@ async function loadPurchasedHouses() {
                 <!-- Add other buttons or details as needed -->
             `;
 
-                // Embed YouTube video or image
-                if (house.media) {
-                    if (house.media.includes("youtube")) {
-                        const videoId = getYoutubeVideoId(house.media);
-                        houseDiv.innerHTML += `<iframe width="100%" height="200px" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                    } else {
-                        houseDiv.innerHTML += `<img src="${house.media}" alt="Image de la maison" style="width: 100%; height: 200px; object-fit: cover;">`;
-                    }
-                }
+// Embed YouTube video or image
+if (house.media) {
+    if (house.media.includes("youtube") || house.media.includes("youtu.be")) {
+        const videoId = getYoutubeVideoId(house.media);
+        if (videoId) { // Vérifie si un ID vidéo a été extrait
+            houseDiv.innerHTML += `<iframe width="100%" height="200px" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+            // Gérer le cas où l'URL n'est pas une URL YouTube valide (afficher un message, une image par défaut, etc.)
+            houseDiv.innerHTML += `<p>Impossible d'afficher la vidéo YouTube.</p>`;
+        }
+    } else {
+        // Appliquer le style en utilisant la propriété style et en échappant les valeurs potentiellement dangereuses
+        houseDiv.innerHTML += `<img src="${encodeURI(house.media)}" alt="Image de la maison" style="width: 100%; height: 200px; object-fit: cover;">`;
+    }
+}
 
                 // Display GPS coordinates if available
                 if (house.latitude && house.longitude) {
@@ -919,5 +994,4 @@ typeFilter.addEventListener("change", applyFiltersAndDisplayHouses);
 priceFilter.addEventListener("input", applyFiltersAndDisplayHouses);
 
 // Initial Load
-loadConstructionTypes();
 loadHouses();

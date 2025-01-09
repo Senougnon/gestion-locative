@@ -728,3 +728,8 @@ footer {
 #souscriptions .data-table td:nth-child(8) {
     width: 10%; /* Propriétaire */
 }
+
+#back-button-container {
+
+    display: none; /* Masquer le bouton par défaut */
+}
