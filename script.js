@@ -2018,6 +2018,73 @@ item.addEventListener('click', () => {
 });
 });
 
+// Function to show the "Back" button
+function showBackButton() {
+    document.getElementById("back-button-container").style.display = "block";
+}
+
+// Function to hide the "Back" button
+function hideBackButton() {
+    document.getElementById("back-button-container").style.display = "none";
+}
+
+// Event listener for the "Back" button
+document.getElementById("back-button").addEventListener("click", () => {
+    contentSections.forEach((section) => {
+        section.classList.remove("active");
+    });
+    document.getElementById("dashboard").classList.add("active");
+    hideBackButton(); // Hide the button after returning to the dashboard
+});
+
+// Show or hide the "Back" button when switching sections
+navLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const targetSectionId = link.dataset.section;
+        contentSections.forEach((section) => {
+            section.classList.remove("active");
+        });
+
+        const targetSection = document.getElementById(targetSectionId);
+        if (targetSection) {
+            targetSection.classList.add("active");
+            fabOptions.classList.remove("show");
+        }
+        // Check user access based on the clicked section
+        checkUserAccess(targetSectionId);
+
+        // Show or hide the "Back" button based on the target section
+        if (targetSectionId !== "dashboard") {
+            showBackButton();
+        } else {
+            hideBackButton();
+        }
+    });
+});
+
+// Show or hide the "Back" button when clicking on dashboard items
+dashboardItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const targetSectionId = item.dataset.section;
+        contentSections.forEach(section => {
+            section.classList.remove('active');
+        });
+
+        const targetSection = document.getElementById(targetSectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+
+        // Show or hide the "Back" button based on the target section
+        if (targetSectionId !== "dashboard") {
+            showBackButton();
+        } else {
+            hideBackButton();
+        }
+    });
+});
+
 // Data loading initialization
 function initializeDataLoad() {
 if (isAuthenticated) {
