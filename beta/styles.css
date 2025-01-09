@@ -118,6 +118,10 @@ button:hover {
     color: #1a2a6c;
 }
 
+.data-table-container {
+    overflow-x: auto;
+}
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -716,5 +720,11 @@ footer {
 
 #recouvrements .data-table th:nth-child(9),
 #recouvrements .data-table td:nth-child(9) {
+    width: 10%; /* Propriétaire */
+}
+
+/* Styles pour la section Souscriptions */
+#souscriptions .data-table th:nth-child(8),
+#souscriptions .data-table td:nth-child(8) {
     width: 10%; /* Propriétaire */
 }
