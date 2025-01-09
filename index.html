@@ -216,13 +216,19 @@
                 <button class="print-btn">Imprimer</button>
             </div>
         </div>
-    
+
+        <!-- Section Souscriptions avec filtre par propriétaire -->
         <div id="souscriptions" class="content-section">
             <div class="content-header">
                 <h2>Souscriptions</h2>
+                <!-- Filtre par propriétaire -->
+                <select id="proprietaire-filter-souscriptions">
+                    <option value="">Tous</option>
+                    <!-- Les options seront ajoutées ici par le script -->
+                </select>
                 <button id="add-souscription-btn" class="add-btn">Ajouter</button>
             </div>
-            
+
             <form id="add-souscription-form" class="data-form">
                 <h3>Ajouter une Souscription</h3>
                 <select id="souscription-maison" required>
@@ -249,10 +255,12 @@
                         <th>Autres Frais</th>
                         <th>Date d'entrée</th>
                         <th>Loyer Mensuel</th>
+                        <th>Propriétaire</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Les données seront ajoutées ici -->
                 </tbody>
             </table>
             <div class="table-actions">
@@ -265,12 +273,18 @@
         <div id="recouvrements" class="content-section">
             <div class="content-header">
                 <h2>Recouvrements</h2>
+                <select id="proprietaire-filter">
+                    <!-- Les options seront ajoutées ici par le script -->
+                </select>
                 <button id="add-recouvrement-btn" class="add-btn">Ajouter</button>
             </div>
             <form id="add-recouvrement-form" class="data-form">
                 <h3>Ajouter un Recouvrement</h3>
                 <select id="recouvrement-souscription" required>
                     <option value="">Sélectionner Souscription</option>
+                </select>
+                <select id="recouvrement-proprietaire" required>
+                  <option value="">Sélectionner Propriétaire</option>
                 </select>
                 <input type="number" id="recouvrement-montant" placeholder="Montant (optionnel)">
                 <input type="month" id="recouvrement-periode" placeholder="Période (optionnel)">
@@ -289,6 +303,7 @@
                         <th>Montant</th>
                         <th>Date</th>
                         <th>Commentaire</th>
+                        <th>Proprietaire</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
