@@ -87,21 +87,23 @@
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-proprietaire-btn" class="cancel-btn">Annuler</button>
             </form>
-            <table id="proprietaires-list" class="data-table">
-                <thead>
-                    <tr>
-                        
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Contact</th>
-                        <th>Email</th>
-                        <th>Adresse</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
+            <div class="data-table-container"> <!-- Conteneur pour le défilement horizontal -->
+                <table id="proprietaires-list" class="data-table">
+                    <thead>
+                        <tr>
+                            
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Adresse</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
             <div class="table-actions">
                 <button class="export-pdf-btn">Exporter en PDF</button>
                 <button class="export-excel-btn">Exporter en Excel</button>
@@ -155,24 +157,26 @@
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-maison-btn" class="cancel-btn">Annuler</button>
             </form>
-            <table id="maisons-list" class="data-table">
-                <thead>
-                    <tr>
-                        
-                        <th>Propriétaire</th>
-                        <th>Type</th>
-                        <th>Numéro</th>
-                        <th>Pièces</th>
-                        <th>Ville, Commune, Quartier</th>
-                        <th>Loyer</th>
-                        <th>Avance</th>
-                        <th>Frais Supplémentaires</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="data-table-container"> <!-- Conteneur pour le défilement horizontal -->
+                <table id="maisons-list" class="data-table">
+                    <thead>
+                        <tr>
+                            
+                            <th>Propriétaire</th>
+                            <th>Type</th>
+                            <th>Numéro</th>
+                            <th>Pièces</th>
+                            <th>Ville, Commune, Quartier</th>
+                            <th>Loyer</th>
+                            <th>Avance</th>
+                            <th>Frais Supplémentaires</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
             <div class="table-actions">
                 <button class="export-pdf-btn">Exporter en PDF</button>
                 <button class="export-excel-btn">Exporter en Excel</button>
@@ -195,21 +199,22 @@
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-locataire-btn" class="cancel-btn">Annuler</button>
             </form>
-
-            <table id="locataires-list" class="data-table">
-                <thead>
-                    <tr>
-                        
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Contact</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="data-table-container"> <!-- Conteneur pour le défilement horizontal -->
+                <table id="locataires-list" class="data-table">
+                    <thead>
+                        <tr>
+                            
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
             <div class="table-actions">
                 <button class="export-pdf-btn">Exporter en PDF</button>
                 <button class="export-excel-btn">Exporter en Excel</button>
@@ -244,25 +249,26 @@
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-souscription-btn" class="cancel-btn">Annuler</button>
             </form>
-
-            <table id="souscriptions-list" class="data-table">
-                <thead>
-                    <tr>
-                        <th>Maison</th>
-                        <th>Locataire</th>
-                        <th>Caution</th>
-                        <th>Avance</th>
-                        <th>Autres Frais</th>
-                        <th>Date d'entrée</th>
-                        <th>Loyer Mensuel</th>
-                        <th>Propriétaire</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées ici -->
-                </tbody>
-            </table>
+            <div class="data-table-container"> <!-- Conteneur pour le défilement horizontal -->
+                <table id="souscriptions-list" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Maison</th>
+                            <th>Locataire</th>
+                            <th>Caution</th>
+                            <th>Avance</th>
+                            <th>Autres Frais</th>
+                            <th>Date d'entrée</th>
+                            <th>Loyer Mensuel</th>
+                            <th>Propriétaire</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Les données seront ajoutées ici -->
+                    </tbody>
+                </table>
+            </div>
             <div class="table-actions">
                 <button class="export-pdf-btn">Exporter en PDF</button>
                 <button class="export-excel-btn">Exporter en Excel</button>
@@ -292,24 +298,26 @@
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-recouvrement-btn" class="cancel-btn">Annuler</button>
             </form>
-            <table id="recouvrements-list" class="data-table">
-                <thead>
-                    <tr>
-                        <th>N°</th>
-                        <th>Locataire</th>
-                        <th>Numéro</th>
-                        <th>Loyer</th>
-                        <th>Période</th>
-                        <th>Montant</th>
-                        <th>Date</th>
-                        <th>Commentaire</th>
-                        <th>Proprietaire</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="data-table-container"> <!-- Conteneur pour le défilement horizontal -->
+                <table id="recouvrements-list" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Locataire</th>
+                            <th>Numéro</th>
+                            <th>Loyer</th>
+                            <th>Période</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Commentaire</th>
+                            <th>Proprietaire</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
             <div class="table-actions">
                 <button class="export-pdf-btn">Exporter en PDF</button>
                 <button class="export-excel-btn">Exporter en Excel</button>

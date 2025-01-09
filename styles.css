@@ -118,6 +118,10 @@ button:hover {
     color: #1a2a6c;
 }
 
+.data-table-container {
+    overflow-x: auto;
+}
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
