@@ -1291,7 +1291,7 @@ function populateMaisonForm(form, itemData, itemId) {
   <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
   <input type="text" id="edit-numero" value="${itemData.numero || ''}" placeholder="Numéro (optionnel)">
   <input type="number" id="edit-pieces" value="${itemData.pieces || ''}" placeholder="Nombre de pièces (optionnel)">
-  <input type="text" id="edit-ville" value="${itemData.ville || ''}" placeholder  <input type="text" id="edit-commune" value="${itemData.commune || ''}" placeholder="Commune (optionnel)">
+  <input type="text" id="edit-ville" value="${itemData.ville || ''}" placeholder="Ville (optionnel)">
   <input type="text" id="edit-quartier" value="${itemData.quartier || ''}" placeholder="Quartier (optionnel)">
   <input type="number" id="edit-loyer" value="${itemData.loyer || ''}" placeholder="Loyer (optionnel)">
   <input type="number" id="edit-nombre-loyer" value="${itemData["nombre de loyer"] || ''}" placeholder="Nombre de loyer (optionnel)">
