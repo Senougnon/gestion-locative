@@ -729,7 +729,40 @@ footer {
     width: 10%; /* Propriétaire */
 }
 
-#back-button-container {
+/* Styles pour les icones d'action */
+.actions-cell {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
 
-    display: none; /* Masquer le bouton par défaut */
+.edit-icon,
+.delete-icon,
+.available-icon {
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s;
+    
+}
+
+.edit-icon {
+    color: #fdbb2d;
+}
+
+.delete-icon {
+    color: #ff4d4d;
+}
+
+.available-icon {
+    color: #28a745; /* Vert pour disponible */
+}
+
+.available-icon.unavailable {
+    color: #6c757d; /* Gris pour indisponible */
+}
+
+.edit-icon:hover,
+.delete-icon:hover,
+.available-icon:hover {
+    color: #333;
 }
