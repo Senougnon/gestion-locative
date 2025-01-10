@@ -1,1 +1,2231 @@
-const _0x471f92=_0x4e39;(function(_0x4ff359,_0x93e97f){const _0x1e56d3=_0x4e39,_0x2e3df5=_0x4ff359();while(!![]){try{const _0x10cb78=-parseInt(_0x1e56d3(0x27b))/0x1+parseInt(_0x1e56d3(0x18b))/0x2*(-parseInt(_0x1e56d3(0x17b))/0x3)+-parseInt(_0x1e56d3(0x1d6))/0x4*(parseInt(_0x1e56d3(0x18a))/0x5)+parseInt(_0x1e56d3(0x1ca))/0x6+-parseInt(_0x1e56d3(0x22a))/0x7+-parseInt(_0x1e56d3(0x185))/0x8*(parseInt(_0x1e56d3(0x20b))/0x9)+-parseInt(_0x1e56d3(0x2b2))/0xa*(-parseInt(_0x1e56d3(0x2cb))/0xb);if(_0x10cb78===_0x93e97f)break;else _0x2e3df5['push'](_0x2e3df5['shift']());}catch(_0x321d51){_0x2e3df5['push'](_0x2e3df5['shift']());}}}(_0x3221,0x5d131));import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';import{getDatabase,ref,get,set,push,onValue,remove,update}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';const firebaseConfig={'apiKey':_0x471f92(0x171),'authDomain':_0x471f92(0x1f6),'databaseURL':_0x471f92(0x292),'projectId':_0x471f92(0x255),'storageBucket':_0x471f92(0x27f),'messagingSenderId':_0x471f92(0x2b1),'appId':_0x471f92(0x2f2),'measurementId':_0x471f92(0x2a3)},app=initializeApp(firebaseConfig),database=getDatabase(app);let isAuthenticated=![];const authSection=document[_0x471f92(0x2c9)](_0x471f92(0x1ce)),loginFormContainer=document[_0x471f92(0x2c9)](_0x471f92(0x1b2)),registerFormContainer=document['getElementById'](_0x471f92(0x163)),loginForm=document[_0x471f92(0x2c9)](_0x471f92(0x259)),registerForm=document[_0x471f92(0x2c9)](_0x471f92(0x2d6)),showRegisterLink=document[_0x471f92(0x2c9)](_0x471f92(0x24d)),showLoginLink=document[_0x471f92(0x2c9)](_0x471f92(0x28a));function _0x4e39(_0x1ea6a4,_0x39579c){const _0x322115=_0x3221();return _0x4e39=function(_0x4e39a9,_0x22bcaf){_0x4e39a9=_0x4e39a9-0x157;let _0x4178b0=_0x322115[_0x4e39a9];return _0x4178b0;},_0x4e39(_0x1ea6a4,_0x39579c);}let currentUser=null;window[_0x471f92(0x1a7)]('load',()=>{const _0x3249ab=_0x471f92,_0x47c389=localStorage[_0x3249ab(0x264)](_0x3249ab(0x16e)),_0x4a1c55=localStorage[_0x3249ab(0x264)](_0x3249ab(0x25f));_0x47c389&&_0x4a1c55==='true'?(currentUser=JSON[_0x3249ab(0x22d)](_0x47c389),isAuthenticated=!![],checkUserRoleAndSubscription(),hideAuthSection(),initializeDataLoad()):authSection[_0x3249ab(0x2d1)][_0x3249ab(0x2cc)]=_0x3249ab(0x18c);}),showRegisterLink[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>{const _0xa65c0f=_0x471f92;loginFormContainer['style']['display']=_0xa65c0f(0x25b),registerFormContainer[_0xa65c0f(0x2d1)]['display']=_0xa65c0f(0x1e8);}),showLoginLink['addEventListener'](_0x471f92(0x2d4),()=>{const _0xfa6cd9=_0x471f92;registerFormContainer[_0xfa6cd9(0x2d1)][_0xfa6cd9(0x2cc)]=_0xfa6cd9(0x25b),loginFormContainer[_0xfa6cd9(0x2d1)][_0xfa6cd9(0x2cc)]='block';}),registerForm[_0x471f92(0x1a7)](_0x471f92(0x1de),async _0x382c61=>{const _0x5a01cf=_0x471f92;_0x382c61[_0x5a01cf(0x226)](),showLoading();const _0x1fd5fa=document[_0x5a01cf(0x2c9)](_0x5a01cf(0x25e))[_0x5a01cf(0x1a5)],_0x4fc3f8=document[_0x5a01cf(0x2c9)](_0x5a01cf(0x1c9))[_0x5a01cf(0x1a5)];try{const _0x514956=simpleHash(_0x4fc3f8),_0x5d6753=ref(database,_0x5a01cf(0x26c)),_0xd64e19=await get(_0x5d6753);if(_0xd64e19['exists']()){const _0x260dfa=_0xd64e19[_0x5a01cf(0x164)]();for(const _0x3920de in _0x260dfa){const _0x11c2b0=_0x260dfa[_0x3920de];if(_0x11c2b0[_0x5a01cf(0x295)]===_0x1fd5fa){alert('Ce\x20nom\x20d\x27utilisateur\x20existe\x20déjà.\x20Veuillez\x20en\x20choisir\x20un\x20autre.'),hideLoading();return;}}}const _0x569188=push(_0x5d6753);await set(_0x569188,{'id':_0x569188['key'],'username':_0x1fd5fa,'password':_0x514956,'role':'user'}),alert(_0x5a01cf(0x20d)),registerForm[_0x5a01cf(0x186)](),showLoginForm();}catch(_0x1ea6c0){console[_0x5a01cf(0x235)]('Erreur\x20lors\x20de\x20l\x27inscription\x20:',_0x1ea6c0),alert(_0x5a01cf(0x222));}finally{hideLoading();}}),loginForm['addEventListener'](_0x471f92(0x1de),async _0x15535a=>{const _0x79c81f=_0x471f92;_0x15535a[_0x79c81f(0x226)](),showLoading();const _0x3f33f3=document['getElementById'](_0x79c81f(0x2e4))[_0x79c81f(0x1a5)],_0x33d360=document[_0x79c81f(0x2c9)](_0x79c81f(0x1a3))['value'];try{const _0xa43995=ref(database,_0x79c81f(0x26c)),_0x224569=await get(_0xa43995);if(_0x224569['exists']()){const _0xa5b9c=_0x224569[_0x79c81f(0x164)]();let _0x2a3c4c=![];for(const _0x552b29 in _0xa5b9c){const _0x48095e=_0xa5b9c[_0x552b29];if(_0x48095e[_0x79c81f(0x295)]===_0x3f33f3&&_0x48095e[_0x79c81f(0x214)]===simpleHash(_0x33d360)){currentUser={'id':_0x48095e['id'],'username':_0x48095e[_0x79c81f(0x295)],'role':_0x48095e['role'],'subscription':_0x48095e['subscription']||{}},isAuthenticated=!![],localStorage[_0x79c81f(0x2ad)](_0x79c81f(0x16e),JSON['stringify'](currentUser)),localStorage[_0x79c81f(0x2ad)](_0x79c81f(0x25f),_0x79c81f(0x232)),checkUserRoleAndSubscription(),hideAuthSection(),loadDashboardData(),initializeDataLoad(),_0x2a3c4c=!![];break;}}!_0x2a3c4c&&alert(_0x79c81f(0x1ab));}else alert(_0x79c81f(0x1cc));}catch(_0x31e7d2){console[_0x79c81f(0x235)](_0x79c81f(0x298),_0x31e7d2),alert(_0x79c81f(0x2bf));}finally{hideLoading();}});function showLoginForm(){const _0x40b6cc=_0x471f92;registerFormContainer[_0x40b6cc(0x2d1)][_0x40b6cc(0x2cc)]=_0x40b6cc(0x25b),loginFormContainer[_0x40b6cc(0x2d1)][_0x40b6cc(0x2cc)]=_0x40b6cc(0x1e8);}async function checkAndUpdateSubscriptionStatus(){const _0x5801c9=_0x471f92;if(currentUser&&currentUser['subscription']){const _0x22f395=new Date(),_0x11d208=new Date(currentUser[_0x5801c9(0x262)]['endDate']);if(_0x22f395>_0x11d208)currentUser[_0x5801c9(0x262)][_0x5801c9(0x253)]=_0x5801c9(0x263),await update(ref(database,'users/'+currentUser['id']+_0x5801c9(0x248)),{'status':_0x5801c9(0x263)}),localStorage[_0x5801c9(0x2ad)]('currentUser',JSON[_0x5801c9(0x16a)](currentUser)),alert(_0x5801c9(0x1a9)),checkUserRoleAndSubscription();else{const _0x41703f=Math[_0x5801c9(0x1a8)]((_0x11d208-_0x22f395)/(0x3e8*0x3c*0x3c*0x18));_0x41703f<=0x2&&alert(_0x5801c9(0x19e)+_0x41703f+_0x5801c9(0x26a));}}}function checkUserRoleAndSubscription(){const _0x324e51=_0x471f92;if(currentUser){const _0x35a45c=currentUser[_0x324e51(0x268)]===_0x324e51(0x250),_0x460ccb=document['getElementById'](_0x324e51(0x2a8)),_0x27b2b9=document['getElementById'](_0x324e51(0x2f5)),_0x265433=document[_0x324e51(0x2c9)](_0x324e51(0x1b6)),_0x50f620=document[_0x324e51(0x2c9)](_0x324e51(0x178)),_0x419568=document[_0x324e51(0x2c9)](_0x324e51(0x1b3));_0x460ccb&&(_0x460ccb['style'][_0x324e51(0x2cc)]=_0x35a45c?_0x324e51(0x1e8):_0x324e51(0x25b));_0x27b2b9&&(_0x27b2b9[_0x324e51(0x2d1)][_0x324e51(0x2cc)]=_0x35a45c?_0x324e51(0x1e8):_0x324e51(0x25b));_0x265433&&(_0x265433['style'][_0x324e51(0x2cc)]=_0x35a45c?_0x324e51(0x1e8):_0x324e51(0x25b));_0x50f620&&(_0x50f620[_0x324e51(0x2d1)][_0x324e51(0x2cc)]=_0x35a45c?_0x324e51(0x1e8):'none');_0x419568&&(_0x419568[_0x324e51(0x2d1)]['display']=_0x35a45c?_0x324e51(0x1e8):'none');const _0x21ee56=currentUser[_0x324e51(0x262)],_0xb267ef=_0x21ee56&&_0x21ee56[_0x324e51(0x253)]===_0x324e51(0x21c),_0x1c13ce=document[_0x324e51(0x2c9)]('subscribe-monthly-btn'),_0x3ac219=document['getElementById']('subscribe-yearly-btn'),_0x56af4f=document['getElementById'](_0x324e51(0x17a));_0xb267ef?(document['getElementById'](_0x324e51(0x2b5))[_0x324e51(0x28e)]='Abonné',_0x1c13ce[_0x324e51(0x2d1)][_0x324e51(0x2cc)]=_0x324e51(0x25b),_0x3ac219[_0x324e51(0x2d1)][_0x324e51(0x2cc)]=_0x324e51(0x25b),_0x56af4f[_0x324e51(0x2d1)][_0x324e51(0x2cc)]=_0x324e51(0x1e8)):(document[_0x324e51(0x2c9)]('abonnement-status-text')[_0x324e51(0x28e)]='Non\x20abonné',_0x1c13ce['style']['display']=_0x324e51(0x1e8),_0x3ac219[_0x324e51(0x2d1)]['display']='block',_0x56af4f[_0x324e51(0x2d1)][_0x324e51(0x2cc)]=_0x324e51(0x25b)),localStorage[_0x324e51(0x2ad)](_0x324e51(0x16e),JSON[_0x324e51(0x16a)](currentUser));}}function simpleHash(_0x5a4d71){const _0x540d93=_0x471f92;let _0x3ce095=0x0;for(let _0x3c4842=0x0;_0x3c4842<_0x5a4d71['length'];_0x3c4842++){const _0x422cc2=_0x5a4d71[_0x540d93(0x28b)](_0x3c4842);_0x3ce095=(_0x3ce095<<0x5)-_0x3ce095+_0x422cc2,_0x3ce095|=0x0;}return _0x3ce095['toString']();}function showMainInterface(){const _0x30d862=_0x471f92;authSection[_0x30d862(0x2d1)][_0x30d862(0x2cc)]='none';}function hideAuthSection(){const _0xb12cd2=_0x471f92;authSection[_0xb12cd2(0x2d1)][_0xb12cd2(0x2cc)]=_0xb12cd2(0x25b);}function showLoading(){const _0x156b8b=_0x471f92;document['getElementById'](_0x156b8b(0x2d2))[_0x156b8b(0x2d1)][_0x156b8b(0x2cc)]='flex';}function hideLoading(){const _0x407569=_0x471f92;document[_0x407569(0x2c9)]('loading-overlay')[_0x407569(0x2d1)][_0x407569(0x2cc)]='none';}const addProprietaireBtn=document[_0x471f92(0x2c9)](_0x471f92(0x2a8)),addMaisonBtn=document['getElementById'](_0x471f92(0x2f5)),addLocataireBtn=document[_0x471f92(0x2c9)]('add-locataire-btn'),addSouscriptionBtn=document[_0x471f92(0x2c9)]('add-souscription-btn'),addRecouvrementBtn=document[_0x471f92(0x2c9)](_0x471f92(0x1b3)),addProprietaireForm=document[_0x471f92(0x2c9)]('add-proprietaire-form'),addMaisonForm=document['getElementById'](_0x471f92(0x286)),addLocataireForm=document[_0x471f92(0x2c9)](_0x471f92(0x203)),addSouscriptionForm=document[_0x471f92(0x2c9)]('add-souscription-form'),addRecouvrementForm=document[_0x471f92(0x2c9)](_0x471f92(0x1d7)),cancelProprietaireBtn=document[_0x471f92(0x2c9)](_0x471f92(0x1ea)),cancelMaisonBtn=document[_0x471f92(0x2c9)](_0x471f92(0x1a2)),cancelLocataireBtn=document[_0x471f92(0x2c9)](_0x471f92(0x2a0)),cancelSouscriptionBtn=document['getElementById'](_0x471f92(0x290)),cancelRecouvrementBtn=document[_0x471f92(0x2c9)](_0x471f92(0x246));function showForm(_0x583633){const _0x208548=_0x471f92;_0x583633[_0x208548(0x2b4)][_0x208548(0x1e7)]('active');}function hideForm(_0x288083){const _0x8bad48=_0x471f92;_0x288083['classList']['remove'](_0x8bad48(0x21c)),_0x288083[_0x8bad48(0x186)]();}addProprietaireBtn[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>showForm(addProprietaireForm)),addMaisonBtn[_0x471f92(0x1a7)]('click',()=>showForm(addMaisonForm)),addLocataireBtn[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>showForm(addLocataireForm)),addSouscriptionBtn['addEventListener']('click',()=>showForm(addSouscriptionForm)),addRecouvrementBtn[_0x471f92(0x1a7)]('click',()=>showForm(addRecouvrementForm)),cancelProprietaireBtn[_0x471f92(0x1a7)]('click',()=>hideForm(addProprietaireForm)),cancelMaisonBtn[_0x471f92(0x1a7)]('click',()=>hideForm(addMaisonForm)),cancelLocataireBtn[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>hideForm(addLocataireForm)),cancelSouscriptionBtn['addEventListener'](_0x471f92(0x2d4),()=>hideForm(addSouscriptionForm)),cancelRecouvrementBtn[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>hideForm(addRecouvrementForm)),addProprietaireForm[_0x471f92(0x1a7)](_0x471f92(0x1de),_0x88e92e=>{const _0x42ed54=_0x471f92;_0x88e92e[_0x42ed54(0x226)](),showLoading();const _0x47a6c8=document['getElementById'](_0x42ed54(0x1d4))['value'],_0x45a7d7=document[_0x42ed54(0x2c9)]('proprietaire-prenom')['value'],_0x1ec28a=document[_0x42ed54(0x2c9)](_0x42ed54(0x1f7))['value'],_0x32f122=document[_0x42ed54(0x2c9)](_0x42ed54(0x2c2))['value'],_0x1f58b9=document[_0x42ed54(0x2c9)](_0x42ed54(0x188))['value'];addProprietaire(_0x47a6c8,_0x45a7d7,_0x1ec28a,_0x32f122,_0x1f58b9)[_0x42ed54(0x280)](()=>{hideForm(addProprietaireForm),loadProprietaires();})[_0x42ed54(0x1cd)](_0x484e89=>{const _0x4d3397=_0x42ed54;console[_0x4d3397(0x235)](_0x4d3397(0x221),_0x484e89),alert(_0x4d3397(0x219));})[_0x42ed54(0x27e)](()=>{hideLoading();});}),addMaisonForm[_0x471f92(0x1a7)]('submit',async _0x5be485=>{const _0x48e5dd=_0x471f92;_0x5be485[_0x48e5dd(0x226)](),showLoading();const _0x4ac88a=document['getElementById'](_0x48e5dd(0x1d9))[_0x48e5dd(0x1a5)],_0x1cc496=document['getElementById'](_0x48e5dd(0x277))[_0x48e5dd(0x1a5)],_0x511e2f=_0x1cc496==='autre'?document[_0x48e5dd(0x2c9)](_0x48e5dd(0x2be))[_0x48e5dd(0x1a5)]:_0x1cc496,_0x11a4eb=document[_0x48e5dd(0x2c9)](_0x48e5dd(0x193))[_0x48e5dd(0x1a5)],_0x4cba40=document[_0x48e5dd(0x2c9)](_0x48e5dd(0x2c3))['value'],_0x27e151=document[_0x48e5dd(0x2c9)](_0x48e5dd(0x1ee))['value'],_0x4e1578=document['getElementById'](_0x48e5dd(0x23e))['value'],_0x235207=document['getElementById'](_0x48e5dd(0x205))[_0x48e5dd(0x1a5)],_0x28cf9b=document['getElementById'](_0x48e5dd(0x209))[_0x48e5dd(0x1a5)],_0x4eadb8=document[_0x48e5dd(0x2c9)](_0x48e5dd(0x2da))[_0x48e5dd(0x1a5)],_0x340e53=document[_0x48e5dd(0x2c9)](_0x48e5dd(0x1c3))[_0x48e5dd(0x1a5)],_0x10884b=document[_0x48e5dd(0x2c9)](_0x48e5dd(0x1b4))[_0x48e5dd(0x1a5)],_0x42d0bb=document[_0x48e5dd(0x2c9)](_0x48e5dd(0x1b7))[_0x48e5dd(0x1a5)],_0x511312=document[_0x48e5dd(0x2c9)]('maison-longitude')['value'];addMaison(_0x4ac88a,_0x511e2f,_0x11a4eb,_0x4cba40,_0x27e151,_0x4e1578,_0x235207,_0x28cf9b,_0x4eadb8,_0x340e53,_0x10884b,_0x42d0bb,_0x511312)[_0x48e5dd(0x280)](()=>{hideForm(addMaisonForm),loadMaisons();})['catch'](_0x456702=>{const _0xeb222f=_0x48e5dd;console[_0xeb222f(0x235)](_0xeb222f(0x215),_0x456702),alert(_0xeb222f(0x1fb));})['finally'](()=>{hideLoading();});});function _0x3221(){const _0x5c70b5=['val','email@default.com','.close-modal','souscription-avance','souscription-caution','agence-adresse','stringify','edit-montant','edit-commentaire','recouvrement-proprietaire','currentUser','Utilisateur\x20non\x20connecté.','</td>\x0a\x20\x20<td>','AIzaSyCNiyVW5DgsvqIR2eAlQ2Ls02DuliFWOOI','.pdf','<html><head><title>Impression\x20du\x20tableau</title>','table_to_book','edit-commune','[data-target=\x22abonnements\x22]','Sheet\x201','add-souscription-btn','type','cancel-subscription-btn','21dVvgrP','innerHTML','/typesConstruction','latlng','getTime','lng','exists','agence-nom','selected','marker','584CfXalE','reset','agence','proprietaire-adresse','\x22\x20required>\x0a<input\x20type=\x22email\x22\x20id=\x22edit-email\x22\x20value=\x22','3304285AoQHhF','158266fuMfpx','flex','save','Votre\x20navigateur\x20ne\x20supporte\x20pas\x20la\x20géolocalisation.\x20Veuillez\x20entrer\x20les\x20coordonnées\x20manuellement.','<option\x20value=\x22\x22>Sélectionner\x20Locataire</option>','\x22>Supprimer</button>\x0a\x20\x20\x20\x20</td>\x0a','contains','souscription-date-debut','maison-numero','agence-api-key','recouvrement-souscription','button','edit-email','section','option','Déconnexion','init','text','Transaction\x20:\x20','Votre\x20abonnement\x20expirera\x20dans\x20','#souscriptions-list\x20tbody\x20tr','edit-periode','No\x20data\x20available\x20for\x20editing','cancel-maison-btn','login-password','coords','value','toggle','addEventListener','round','Votre\x20abonnement\x20a\x20expiré.\x20Veuillez\x20renouveler\x20votre\x20abonnement\x20pour\x20continuer\x20à\x20utiliser\x20les\x20fonctionnalités\x20premium.','fas\x20fa-home','Pseudo\x20ou\x20mot\x20de\x20passe\x20incorrect.','Abonnement\x20mensuel\x20à\x20la\x20plateforme\x20de\x20gestion\x20locative','souscription-maison','className','contact','autre','Vous\x20avez\x20déjà\x20un\x20abonnement\x20actif.','login-form-container','add-recouvrement-btn','maison-media','<option\x20value=\x22\x22>Tous</option>','add-locataire-btn','maison-latitude','Erreur\x20lors\x20du\x20chargement\x20des\x20informations\x20de\x20l\x27agence\x20:','agence-email','querySelector','\x22\x20required>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-commune\x22\x20value=\x22','dashboard-recouvrements-count','toISOString','apiKey','dashboard-maisons-count','focus','email','td:nth-child(8)','maison-frais-supplementaire','userId','.fab-option','</td>\x0a\x20\x20\x20\x20<td>','manual-gps-fields','edit-adresse','register-password','798114PCtqlO','cancelled','Aucun\x20utilisateur\x20trouvé.','catch','auth-section','\x22\x20required>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-autres\x22\x20value=\x22','</option>','back-button-container','\x0a\x20\x20<h3>Modifier\x20la\x20maison</h3>\x0a\x20\x20<select\x20id=\x22edit-proprietaire\x22>','key','proprietaire-nom','edit-media','4jvZTTb','add-recouvrement-form','recouvrement-commentaire','maison-proprietaire','\x0a\x20\x20<h3>Modifier\x20la\x20souscription</h3>\x0a\x20\x20<select\x20id=\x22edit-maison\x22>','recouvrements','proprietaireId','\x22\x20required>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-quartier\x22\x20value=\x22','submit','Veuillez\x20configurer\x20les\x20informations\x20de\x20votre\x20agence\x20avant\x20de\x20souscrire\x20à\x20un\x20abonnement.','manual-gps','\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22','body','proprietaire-filter','jspdf','addTo','<option\x20value=\x22\x22>Sélectionner\x20Souscription</option>','add','block','print','cancel-proprietaire-btn','commentaire','map','DIALOG_DISMISSED','maison-ville','monthly','Vous\x20devez\x20avoir\x20un\x20abonnement\x20actif\x20pour\x20accéder\x20à\x20cette\x20section.','nom','numero','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Prénom:</strong>\x20','edit-locataire','geolocation','immo-75593.firebaseapp.com','proprietaire-contact','auto-gps','</select>\x0a\x20\x20<select\x20id=\x22edit-locataire\x22>','edit-souscription','Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20maison.','quartier','Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20recouvrement:','\x22\x20required>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-commentaire\x22\x20value=\x22','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Adresse:</strong>\x20','\x22\x20placeholder=\x22Lien\x20vidéo\x20YouTube\x20ou\x20image\x20(optionnel)\x22>\x0a\x20\x20<button\x20type=\x22submit\x22\x20class=\x22submit-btn\x22>Enregistrer</button>\x0a\x20\x20<button\x20type=\x22button\x22\x20class=\x22cancel-btn\x22\x20onclick=\x22closeEditModal()\x22>Annuler</button>\x0a','Inconnu','montant','add-locataire-form','souscriptions','maison-quartier','fas\x20fa-user-tie','edit-type','<p>Aucune\x20information\x20d\x27agence\x20disponible.</p>','maison-loyer','edit-nom','44865gEIsCJ','href','Inscription\x20réussie\x20!','edit-frais-supplementaire','Erreur\x20lors\x20de\x20la\x20suppression\x20de\x20','all','toUpperCase','closest','annuel','password','Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20maison:','logout-btn','souscription-autres','fas\x20fa-hand-holding-usd','Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20propriétaire.','\x0a\x20\x20\x0a\x20\x20<td>','loyer','active','Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20locataire:','Impossible\x20d\x27obtenir\x20votre\x20position\x20actuelle.\x20Veuillez\x20autoriser\x20la\x20géolocalisation\x20ou\x20entrer\x20les\x20coordonnées\x20manuellement.','edit-loyer','\x22\x20placeholder=\x22Nombre\x20d\x27avance\x20(optionnel)\x22>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-frais-supplementaire\x22\x20value=\x22','Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20propriétaire:','Erreur\x20lors\x20de\x20l\x27inscription.','periode','maisons/','edit-numero','preventDefault','slice','\x22\x20required>\x0a<button\x20type=\x22submit\x22\x20class=\x22submit-btn\x22>Enregistrer</button>\x0a<button\x20type=\x22button\x22\x20class=\x22cancel-btn\x22\x20onclick=\x22closeEditModal()\x22>Annuler</button>\x0a','\x22\x20required>\x0a\x20\x20<input\x20type=\x22number\x22\x20id=\x22edit-pieces\x22\x20value=\x22','5033028mmrEGy','maison','<option\x20value=\x22\x22>Sélectionner\x20Propriétaire</option>','parse','change','date','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','auto-gps-map','true','.content-section','inconnu','error','\x22\x20required>\x0a\x20\x20<input\x20type=\x22month\x22\x20id=\x22edit-periode\x22\x20value=\x22','Erreur\x20de\x20géolocalisation:','Abonnement\x20','</td>\x0a\x20\x20\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22','index.html','</body></html>','cancel-agence-btn','prenom','maison-commune','souscriptions/','\x22\x20required>\x0a<input\x20type=\x22text\x22\x20id=\x22edit-prenom\x22\x20value=\x22','write','getCurrentPosition','.export-excel-btn','modal-details-content','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20data-proprietaire-id=\x22','cancel-recouvrement-btn','agence-telephone','/subscription','Inconnue','dateDebut','\x22\x20placeholder=\x22Frais\x20supplémentaires\x20(optionnel)\x22>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-media\x22\x20value=\x22','\x22\x20required>\x0a\x20\x20<button\x20type=\x22submit\x22\x20class=\x22submit-btn\x22>Enregistrer</button>\x0a\x20\x20<button\x20type=\x22button\x22\x20class=\x22cancel-btn\x22\x20onclick=\x22closeEditModal()\x22>Annuler</button>\x0a','show-register','maison-longitude','removeItem','admin','open','\x20réussi\x20!','status','closeEditModal','immo-75593','\x22\x20required>\x0a<input\x20type=\x22tel\x22\x20id=\x22edit-contact\x22\x20value=\x22','onsubmit','proprietaires','login-form','forEach','none','fas\x20fa-tachometer-alt','edit-autres','register-username','isAuthenticated','\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22','fas\x20fa-building','subscription','expired','getItem','\x22\x20required>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-ville\x22\x20value=\x22','</head><body>','dataset','role','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Clé\x20API\x20publique\x20FedaPay:</strong>\x20','\x20jour(s).\x20Pensez\x20à\x20le\x20renouveler.','remove','users','tileLayer','#recouvrements-list\x20tbody','charAt','\x22\x20required>\x0a<input\x20type=\x22text\x22\x20id=\x22edit-adresse\x22\x20value=\x22','<p>Erreur\x20lors\x20du\x20chargement\x20des\x20informations\x20de\x20l\x27agence.</p>','locataire-nom','Paiement\x20annulé.','close','\x22>Supprimer</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x22\x20required>\x0a\x20\x20<input\x20type=\x22number\x22\x20id=\x22edit-loyer\x22\x20value=\x22','maison-type','createElement','locataire-email','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22','456419sdjtfM','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','target','finally','immo-75593.firebasestorage.app','then','location','dashboard-abonnements-count','autres','locataires/','.dashboard-item','add-maison-form','N/A','Propriétaire\x20inconnu','longitude','show-login','charCodeAt','\x22\x20required>\x0a\x20\x20<input\x20type=\x22number\x22\x20id=\x22edit-avance\x22\x20value=\x22','Abonnement\x20annuel\x20à\x20la\x20plateforme\x20de\x20gestion\x20locative','textContent','proprietaire','cancel-souscription-btn','<option\x20value=\x22','https://immo-75593-default-rtdb.firebaseio.com','dashboard','\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20<td>','username','mensuel','commune','Erreur\x20lors\x20de\x20la\x20connexion\x20:','back-button','\x0a<h3>Modifier\x20le\x20locataire</h3>\x0a<input\x20type=\x22text\x22\x20id=\x22edit-nom\x22\x20value=\x22','dashboard-proprietaires-count','fas\x20fa-credit-card','\x22>Supprimer</button>\x0a\x20\x20</td>\x0a','<option\x20value=\x22\x22>Sélectionner\x20Maison</option>','edit-proprietaire','cancel-locataire-btn','Erreur\x20lors\x20de\x20la\x20modification\x20de\x20','proprietaire-filter-souscriptions','G-52KYCJZSHE','locataire-contact','log','Êtes-vous\x20sûr\x20de\x20vouloir\x20supprimer\x20ce\x20','cloneNode','add-proprietaire-btn','</td>\x0a\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Email:</strong>\x20','edit-contact','pieces','setItem','#souscriptions-list\x20tbody','Erreur\x20lors\x20de\x20la\x20mise\x20à\x20jour\x20des\x20informations\x20de\x20l\x27agence\x20:','Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20locataire.','146632846661','30023300VgqtSn','users/','classList','abonnement-status-text','length','edit-agence-btn','#maisons-list\x20tbody','avance','edit-pieces','setLatLng','edit-avance','locataire','nouveau-type-construction','Erreur\x20lors\x20de\x20la\x20connexion.','\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22','recouvrement-montant','proprietaire-email','maison-pieces','edit-modal','.fab-button','</select>\x0a\x20\x20<input\x20type=\x22number\x22\x20id=\x22edit-caution\x22\x20value=\x22','.export-pdf-btn','outerHTML','getElementById','dashboard-souscriptions-count','11kDCEEj','display','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20souscription.','Vous\x20n\x27avez\x20pas\x20d\x27abonnement\x20actif\x20à\x20annuler.','\x22>Supprimer</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</td>\x0a\x20\x20\x20\x20\x20\x20','style','loading-overlay','fas\x20fa-users','click','#locataires-list\x20tbody','register-form','adresse','/agence','load','maison-avance','latitude','\x20-\x20','delete-btn','</select>\x0a\x20\x20<input\x20type=\x22number\x22\x20id=\x22edit-montant\x22\x20value=\x22','appendChild','Erreur\x20lors\x20de\x20l\x27ajout\x20du\x20recouvrement.','souscription-locataire','\x20modifié\x20avec\x20succès\x20!','.data-table','login-username','Erreur\x20lors\x20de\x20la\x20mise\x20à\x20jour\x20des\x20informations\x20de\x20l\x27agence.','autoTable','ville','\x22>Modifier</button>\x0a\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22','querySelectorAll','subscribe-yearly-btn','agence-prenom','\x0a<h3>Modifier\x20le\x20propriétaire</h3>\x0a<input\x20type=\x22text\x22\x20id=\x22edit-nom\x22\x20value=\x22','proprietaires/','dragend','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Nom:</strong>\x20','<option\x20value=\x22autre\x22>Autre</option>','1:146632846661:web:d63ca5c24f5b4acdeea22c','setView','lat','add-maison-btn','details-modal','locataires','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','.print-btn','show','#proprietaires-list\x20tbody','document','souscription','</select>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22nouveau-type-construction\x22\x20placeholder=\x22Entrez\x20le\x20nouveau\x20type\x22\x20style=\x22display:\x20none;\x22>\x0a\x20\x20<input\x20type=\x22text\x22\x20id=\x22edit-numero\x22\x20value=\x22','caution','edit-prenom','maisons','register-form-container'];_0x3221=function(){return _0x5c70b5;};return _0x3221();}async function addNewConstructionTypeForUser(_0xc13ff2,_0x22f033){const _0x49ec52=_0x471f92,_0x2d6a8f=ref(database,_0x49ec52(0x2b3)+_0xc13ff2+_0x49ec52(0x17d)),_0x4e2e78=push(_0x2d6a8f);await set(_0x4e2e78,{'nom':_0x22f033});}function loadConstructionTypesForUser(_0x2e44b9){const _0x41bf0c=_0x471f92,_0x42bafe=ref(database,_0x41bf0c(0x2b3)+_0x2e44b9+_0x41bf0c(0x17d));onValue(_0x42bafe,_0x209ef2=>{const _0x309071=_0x41bf0c,_0x438e46=_0x209ef2[_0x309071(0x164)](),_0x4d36fb=document[_0x309071(0x2c9)]('maison-type');while(_0x4d36fb['options'][_0x309071(0x2b6)]>0x2){_0x4d36fb[_0x309071(0x26b)](0x2);}for(const _0x341067 in _0x438e46){const _0x3a2a67=_0x438e46[_0x341067];if(!_0x4d36fb['querySelector']('option[value=\x22'+_0x3a2a67['nom']+'\x22]')){const _0x43dae7=document[_0x309071(0x278)](_0x309071(0x199));_0x43dae7['value']=_0x3a2a67[_0x309071(0x1f1)],_0x43dae7[_0x309071(0x19c)]=_0x3a2a67[_0x309071(0x1f1)],_0x4d36fb[_0x309071(0x1e7)](_0x43dae7);}}},{'onlyOnce':!![]});}document['getElementById']('maison-type')[_0x471f92(0x1a7)](_0x471f92(0x22e),_0x164c35=>{const _0x1af90b=_0x471f92,_0x2e442e=document[_0x1af90b(0x2c9)](_0x1af90b(0x2be));_0x164c35[_0x1af90b(0x27d)][_0x1af90b(0x1a5)]===_0x1af90b(0x1b0)?_0x2e442e['style'][_0x1af90b(0x2cc)]=_0x1af90b(0x1e8):_0x2e442e[_0x1af90b(0x2d1)][_0x1af90b(0x2cc)]='none';}),addLocataireForm[_0x471f92(0x1a7)]('submit',_0x2b2d0c=>{const _0x5d9246=_0x471f92;_0x2b2d0c['preventDefault'](),showLoading();const _0x153434=document[_0x5d9246(0x2c9)](_0x5d9246(0x272))[_0x5d9246(0x1a5)],_0x5d50e8=document[_0x5d9246(0x2c9)]('locataire-prenom')[_0x5d9246(0x1a5)],_0x3f3bd3=document['getElementById'](_0x5d9246(0x2a4))[_0x5d9246(0x1a5)],_0x261c92=document[_0x5d9246(0x2c9)](_0x5d9246(0x279))[_0x5d9246(0x1a5)];addLocataire(_0x153434,_0x5d50e8,_0x3f3bd3,_0x261c92)[_0x5d9246(0x280)](()=>{hideForm(addLocataireForm),loadLocataires();})[_0x5d9246(0x1cd)](_0x5703b3=>{const _0x4606ce=_0x5d9246;console[_0x4606ce(0x235)](_0x4606ce(0x21d),_0x5703b3),alert(_0x4606ce(0x2b0));})[_0x5d9246(0x27e)](()=>{hideLoading();});}),addSouscriptionForm[_0x471f92(0x1a7)](_0x471f92(0x1de),_0x3b3ad6=>{const _0x45aba9=_0x471f92;_0x3b3ad6[_0x45aba9(0x226)](),showLoading();const _0x4757a0=document[_0x45aba9(0x2c9)](_0x45aba9(0x1ad))['value'],_0x53e0d1=document[_0x45aba9(0x2c9)](_0x45aba9(0x2e1))[_0x45aba9(0x1a5)],_0x235e9d=parseInt(document['getElementById'](_0x45aba9(0x168))[_0x45aba9(0x1a5)]),_0x1c025b=parseInt(document[_0x45aba9(0x2c9)](_0x45aba9(0x167))[_0x45aba9(0x1a5)]),_0x4ab4c6=document[_0x45aba9(0x2c9)](_0x45aba9(0x217))['value'],_0x2c39d8=document[_0x45aba9(0x2c9)](_0x45aba9(0x192))['value'];addSouscription(_0x4757a0,_0x53e0d1,_0x235e9d,_0x1c025b,_0x4ab4c6,_0x2c39d8)[_0x45aba9(0x280)](()=>{hideForm(addSouscriptionForm),loadSouscriptions(),loadProprietairesForFilterSouscriptions();})['catch'](_0x478a46=>{const _0xdc3064=_0x45aba9;console[_0xdc3064(0x235)]('Erreur\x20lors\x20de\x20l\x27ajout\x20de\x20la\x20souscription:',_0x478a46),alert(_0xdc3064(0x2ce));})[_0x45aba9(0x27e)](()=>{hideLoading();});}),addRecouvrementForm[_0x471f92(0x1a7)](_0x471f92(0x1de),_0x210d12=>{const _0x4af060=_0x471f92;_0x210d12[_0x4af060(0x226)](),showLoading();const _0x3b5d8d=document[_0x4af060(0x2c9)]('recouvrement-souscription')['value'],_0x23a6a7=parseInt(document[_0x4af060(0x2c9)](_0x4af060(0x2c1))['value']),_0x53531b=document[_0x4af060(0x2c9)]('recouvrement-periode')[_0x4af060(0x1a5)],_0x1d5c4d=document[_0x4af060(0x2c9)](_0x4af060(0x1d8))[_0x4af060(0x1a5)];addRecouvrement(_0x3b5d8d,_0x23a6a7,_0x53531b,_0x1d5c4d)['then'](()=>{hideForm(addRecouvrementForm),loadRecouvrements(),loadProprietairesForFilter();})['catch'](_0x1c3319=>{const _0x426d99=_0x4af060;console[_0x426d99(0x235)](_0x426d99(0x1fd),_0x1c3319),alert(_0x426d99(0x2e0));})[_0x4af060(0x27e)](()=>{hideLoading();});});async function addProprietaire(_0x1ef62e,_0x5d8048,_0x49c35e,_0x27d286,_0x12a70e){const _0x32a915=ref(database,'proprietaires'),_0x543a7e=push(_0x32a915);await set(_0x543a7e,{'id':_0x543a7e['key'],'userId':currentUser['id'],'nom':_0x1ef62e,'prenom':_0x5d8048,'contact':_0x49c35e||'','adresse':_0x12a70e||''});}async function addMaison(_0x5e47eb,_0x5c1f4b,_0x4eb8d8,_0x3f79ed,_0x253895,_0x33f697,_0xbea0da,_0x49e01b,_0xa22f75,_0x3d77fb,_0x456284,_0x43e4a8,_0x36fa05){const _0x99ba94=_0x471f92,_0x3cac65=ref(database,_0x99ba94(0x162)),_0x3e04e1=push(_0x3cac65);await set(_0x3e04e1,{'id':_0x3e04e1[_0x99ba94(0x1d3)],'userId':currentUser['id'],'proprietaire':_0x5e47eb,'type':_0x5c1f4b,'numero':_0x4eb8d8||'','pieces':_0x3f79ed||0x0,'ville':_0x253895||'','commune':_0x33f697||'','quartier':_0xbea0da||'','loyer':_0x49e01b||0x0,'avance':_0xa22f75||0x0,'frais_supplementaire':_0x3d77fb||'','media':_0x456284||'','latitude':_0x43e4a8||null,'longitude':_0x36fa05||null});}async function addLocataire(_0x4ad3ea,_0x1c5fcf,_0x2ea518,_0x3925c2){const _0x18786e=_0x471f92,_0x6ddc18=ref(database,'locataires'),_0x1efbd6=push(_0x6ddc18);await set(_0x1efbd6,{'id':_0x1efbd6[_0x18786e(0x1d3)],'userId':currentUser['id'],'nom':_0x4ad3ea,'prenom':_0x1c5fcf,'contact':_0x2ea518||'','email':_0x3925c2||''});}async function addSouscription(_0x461e85,_0x610ce8,_0x425e7f,_0x4e3417,_0x4a3b05,_0x57c076){const _0x3fca3b=_0x471f92,_0x4af30d=ref(database,_0x3fca3b(0x204)),_0x1d7e86=push(_0x4af30d),_0x3724b6=ref(database,'maisons/'+_0x461e85),_0x5010a4=await get(_0x3724b6),_0x1ae577=_0x5010a4[_0x3fca3b(0x164)](),_0x2761c1=_0x1ae577['loyer'],_0x44b14d=_0x1ae577[_0x3fca3b(0x28f)];await set(_0x1d7e86,{'id':_0x1d7e86[_0x3fca3b(0x1d3)],'userId':currentUser['id'],'maison':_0x461e85,'locataire':_0x610ce8,'caution':_0x425e7f||0x0,'avance':_0x4e3417||0x0,'autres':_0x4a3b05||'','dateDebut':_0x57c076,'loyer':_0x2761c1,'proprietaire':_0x44b14d});}async function addRecouvrement(_0x226e9a,_0x1d1a5d,_0x32c632,_0x266c8d){const _0x21e3d8=_0x471f92,_0x1769fd=ref(database,_0x21e3d8(0x1db)),_0x100dc3=push(_0x1769fd),_0x332b6f=ref(database,_0x21e3d8(0x23f)+_0x226e9a),_0x1fd19f=await get(_0x332b6f),_0x513576=_0x1fd19f[_0x21e3d8(0x164)](),_0x452645=_0x513576[_0x21e3d8(0x22b)],_0x180610=ref(database,_0x21e3d8(0x224)+_0x452645),_0x4844b5=await get(_0x180610),_0x276bb3=_0x4844b5[_0x21e3d8(0x164)](),_0x319653=_0x276bb3[_0x21e3d8(0x28f)];await set(_0x100dc3,{'id':_0x100dc3[_0x21e3d8(0x1d3)],'userId':currentUser['id'],'souscription':_0x226e9a,'montant':_0x1d1a5d||0x0,'periode':_0x32c632||'','commentaire':_0x266c8d||'','proprietaire':_0x319653});}function loadProprietaires(){const _0x428ade=_0x471f92;showLoading();const _0xa9d523=document['querySelector'](_0x428ade(0x15c));_0xa9d523[_0x428ade(0x17c)]='';const _0x1626e7=ref(database,_0x428ade(0x258));onValue(_0x1626e7,_0x1fbb66=>{const _0x40061a=_0x428ade,_0x32d776=_0x1fbb66[_0x40061a(0x164)]();let _0x1925fb=0x0;for(const _0x4d5cb9 in _0x32d776){const _0x5001da=_0x32d776[_0x4d5cb9];if(_0x5001da['userId']===currentUser['id']){_0x1925fb++;const _0x17a0ef=document['createElement']('tr');_0x17a0ef['innerHTML']=_0x40061a(0x21a)+_0x5001da[_0x40061a(0x1f1)]+'</td>\x0a\x20\x20<td>'+_0x5001da[_0x40061a(0x23d)]+_0x40061a(0x170)+_0x5001da[_0x40061a(0x1af)]+_0x40061a(0x170)+_0x5001da[_0x40061a(0x1c1)]+_0x40061a(0x170)+_0x5001da['adresse']+_0x40061a(0x2a9)+_0x5001da['id']+_0x40061a(0x2e8)+_0x5001da['id']+_0x40061a(0x29d),_0xa9d523['appendChild'](_0x17a0ef);}}document[_0x40061a(0x2c9)]('dashboard-proprietaires-count')[_0x40061a(0x28e)]=_0x1925fb,hideLoading();},{'onlyOnce':!![]});}function loadMaisons(){const _0x2aada7=_0x471f92;showLoading();const _0x5751dc=document[_0x2aada7(0x1ba)](_0x2aada7(0x2b8));_0x5751dc[_0x2aada7(0x17c)]='';const _0x214552=ref(database,_0x2aada7(0x162));onValue(_0x214552,_0x48b0d4=>{const _0x19307b=_0x2aada7,_0xd08198=_0x48b0d4['val']();let _0x73cc92=0x0;loadConstructionTypesForUser(currentUser['id']);const _0x4a9df9=document[_0x19307b(0x2c9)]('maison-proprietaire');_0x4a9df9[_0x19307b(0x17c)]=_0x19307b(0x22c);const _0x244141=ref(database,_0x19307b(0x258));get(_0x244141)['then'](_0x42adf7=>{const _0x569bbf=_0x19307b,_0xc0642d=_0x42adf7['val']();for(const _0x5d1b9c in _0xc0642d){const _0xe32392=_0xc0642d[_0x5d1b9c];if(_0xe32392['userId']===currentUser['id']){const _0x20e171=document[_0x569bbf(0x278)](_0x569bbf(0x199));_0x20e171[_0x569bbf(0x1a5)]=_0x5d1b9c,_0x20e171[_0x569bbf(0x19c)]=_0xe32392[_0x569bbf(0x1f1)]+'\x20'+_0xe32392[_0x569bbf(0x23d)],_0x4a9df9[_0x569bbf(0x2df)](_0x20e171);}}});for(const _0x3a11d1 in _0xd08198){const _0x2aa0cf=_0xd08198[_0x3a11d1];_0x2aa0cf[_0x19307b(0x1c4)]===currentUser['id']&&(_0x73cc92++,get(ref(database,_0x19307b(0x2ed)+_0x2aa0cf[_0x19307b(0x28f)]))[_0x19307b(0x280)](_0xa945f6=>{const _0x17bc6f=_0x19307b,_0x231ae2=_0xa945f6[_0x17bc6f(0x164)](),_0x3c07a8=_0x231ae2?_0x231ae2[_0x17bc6f(0x1f1)]+'\x20'+_0x231ae2[_0x17bc6f(0x23d)]:_0x17bc6f(0x288),_0x5abf81=document[_0x17bc6f(0x278)]('tr');_0x5abf81['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x3c07a8+_0x17bc6f(0x27c)+_0x2aa0cf['type']+_0x17bc6f(0x27c)+_0x2aa0cf[_0x17bc6f(0x1f2)]+_0x17bc6f(0x27c)+_0x2aa0cf[_0x17bc6f(0x2ac)]+_0x17bc6f(0x27c)+_0x2aa0cf[_0x17bc6f(0x2e7)]+',\x20'+_0x2aa0cf[_0x17bc6f(0x297)]+',\x20'+_0x2aa0cf[_0x17bc6f(0x1fc)]+_0x17bc6f(0x27c)+_0x2aa0cf[_0x17bc6f(0x21b)]+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x2aa0cf[_0x17bc6f(0x2b9)]+_0x17bc6f(0x27c)+_0x2aa0cf['frais_supplementaire']+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22'+_0x2aa0cf['id']+_0x17bc6f(0x260)+_0x2aa0cf['id']+_0x17bc6f(0x2d0),_0x5751dc[_0x17bc6f(0x2df)](_0x5abf81);}));}document[_0x19307b(0x2c9)](_0x19307b(0x1bf))[_0x19307b(0x28e)]=_0x73cc92,hideLoading();},{'onlyOnce':!![]});}function loadLocataires(){const _0x5308c9=_0x471f92;showLoading();const _0x1076fd=document[_0x5308c9(0x1ba)]('#locataires-list\x20tbody');_0x1076fd[_0x5308c9(0x17c)]='';const _0xbf6134=ref(database,'locataires');onValue(_0xbf6134,_0x449938=>{const _0x369ddd=_0x5308c9,_0x1aa185=_0x449938['val']();let _0x220019=0x0;for(const _0x462528 in _0x1aa185){const _0x1ec024=_0x1aa185[_0x462528];if(_0x1ec024[_0x369ddd(0x1c4)]===currentUser['id']){_0x220019++;const _0x507b6e=document[_0x369ddd(0x278)]('tr');_0x507b6e['innerHTML']=_0x369ddd(0x294)+_0x1ec024['nom']+_0x369ddd(0x1c6)+_0x1ec024['prenom']+_0x369ddd(0x1c6)+_0x1ec024[_0x369ddd(0x1af)]+_0x369ddd(0x1c6)+_0x1ec024['email']+_0x369ddd(0x239)+_0x1ec024['id']+'\x22>Modifier</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22delete-btn\x22\x20data-id=\x22'+_0x1ec024['id']+_0x369ddd(0x190),_0x1076fd['appendChild'](_0x507b6e);}}document['getElementById']('dashboard-locataires-count')[_0x369ddd(0x28e)]=_0x220019,hideLoading();},{'onlyOnce':!![]});}function loadProprietairesForFilterSouscriptions(){const _0x5e5cec=_0x471f92,_0x38b3ec=document['getElementById']('proprietaire-filter-souscriptions');_0x38b3ec[_0x5e5cec(0x17c)]='<option\x20value=\x22\x22>Tous</option>';const _0x17498d=ref(database,_0x5e5cec(0x204));get(_0x17498d)[_0x5e5cec(0x280)](_0x681698=>{const _0x3fe3e6=_0x5e5cec,_0x516b37=_0x681698[_0x3fe3e6(0x164)](),_0x2fbcb0=new Set();for(const _0x6452fa in _0x516b37){const _0x42600e=_0x516b37[_0x6452fa];_0x42600e[_0x3fe3e6(0x1c4)]===currentUser['id']&&_0x42600e['proprietaire']&&_0x2fbcb0[_0x3fe3e6(0x1e7)](_0x42600e[_0x3fe3e6(0x28f)]);}_0x2fbcb0['forEach'](_0x19de98=>{const _0x2a8675=_0x3fe3e6,_0x3f8ea1=ref(database,_0x2a8675(0x2ed)+_0x19de98);get(_0x3f8ea1)[_0x2a8675(0x280)](_0x21c3e2=>{const _0x4e194c=_0x2a8675,_0x5c9712=_0x21c3e2['val']();if(_0x5c9712){const _0x3f416f=document[_0x4e194c(0x278)]('option');_0x3f416f[_0x4e194c(0x1a5)]=_0x19de98,_0x3f416f[_0x4e194c(0x19c)]=_0x5c9712[_0x4e194c(0x1f1)]+'\x20'+_0x5c9712['prenom'],_0x38b3ec[_0x4e194c(0x2df)](_0x3f416f);}});});});}function filterSouscriptionsByProprietaire(){const _0x3f3757=_0x471f92,_0x4905b4=document[_0x3f3757(0x2c9)](_0x3f3757(0x2a2))['value'],_0x3dceb6=document[_0x3f3757(0x2e9)](_0x3f3757(0x19f));_0x3dceb6[_0x3f3757(0x25a)](_0x315aa1=>{const _0x3dcd3f=_0x3f3757,_0x41ddca=_0x315aa1[_0x3dcd3f(0x1ba)](_0x3dcd3f(0x1c2)),_0x4367f9=_0x41ddca[_0x3dcd3f(0x267)][_0x3dcd3f(0x1dc)];!_0x4905b4||_0x4367f9===_0x4905b4?_0x315aa1[_0x3dcd3f(0x2d1)]['display']='':_0x315aa1[_0x3dcd3f(0x2d1)]['display']='none';});}function loadSouscriptions(){const _0x2afb06=_0x471f92;showLoading();const _0x55aade=document['querySelector']('#souscriptions-list\x20tbody');_0x55aade['innerHTML']='';const _0x155860=document[_0x2afb06(0x2c9)](_0x2afb06(0x1ad));_0x155860[_0x2afb06(0x17c)]=_0x2afb06(0x29e);const _0x154da6=ref(database,_0x2afb06(0x162));get(_0x154da6)[_0x2afb06(0x280)](_0x50cb16=>{const _0x4b94c5=_0x2afb06,_0x133974=_0x50cb16[_0x4b94c5(0x164)]();for(const _0x14d9a0 in _0x133974){const _0xf63788=_0x133974[_0x14d9a0];if(_0xf63788[_0x4b94c5(0x1c4)]===currentUser['id']){const _0x32de00=document[_0x4b94c5(0x278)](_0x4b94c5(0x199));_0x32de00[_0x4b94c5(0x1a5)]=_0x14d9a0,_0x32de00[_0x4b94c5(0x19c)]=_0xf63788[_0x4b94c5(0x2e7)]+',\x20'+_0xf63788[_0x4b94c5(0x297)]+',\x20'+_0xf63788[_0x4b94c5(0x1fc)],_0x155860['appendChild'](_0x32de00);}}});const _0x3b8467=document[_0x2afb06(0x2c9)](_0x2afb06(0x2e1));_0x3b8467['innerHTML']=_0x2afb06(0x18f);const _0x9a4611=ref(database,_0x2afb06(0x158));get(_0x9a4611)[_0x2afb06(0x280)](_0x377d09=>{const _0x1d086c=_0x2afb06,_0x5dbb43=_0x377d09['val']();for(const _0xb52480 in _0x5dbb43){const _0x547f25=_0x5dbb43[_0xb52480];if(_0x547f25[_0x1d086c(0x1c4)]===currentUser['id']){const _0x391849=document[_0x1d086c(0x278)]('option');_0x391849[_0x1d086c(0x1a5)]=_0xb52480,_0x391849[_0x1d086c(0x19c)]=_0x547f25[_0x1d086c(0x1f1)]+'\x20'+_0x547f25[_0x1d086c(0x23d)],_0x3b8467[_0x1d086c(0x2df)](_0x391849);}}});const _0x33f75c=ref(database,_0x2afb06(0x204));onValue(_0x33f75c,_0x451e1e=>{const _0x9623e0=_0x2afb06,_0x2aabc4=_0x451e1e[_0x9623e0(0x164)]();let _0x42a7c5=0x0;for(const _0x20255b in _0x2aabc4){const _0x2d1b76=_0x2aabc4[_0x20255b];_0x2d1b76[_0x9623e0(0x1c4)]===currentUser['id']&&(_0x42a7c5++,Promise['all']([get(ref(database,'maisons/'+_0x2d1b76[_0x9623e0(0x22b)])),get(ref(database,_0x9623e0(0x284)+_0x2d1b76[_0x9623e0(0x2bd)])),get(ref(database,'proprietaires/'+_0x2d1b76['proprietaire']))])[_0x9623e0(0x280)](([_0x38b1a6,_0x1f7c8f,_0x1e2be1])=>{const _0x4cab7=_0x9623e0,_0x106423=_0x38b1a6[_0x4cab7(0x164)](),_0x5e06a3=_0x1f7c8f[_0x4cab7(0x164)](),_0x187a9f=_0x1e2be1[_0x4cab7(0x164)](),_0x3cec18=_0x187a9f?_0x187a9f['id']:_0x4cab7(0x234),_0x3a37d4=_0x187a9f?_0x187a9f[_0x4cab7(0x1f1)]+'\x20'+_0x187a9f[_0x4cab7(0x23d)]:_0x4cab7(0x201),_0x46667a=document['createElement']('tr');_0x46667a[_0x4cab7(0x17c)]=_0x4cab7(0x2cd)+(_0x106423?_0x106423[_0x4cab7(0x2e7)]+',\x20'+_0x106423[_0x4cab7(0x297)]+',\x20'+_0x106423['quartier']:_0x4cab7(0x249))+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+(_0x5e06a3?_0x5e06a3[_0x4cab7(0x1f1)]+'\x20'+_0x5e06a3[_0x4cab7(0x23d)]:_0x4cab7(0x201))+_0x4cab7(0x2ef)+_0x2d1b76[_0x4cab7(0x160)]+_0x4cab7(0x2ef)+_0x2d1b76[_0x4cab7(0x2b9)]+_0x4cab7(0x2ef)+_0x2d1b76[_0x4cab7(0x283)]+_0x4cab7(0x2ef)+_0x2d1b76[_0x4cab7(0x24a)]+_0x4cab7(0x2ef)+_0x2d1b76['loyer']+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20data-proprietaire-id=\x22'+_0x3cec18+'\x22>'+_0x3a37d4+_0x4cab7(0x27a)+_0x2d1b76['id']+_0x4cab7(0x1e1)+_0x2d1b76['id']+_0x4cab7(0x275),_0x55aade['appendChild'](_0x46667a);}));}document[_0x9623e0(0x2c9)](_0x9623e0(0x2ca))[_0x9623e0(0x28e)]=_0x42a7c5,hideLoading();const _0x43077c=document[_0x9623e0(0x2c9)](_0x9623e0(0x2a2));_0x43077c[_0x9623e0(0x1a7)](_0x9623e0(0x22e),filterSouscriptionsByProprietaire);},{'onlyOnce':!![]});}function loadRecouvrements(){const _0x48fb76=_0x471f92;showLoading();const _0x1a96e1=document[_0x48fb76(0x1ba)](_0x48fb76(0x26e));_0x1a96e1[_0x48fb76(0x17c)]='';const _0x501b15=document[_0x48fb76(0x2c9)](_0x48fb76(0x195));_0x501b15[_0x48fb76(0x17c)]=_0x48fb76(0x1e6);const _0x2a4d72=ref(database,_0x48fb76(0x204));get(_0x2a4d72)[_0x48fb76(0x280)](_0x4e4c73=>{const _0x4f9bbc=_0x48fb76,_0x4ee8e2=_0x4e4c73[_0x4f9bbc(0x164)]();for(const _0x28cf6e in _0x4ee8e2){const _0x43b241=_0x4ee8e2[_0x28cf6e];if(_0x43b241[_0x4f9bbc(0x1c4)]===currentUser['id']){const _0x5ab096=document[_0x4f9bbc(0x278)]('option');_0x5ab096[_0x4f9bbc(0x1a5)]=_0x28cf6e,get(ref(database,'maisons/'+_0x43b241[_0x4f9bbc(0x22b)]))[_0x4f9bbc(0x280)](_0x4ae062=>{const _0x20e5b9=_0x4f9bbc,_0x62013c=_0x4ae062[_0x20e5b9(0x164)]();get(ref(database,_0x20e5b9(0x284)+_0x43b241[_0x20e5b9(0x2bd)]))[_0x20e5b9(0x280)](_0x4bf9db=>{const _0x1c0127=_0x20e5b9,_0x4c877d=_0x4bf9db[_0x1c0127(0x164)]();_0x5ab096[_0x1c0127(0x19c)]=_0x4c877d[_0x1c0127(0x1f1)]+'\x20'+_0x4c877d['prenom']+_0x1c0127(0x2dc)+_0x62013c[_0x1c0127(0x2e7)]+',\x20'+_0x62013c[_0x1c0127(0x297)]+',\x20'+_0x62013c[_0x1c0127(0x1fc)],_0x501b15[_0x1c0127(0x2df)](_0x5ab096);});});}}}),_0x501b15[_0x48fb76(0x1a7)](_0x48fb76(0x22e),async()=>{const _0x382440=_0x48fb76,_0x5e0ec3=_0x501b15[_0x382440(0x1a5)];if(_0x5e0ec3){const _0x52c188=ref(database,'souscriptions/'+_0x5e0ec3),_0x1d8b63=await get(_0x52c188),_0x30cae2=_0x1d8b63['val'](),_0x2a37e6=_0x30cae2['maison'],_0x172a4d=ref(database,_0x382440(0x224)+_0x2a37e6),_0x25ade1=await get(_0x172a4d),_0x1385e3=_0x25ade1[_0x382440(0x164)](),_0x4f72c7=_0x1385e3['proprietaire'],_0x425922=ref(database,_0x382440(0x2ed)+_0x4f72c7),_0x20ddba=await get(_0x425922),_0x343339=_0x20ddba['val'](),_0x873c74=_0x343339?_0x343339['nom']+'\x20'+_0x343339['prenom']:_0x382440(0x288),_0x5278b4=document[_0x382440(0x2c9)](_0x382440(0x16d));_0x5278b4[_0x382440(0x17c)]=_0x382440(0x291)+_0x4f72c7+'\x22>'+_0x873c74+_0x382440(0x1d0);}else{const _0x2cc827=document['getElementById'](_0x382440(0x16d));_0x2cc827[_0x382440(0x17c)]=_0x382440(0x22c);}});const _0x25a79b=ref(database,_0x48fb76(0x1db));onValue(_0x25a79b,_0x5d4a82=>{const _0x2540a9=_0x48fb76,_0x2d202c=_0x5d4a82[_0x2540a9(0x164)]();let _0xad2b07=0x0,_0x1d11d2=0x1;for(const _0x148fff in _0x2d202c){const _0xc60469=_0x2d202c[_0x148fff];_0xc60469[_0x2540a9(0x1c4)]===currentUser['id']&&(_0xad2b07++,get(ref(database,_0x2540a9(0x23f)+_0xc60469[_0x2540a9(0x15e)]))['then'](_0x3f7825=>{const _0x3b4808=_0x2540a9,_0xc29574=_0x3f7825[_0x3b4808(0x164)]();_0xc29574&&Promise[_0x3b4808(0x210)]([get(ref(database,'locataires/'+_0xc29574['locataire'])),get(ref(database,_0x3b4808(0x224)+_0xc29574['maison'])),get(ref(database,_0x3b4808(0x2ed)+_0xc60469[_0x3b4808(0x28f)]))])[_0x3b4808(0x280)](([_0x4021a7,_0x5a4feb,_0x38118f])=>{const _0x43f540=_0x3b4808,_0x43b6a3=_0x4021a7[_0x43f540(0x164)](),_0x16e2d7=_0x5a4feb['val'](),_0x1b925c=_0x38118f[_0x43f540(0x164)](),_0x44494f=_0x1b925c?_0x1b925c['id']:'inconnu',_0x19e09c=_0x1b925c?_0x1b925c[_0x43f540(0x1f1)]+'\x20'+_0x1b925c[_0x43f540(0x23d)]:_0x43f540(0x201),_0x3f30bb=document[_0x43f540(0x278)]('tr');_0x3f30bb[_0x43f540(0x17c)]='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+_0x1d11d2+_0x43f540(0x230)+(_0x43b6a3?_0x43b6a3[_0x43f540(0x1f1)]+'\x20'+_0x43b6a3[_0x43f540(0x23d)]:_0x43f540(0x201))+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>'+(_0x16e2d7&&_0x16e2d7[_0x43f540(0x1f2)]?_0x16e2d7[_0x43f540(0x1f2)]:_0x43f540(0x287))+_0x43f540(0x230)+_0xc29574[_0x43f540(0x21b)]+_0x43f540(0x230)+_0xc60469[_0x43f540(0x223)]+_0x43f540(0x230)+_0xc60469[_0x43f540(0x202)]+_0x43f540(0x230)+_0xc60469[_0x43f540(0x22f)]+_0x43f540(0x230)+_0xc60469[_0x43f540(0x1eb)]+_0x43f540(0x245)+_0x44494f+'\x22>'+_0x19e09c+'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22actions-cell\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22edit-btn\x22\x20data-id=\x22'+_0xc60469['id']+_0x43f540(0x2c0)+_0xc60469['id']+'\x22>Supprimer</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0x1a96e1[_0x43f540(0x2df)](_0x3f30bb),_0x1d11d2++;});}));}document[_0x2540a9(0x2c9)](_0x2540a9(0x1bc))[_0x2540a9(0x28e)]=_0xad2b07,hideLoading();},{'onlyOnce':!![]});}function loadProprietairesForFilter(){const _0x15c494=_0x471f92,_0x4ca4dd=document[_0x15c494(0x2c9)](_0x15c494(0x1e3));_0x4ca4dd[_0x15c494(0x17c)]=_0x15c494(0x1b5);const _0x544b96=ref(database,_0x15c494(0x1db));get(_0x544b96)[_0x15c494(0x280)](_0x193bb5=>{const _0x523211=_0x15c494,_0x436fbc=_0x193bb5[_0x523211(0x164)](),_0x74870b=new Set();for(const _0x2ba5c5 in _0x436fbc){const _0x1a4688=_0x436fbc[_0x2ba5c5];_0x1a4688[_0x523211(0x1c4)]===currentUser['id']&&_0x1a4688['proprietaire']&&_0x74870b['add'](_0x1a4688[_0x523211(0x28f)]);}_0x74870b[_0x523211(0x25a)](_0xd02d50=>{const _0x106243=_0x523211,_0x1e1f84=ref(database,_0x106243(0x2ed)+_0xd02d50);get(_0x1e1f84)[_0x106243(0x280)](_0x1d26b5=>{const _0x24b37f=_0x106243,_0x2e2128=_0x1d26b5['val']();if(_0x2e2128){const _0x3b073d=document[_0x24b37f(0x278)](_0x24b37f(0x199));_0x3b073d[_0x24b37f(0x1a5)]=_0xd02d50,_0x3b073d['text']=_0x2e2128[_0x24b37f(0x1f1)]+'\x20'+_0x2e2128['prenom'],_0x4ca4dd[_0x24b37f(0x2df)](_0x3b073d);}});});});}function filterRecouvrementsByProprietaire(){const _0x40d44a=_0x471f92,_0x367b8c=document[_0x40d44a(0x2c9)](_0x40d44a(0x1e3))['value'],_0x1136d8=document[_0x40d44a(0x2e9)]('#recouvrements-list\x20tbody\x20tr');_0x1136d8[_0x40d44a(0x25a)](_0xb6f208=>{const _0x9d0188=_0x40d44a,_0x60f884=_0xb6f208[_0x9d0188(0x1ba)]('td:nth-child(9)'),_0x3f07f8=_0x60f884[_0x9d0188(0x267)][_0x9d0188(0x1dc)];!_0x367b8c||_0x3f07f8===_0x367b8c?_0xb6f208[_0x9d0188(0x2d1)][_0x9d0188(0x2cc)]='':_0xb6f208[_0x9d0188(0x2d1)]['display']=_0x9d0188(0x25b);});}window['addEventListener'](_0x471f92(0x2d9),()=>{const _0x22f87b=_0x471f92;loadProprietairesForFilter(),loadProprietairesForFilterSouscriptions();const _0x29568f=document[_0x22f87b(0x2c9)](_0x22f87b(0x1e3));_0x29568f[_0x22f87b(0x1a7)](_0x22f87b(0x22e),filterRecouvrementsByProprietaire);const _0x53d7cd=document[_0x22f87b(0x2c9)](_0x22f87b(0x2a2));_0x53d7cd[_0x22f87b(0x1a7)]('change',filterSouscriptionsByProprietaire);});function openEditModal(_0x57402a,_0x58e5da){const _0x205d48=_0x471f92,_0x5c9f6f=document[_0x205d48(0x2c9)](_0x205d48(0x2c4)),_0x2fc0f0=document[_0x205d48(0x2c9)]('edit-form');_0x2fc0f0['innerHTML']='';const _0x1ec7fc=ref(database,_0x58e5da+'/'+_0x57402a);get(_0x1ec7fc)['then'](_0x348561=>{const _0xe89c7b=_0x205d48;if(_0x348561[_0xe89c7b(0x181)]()){const _0x37f352=_0x348561[_0xe89c7b(0x164)]();switch(_0x58e5da){case _0xe89c7b(0x258):populateProprietaireForm(_0x2fc0f0,_0x37f352,_0x57402a);break;case _0xe89c7b(0x162):populateMaisonForm(_0x2fc0f0,_0x37f352,_0x57402a);break;case'locataires':populateLocataireForm(_0x2fc0f0,_0x37f352,_0x57402a);break;case _0xe89c7b(0x204):populateSouscriptionForm(_0x2fc0f0,_0x37f352,_0x57402a);break;case _0xe89c7b(0x1db):populateRecouvrementForm(_0x2fc0f0,_0x37f352,_0x57402a);break;}}else console[_0xe89c7b(0x2a5)](_0xe89c7b(0x1a1));})[_0x205d48(0x1cd)](_0x237e17=>{const _0x113d93=_0x205d48;console[_0x113d93(0x235)]('Error\x20fetching\x20item\x20data:',_0x237e17);}),_0x5c9f6f[_0x205d48(0x2d1)][_0x205d48(0x2cc)]=_0x205d48(0x1e8);}function populateProprietaireForm(_0x324973,_0x22eaec,_0x44941e){const _0x27a537=_0x471f92;_0x324973['innerHTML']=_0x27a537(0x2ec)+_0x22eaec['nom']+_0x27a537(0x240)+_0x22eaec['prenom']+_0x27a537(0x256)+_0x22eaec[_0x27a537(0x1af)]+'\x22\x20required>\x0a<input\x20type=\x22email\x22\x20id=\x22edit-email\x22\x20value=\x22'+_0x22eaec[_0x27a537(0x1c1)]+_0x27a537(0x270)+_0x22eaec[_0x27a537(0x2d7)]+_0x27a537(0x228),_0x324973['onsubmit']=_0x22b905=>{const _0x1d734b=_0x27a537;_0x22b905['preventDefault']();const _0x448ac4={'nom':document[_0x1d734b(0x2c9)](_0x1d734b(0x20a))['value'],'prenom':document[_0x1d734b(0x2c9)](_0x1d734b(0x161))[_0x1d734b(0x1a5)],'contact':document[_0x1d734b(0x2c9)](_0x1d734b(0x2ab))[_0x1d734b(0x1a5)],'email':document[_0x1d734b(0x2c9)](_0x1d734b(0x197))[_0x1d734b(0x1a5)],'adresse':document['getElementById'](_0x1d734b(0x1c8))[_0x1d734b(0x1a5)]};updateItem('proprietaires',_0x44941e,_0x448ac4);};}function populateMaisonForm(_0x53d076,_0x507cb5,_0x11bfab){const _0x44b2c7=_0x471f92,_0x569934=ref(database,_0x44b2c7(0x258)),_0xd76d44=ref(database,_0x44b2c7(0x2b3)+currentUser['id']+_0x44b2c7(0x17d));Promise[_0x44b2c7(0x210)]([get(_0x569934),get(_0xd76d44)])[_0x44b2c7(0x280)](([_0x1b3943,_0x5b926d])=>{const _0x450934=_0x44b2c7,_0xc50101=_0x1b3943[_0x450934(0x164)](),_0x44babd=_0x5b926d['val']();let _0x321550='';for(const _0x4441b4 in _0xc50101){const _0x498c1f=_0xc50101[_0x4441b4];if(_0x498c1f['userId']===currentUser['id']){const _0x26c6f3=_0x4441b4===_0x507cb5[_0x450934(0x28f)]?'selected':'';_0x321550+=_0x450934(0x291)+_0x4441b4+'\x22\x20'+_0x26c6f3+'>'+_0x498c1f[_0x450934(0x1f1)]+'\x20'+_0x498c1f['prenom']+_0x450934(0x1d0);}}let _0x4fb280=_0x450934(0x2f1);for(const _0x301126 in _0x44babd){const _0x195efb=_0x44babd[_0x301126],_0x205313=_0x195efb[_0x450934(0x1f1)]===_0x507cb5[_0x450934(0x179)]?_0x450934(0x183):'';_0x4fb280+='<option\x20value=\x22'+_0x195efb['nom']+'\x22\x20'+_0x205313+'>'+_0x195efb[_0x450934(0x1f1)]+_0x450934(0x1d0);}_0x53d076['innerHTML']=_0x450934(0x1d2)+_0x321550+'</select>\x0a\x20\x20<select\x20id=\x22edit-type\x22>'+_0x4fb280+_0x450934(0x15f)+_0x507cb5[_0x450934(0x1f2)]+_0x450934(0x229)+_0x507cb5[_0x450934(0x2ac)]+_0x450934(0x265)+_0x507cb5[_0x450934(0x2e7)]+_0x450934(0x1bb)+_0x507cb5[_0x450934(0x297)]+_0x450934(0x1dd)+_0x507cb5[_0x450934(0x1fc)]+_0x450934(0x276)+_0x507cb5[_0x450934(0x21b)]+_0x450934(0x28c)+(_0x507cb5[_0x450934(0x2b9)]||'')+_0x450934(0x220)+(_0x507cb5['frais_supplementaire']||'')+_0x450934(0x24b)+(_0x507cb5['media']||'')+_0x450934(0x200);const _0x3a43ef=document[_0x450934(0x2c9)](_0x450934(0x207)),_0x365d93=document[_0x450934(0x2c9)](_0x450934(0x2be));_0x3a43ef[_0x450934(0x1a5)]!==_0x450934(0x1b0)&&(_0x365d93[_0x450934(0x2d1)]['display']=_0x450934(0x25b)),_0x3a43ef[_0x450934(0x1a7)](_0x450934(0x22e),()=>{const _0x2d5e1d=_0x450934;_0x365d93[_0x2d5e1d(0x2d1)][_0x2d5e1d(0x2cc)]=_0x3a43ef['value']==='autre'?_0x2d5e1d(0x1e8):_0x2d5e1d(0x25b);}),_0x53d076[_0x450934(0x257)]=_0x133aa3=>{const _0x92bf8b=_0x450934;_0x133aa3[_0x92bf8b(0x226)]();const _0x57b6fc=_0x3a43ef[_0x92bf8b(0x1a5)]==='autre'?_0x365d93[_0x92bf8b(0x1a5)]:_0x3a43ef['value'],_0x24b43c={'proprietaire':document[_0x92bf8b(0x2c9)](_0x92bf8b(0x29f))[_0x92bf8b(0x1a5)],'type':_0x57b6fc,'numero':document[_0x92bf8b(0x2c9)](_0x92bf8b(0x225))['value'],'pieces':parseInt(document[_0x92bf8b(0x2c9)](_0x92bf8b(0x2ba))[_0x92bf8b(0x1a5)]),'ville':document[_0x92bf8b(0x2c9)]('edit-ville')[_0x92bf8b(0x1a5)],'commune':document[_0x92bf8b(0x2c9)](_0x92bf8b(0x175))[_0x92bf8b(0x1a5)],'quartier':document[_0x92bf8b(0x2c9)]('edit-quartier')[_0x92bf8b(0x1a5)],'loyer':parseInt(document[_0x92bf8b(0x2c9)](_0x92bf8b(0x21f))[_0x92bf8b(0x1a5)]),'avance':parseInt(document[_0x92bf8b(0x2c9)]('edit-avance')[_0x92bf8b(0x1a5)]),'frais_supplementaire':document['getElementById'](_0x92bf8b(0x20e))['value'],'media':document[_0x92bf8b(0x2c9)](_0x92bf8b(0x1d5))[_0x92bf8b(0x1a5)]};updateItem('maisons',_0x11bfab,_0x24b43c);};});}function populateLocataireForm(_0x4810dc,_0x4ea526,_0x16ce87){const _0x1b0e79=_0x471f92;_0x4810dc[_0x1b0e79(0x17c)]=_0x1b0e79(0x29a)+_0x4ea526['nom']+_0x1b0e79(0x240)+_0x4ea526[_0x1b0e79(0x23d)]+_0x1b0e79(0x256)+_0x4ea526[_0x1b0e79(0x1af)]+_0x1b0e79(0x189)+_0x4ea526[_0x1b0e79(0x1c1)]+_0x1b0e79(0x228),_0x4810dc[_0x1b0e79(0x257)]=_0x56b731=>{const _0x11a419=_0x1b0e79;_0x56b731[_0x11a419(0x226)]();const _0xe691be={'nom':document['getElementById'](_0x11a419(0x20a))[_0x11a419(0x1a5)],'prenom':document[_0x11a419(0x2c9)](_0x11a419(0x161))['value'],'contact':document[_0x11a419(0x2c9)](_0x11a419(0x2ab))[_0x11a419(0x1a5)],'email':document[_0x11a419(0x2c9)](_0x11a419(0x197))[_0x11a419(0x1a5)]};updateItem(_0x11a419(0x158),_0x16ce87,_0xe691be);};}function populateSouscriptionForm(_0x4e710f,_0x22a431,_0x38103b){const _0x472b31=_0x471f92,_0x3e9c74=ref(database,_0x472b31(0x162)),_0x19424a=ref(database,_0x472b31(0x158));Promise['all']([get(_0x3e9c74),get(_0x19424a)])[_0x472b31(0x280)](([_0x233474,_0x5a9e25])=>{const _0x5b0f24=_0x472b31,_0x1ca0b3=_0x233474[_0x5b0f24(0x164)](),_0x46cf8a=_0x5a9e25[_0x5b0f24(0x164)]();let _0x407905='';for(const _0x413a91 in _0x1ca0b3){const _0x35854e=_0x1ca0b3[_0x413a91];if(_0x35854e[_0x5b0f24(0x1c4)]===currentUser['id']){const _0x41db6d=_0x413a91===_0x22a431['maison']?'selected':'';_0x407905+='<option\x20value=\x22'+_0x413a91+'\x22\x20'+_0x41db6d+'>'+_0x35854e[_0x5b0f24(0x2e7)]+',\x20'+_0x35854e['commune']+',\x20'+_0x35854e[_0x5b0f24(0x1fc)]+_0x5b0f24(0x1d0);}}let _0x29c081='';for(const _0x328d8c in _0x46cf8a){const _0x22e666=_0x46cf8a[_0x328d8c];if(_0x22e666['userId']===currentUser['id']){const _0x2778eb=_0x328d8c===_0x22a431[_0x5b0f24(0x2bd)]?'selected':'';_0x29c081+=_0x5b0f24(0x291)+_0x328d8c+'\x22\x20'+_0x2778eb+'>'+_0x22e666['nom']+'\x20'+_0x22e666['prenom']+_0x5b0f24(0x1d0);}}_0x4e710f[_0x5b0f24(0x17c)]=_0x5b0f24(0x1da)+_0x407905+_0x5b0f24(0x1f9)+_0x29c081+_0x5b0f24(0x2c6)+_0x22a431['caution']+_0x5b0f24(0x28c)+_0x22a431[_0x5b0f24(0x2b9)]+_0x5b0f24(0x1cf)+_0x22a431['autres']+'\x22\x20required>\x0a\x20\x20<input\x20type=\x22date\x22\x20id=\x22edit-dateDebut\x22\x20value=\x22'+_0x22a431[_0x5b0f24(0x24a)]+_0x5b0f24(0x24c),_0x4e710f[_0x5b0f24(0x257)]=_0x2a2732=>{const _0x37b2dc=_0x5b0f24;_0x2a2732[_0x37b2dc(0x226)]();const _0x1027c9={'maison':document[_0x37b2dc(0x2c9)]('edit-maison')[_0x37b2dc(0x1a5)],'locataire':document[_0x37b2dc(0x2c9)](_0x37b2dc(0x1f4))[_0x37b2dc(0x1a5)],'caution':parseInt(document['getElementById']('edit-caution')[_0x37b2dc(0x1a5)]),'avance':parseInt(document[_0x37b2dc(0x2c9)](_0x37b2dc(0x2bc))[_0x37b2dc(0x1a5)]),'autres':document[_0x37b2dc(0x2c9)](_0x37b2dc(0x25d))[_0x37b2dc(0x1a5)],'dateDebut':document['getElementById']('edit-dateDebut')[_0x37b2dc(0x1a5)]};updateItem(_0x37b2dc(0x204),_0x38103b,_0x1027c9);};});}function populateRecouvrementForm(_0x939f21,_0x4a8f6c,_0x11dca7){const _0x32f4ae=_0x471f92,_0x5dde3f=ref(database,_0x32f4ae(0x204));get(_0x5dde3f)['then'](_0xdf528=>{const _0x5867a5=_0x32f4ae,_0x4de013=_0xdf528[_0x5867a5(0x164)]();let _0x35e7ca='';for(const _0x5ab7b0 in _0x4de013){const _0x3ef89a=_0x4de013[_0x5ab7b0];if(_0x3ef89a[_0x5867a5(0x1c4)]===currentUser['id']){const _0x4b1191=_0x5ab7b0===_0x4a8f6c[_0x5867a5(0x15e)]?'selected':'';_0x35e7ca+=_0x5867a5(0x291)+_0x5ab7b0+'\x22\x20'+_0x4b1191+'>ID:\x20'+_0x5ab7b0+'</option>';}}_0x939f21[_0x5867a5(0x17c)]='\x0a\x20\x20<h3>Modifier\x20le\x20recouvrement</h3>\x0a\x20\x20<select\x20id=\x22edit-souscription\x22>'+_0x35e7ca+_0x5867a5(0x2de)+_0x4a8f6c[_0x5867a5(0x202)]+_0x5867a5(0x236)+_0x4a8f6c['periode']+_0x5867a5(0x1fe)+_0x4a8f6c[_0x5867a5(0x1eb)]+'\x22\x20placeholder=\x22Commentaire\x20(ex:\x20Payé)\x22>\x0a\x20\x20<button\x20type=\x22submit\x22\x20class=\x22submit-btn\x22>Enregistrer</button>\x0a\x20\x20<button\x20type=\x22button\x22\x20class=\x22cancel-btn\x22\x20onclick=\x22closeEditModal()\x22>Annuler</button>\x0a',_0x939f21[_0x5867a5(0x257)]=_0x3b11d6=>{const _0x553441=_0x5867a5;_0x3b11d6[_0x553441(0x226)]();const _0x27dcae={'souscription':document[_0x553441(0x2c9)](_0x553441(0x1fa))[_0x553441(0x1a5)],'montant':parseInt(document['getElementById'](_0x553441(0x16b))[_0x553441(0x1a5)]),'periode':document[_0x553441(0x2c9)](_0x553441(0x1a0))[_0x553441(0x1a5)],'commentaire':document[_0x553441(0x2c9)](_0x553441(0x16c))['value']};updateItem('recouvrements',_0x11dca7,_0x27dcae);};});}function closeEditModal(){const _0x2f9a43=_0x471f92;document['getElementById'](_0x2f9a43(0x2c4))[_0x2f9a43(0x2d1)][_0x2f9a43(0x2cc)]=_0x2f9a43(0x25b);}window[_0x471f92(0x254)]=closeEditModal;function updateItem(_0x583988,_0x220265,_0x1635e8){const _0x1a042c=_0x471f92;showLoading();const _0x2ff9f5=ref(database,_0x583988+'/'+_0x220265);update(_0x2ff9f5,_0x1635e8)[_0x1a042c(0x280)](()=>{const _0xe77d46=_0x1a042c;switch(_0x583988){case _0xe77d46(0x258):loadProprietaires();break;case _0xe77d46(0x162):loadMaisons();break;case _0xe77d46(0x158):loadLocataires();break;case'souscriptions':loadSouscriptions();break;case'recouvrements':loadRecouvrements();break;}alert(_0x583988[_0xe77d46(0x26f)](0x0)[_0xe77d46(0x211)]()+_0x583988[_0xe77d46(0x227)](0x1,-0x1)+_0xe77d46(0x2e2)),closeEditModal();})[_0x1a042c(0x1cd)](_0x37c860=>{const _0x3f245c=_0x1a042c;console[_0x3f245c(0x235)](_0x3f245c(0x2a1)+_0x583988+':',_0x37c860),alert('Erreur\x20lors\x20de\x20la\x20modification\x20de\x20'+_0x583988+'.');})[_0x1a042c(0x27e)](()=>{hideLoading();});}document[_0x471f92(0x1ba)]('#proprietaires-list\x20tbody')['addEventListener']('click',_0x434377=>handleEditDelete(_0x434377,'proprietaires')),document['querySelector'](_0x471f92(0x2b8))['addEventListener']('click',_0x31bd31=>handleEditDelete(_0x31bd31,'maisons')),document[_0x471f92(0x1ba)](_0x471f92(0x2d5))[_0x471f92(0x1a7)](_0x471f92(0x2d4),_0x3d9074=>handleEditDelete(_0x3d9074,'locataires')),document[_0x471f92(0x1ba)](_0x471f92(0x2ae))[_0x471f92(0x1a7)]('click',_0x9c787e=>handleEditDelete(_0x9c787e,_0x471f92(0x204))),document[_0x471f92(0x1ba)](_0x471f92(0x26e))['addEventListener'](_0x471f92(0x2d4),_0xbdfc3=>handleEditDelete(_0xbdfc3,_0x471f92(0x1db)));function handleEditDelete(_0x52899c,_0x159dcf){const _0x1b15fc=_0x471f92,_0x10364a=_0x52899c['target'];if(_0x10364a[_0x1b15fc(0x2b4)][_0x1b15fc(0x191)]('edit-btn')){const _0x42c8c7=_0x10364a[_0x1b15fc(0x267)]['id'];openEditModal(_0x42c8c7,_0x159dcf);}else{if(_0x10364a[_0x1b15fc(0x2b4)][_0x1b15fc(0x191)](_0x1b15fc(0x2dd))){const _0x3b25a8=_0x10364a[_0x1b15fc(0x267)]['id'],_0x21a32c=_0x1b15fc(0x2a6)+_0x159dcf[_0x1b15fc(0x227)](0x0,-0x1)+'\x20?';confirm(_0x21a32c)&&deleteItem(_0x159dcf,_0x3b25a8);}}}async function deleteItem(_0x5d1780,_0x2597d8){const _0x2773a1=_0x471f92;showLoading();try{const _0x10bc7a=ref(database,_0x5d1780+'/'+_0x2597d8);await remove(_0x10bc7a);if(_0x5d1780===_0x2773a1(0x258))loadProprietaires();else{if(_0x5d1780===_0x2773a1(0x162))loadMaisons();else{if(_0x5d1780==='locataires')loadLocataires();else{if(_0x5d1780==='souscriptions')loadSouscriptions();else _0x5d1780===_0x2773a1(0x1db)&&loadRecouvrements();}}}}catch(_0x2b4b5b){console[_0x2773a1(0x235)](_0x2773a1(0x20f)+_0x5d1780+':',_0x2b4b5b),alert(_0x2773a1(0x20f)+_0x5d1780+'.');}finally{hideLoading();}}const subscribeMonthlyBtn=document[_0x471f92(0x2c9)]('subscribe-monthly-btn'),subscribeYearlyBtn=document[_0x471f92(0x2c9)](_0x471f92(0x2ea)),cancelSubscriptionBtn=document['getElementById'](_0x471f92(0x17a));subscribeMonthlyBtn[_0x471f92(0x1a7)]('click',()=>{const _0x49c086=_0x471f92;handleSubscription(_0x49c086(0x1ef));}),subscribeYearlyBtn[_0x471f92(0x1a7)]('click',()=>{handleSubscription('yearly');});async function handleSubscription(_0x54ae8d){const _0x1c2345=_0x471f92;if(currentUser&&currentUser[_0x1c2345(0x262)]&&currentUser[_0x1c2345(0x262)][_0x1c2345(0x253)]==='active'){alert(_0x1c2345(0x1b1));return;}const _0x55a60c=ref(database,_0x1c2345(0x2b3)+currentUser['id']+_0x1c2345(0x2d8)),_0x43dd08=await get(_0x55a60c);if(!_0x43dd08[_0x1c2345(0x181)]()){alert(_0x1c2345(0x1df));return;}const _0x247d99=_0x43dd08['val'](),_0x27a3c0=_0x247d99[_0x1c2345(0x1be)];if(!_0x27a3c0){alert('Clé\x20API\x20publique\x20FedaPay\x20manquante.\x20Veuillez\x20configurer\x20les\x20informations\x20de\x20votre\x20agence.');return;}const _0x4ca379=_0x54ae8d===_0x1c2345(0x1ef)?0x3e8:0x2710,_0x3073d1=_0x54ae8d===_0x1c2345(0x1ef)?_0x1c2345(0x1ac):_0x1c2345(0x28d);showLoading(),FedaPay[_0x1c2345(0x19b)]({'public_key':_0x27a3c0,'transaction':{'amount':_0x4ca379,'description':_0x3073d1},'customer':{'email':_0x247d99[_0x1c2345(0x1c1)]||_0x1c2345(0x165)},'onComplete':async function(_0x134a8d){const _0x308ff5=_0x1c2345;if(_0x134a8d['reason']===FedaPay['CHECKOUT_COMPLETED']){const _0x1485b6=new Date(),_0x22b32d=new Date(_0x54ae8d===_0x308ff5(0x1ef)?_0x1485b6[_0x308ff5(0x17f)]()+0x1e*0x18*0x3c*0x3c*0x3e8:_0x1485b6[_0x308ff5(0x17f)]()+0x16d*0x18*0x3c*0x3c*0x3e8),_0x3104d0={'status':_0x308ff5(0x21c),'type':_0x54ae8d,'startDate':_0x1485b6[_0x308ff5(0x1bd)](),'endDate':_0x22b32d[_0x308ff5(0x1bd)]()};await update(ref(database,_0x308ff5(0x2b3)+currentUser['id']+_0x308ff5(0x248)),_0x3104d0),currentUser&&(currentUser['subscription']=_0x3104d0,localStorage[_0x308ff5(0x2ad)](_0x308ff5(0x16e),JSON[_0x308ff5(0x16a)](currentUser))),checkUserRoleAndSubscription(),alert(_0x308ff5(0x238)+(_0x54ae8d===_0x308ff5(0x1ef)?_0x308ff5(0x296):_0x308ff5(0x213))+_0x308ff5(0x252)),loadDashboardData();}else _0x134a8d['reason']===FedaPay[_0x308ff5(0x1ed)]?alert(_0x308ff5(0x273)):(console[_0x308ff5(0x2a5)](_0x308ff5(0x19d),_0x134a8d),alert('Erreur\x20lors\x20du\x20paiement.\x20Veuillez\x20réessayer.'));}})[_0x1c2345(0x251)](),hideLoading();}async function loadDashboardData(){const _0x9b7125=_0x471f92;if(!isAuthenticated)return;const _0x5a8401=ref(database,_0x9b7125(0x258));onValue(_0x5a8401,_0x4bbaac=>{const _0x345a5d=_0x9b7125,_0xac1d5b=_0x4bbaac[_0x345a5d(0x164)]();let _0x1e7519=0x0;for(const _0x3b7ab3 in _0xac1d5b){_0xac1d5b[_0x3b7ab3][_0x345a5d(0x1c4)]===currentUser['id']&&_0x1e7519++;}document[_0x345a5d(0x2c9)](_0x345a5d(0x29b))[_0x345a5d(0x28e)]=_0x1e7519;});const _0x487ee5=ref(database,_0x9b7125(0x158));onValue(_0x487ee5,_0x166f15=>{const _0x2cd0d0=_0x9b7125,_0x44047d=_0x166f15[_0x2cd0d0(0x164)]();let _0x5299e0=0x0;for(const _0x136fb7 in _0x44047d){_0x44047d[_0x136fb7][_0x2cd0d0(0x1c4)]===currentUser['id']&&_0x5299e0++;}document[_0x2cd0d0(0x2c9)]('dashboard-locataires-count')[_0x2cd0d0(0x28e)]=_0x5299e0;});const _0x374e94=ref(database,'maisons');onValue(_0x374e94,_0x5c45c8=>{const _0xa32403=_0x9b7125,_0x3f1c06=_0x5c45c8['val']();let _0x52e1ba=0x0;for(const _0x50d948 in _0x3f1c06){_0x3f1c06[_0x50d948][_0xa32403(0x1c4)]===currentUser['id']&&_0x52e1ba++;}document['getElementById'](_0xa32403(0x1bf))[_0xa32403(0x28e)]=_0x52e1ba;});const _0xdc4245=ref(database,_0x9b7125(0x204));onValue(_0xdc4245,_0x33d06b=>{const _0x128576=_0x9b7125,_0x2e4484=_0x33d06b[_0x128576(0x164)]();let _0x1d037b=0x0;for(const _0x7a4def in _0x2e4484){_0x2e4484[_0x7a4def][_0x128576(0x1c4)]===currentUser['id']&&_0x1d037b++;}document['getElementById']('dashboard-souscriptions-count')['textContent']=_0x1d037b;});const _0x3fe7c1=ref(database,_0x9b7125(0x1db));onValue(_0x3fe7c1,_0x542a1d=>{const _0x4d7a2b=_0x9b7125,_0x5cd289=_0x542a1d[_0x4d7a2b(0x164)]();let _0x1e1cfb=0x0;for(const _0x378dac in _0x5cd289){_0x5cd289[_0x378dac][_0x4d7a2b(0x1c4)]===currentUser['id']&&_0x1e1cfb++;}document[_0x4d7a2b(0x2c9)](_0x4d7a2b(0x1bc))[_0x4d7a2b(0x28e)]=_0x1e1cfb;});const _0x5191aa=ref(database,_0x9b7125(0x26c));onValue(_0x5191aa,_0x2245f7=>{const _0x3681eb=_0x9b7125,_0x45859d=_0x2245f7[_0x3681eb(0x164)]();let _0x3ce7c6=0x0;for(const _0x1a1578 in _0x45859d){const _0x39f6f0=_0x45859d[_0x1a1578];_0x39f6f0[_0x3681eb(0x262)]&&_0x39f6f0[_0x3681eb(0x262)][_0x3681eb(0x253)]===_0x3681eb(0x21c)&&_0x3ce7c6++;}document[_0x3681eb(0x2c9)](_0x3681eb(0x282))[_0x3681eb(0x28e)]=_0x3ce7c6;});}cancelSubscriptionBtn['addEventListener'](_0x471f92(0x2d4),async()=>{const _0x4b1dba=_0x471f92;currentUser&&currentUser[_0x4b1dba(0x262)]?confirm('Êtes-vous\x20sûr\x20de\x20vouloir\x20annuler\x20votre\x20abonnement\x20?')&&(await update(ref(database,_0x4b1dba(0x2b3)+currentUser['id']+_0x4b1dba(0x248)),{'status':_0x4b1dba(0x1cb)}),currentUser[_0x4b1dba(0x262)][_0x4b1dba(0x253)]='cancelled',localStorage[_0x4b1dba(0x2ad)](_0x4b1dba(0x16e),JSON[_0x4b1dba(0x16a)](currentUser)),checkUserRoleAndSubscription(),alert('Abonnement\x20annulé.'),loadDashboardData()):alert(_0x4b1dba(0x2cf));});function logout(){const _0x2802fa=_0x471f92;localStorage[_0x2802fa(0x24f)](_0x2802fa(0x16e)),localStorage['removeItem'](_0x2802fa(0x25f)),isAuthenticated=![],currentUser=null,window[_0x2802fa(0x281)][_0x2802fa(0x20c)]=_0x2802fa(0x23a);}const logoutButton=document[_0x471f92(0x278)](_0x471f92(0x196));logoutButton['id']=_0x471f92(0x216),logoutButton[_0x471f92(0x28e)]=_0x471f92(0x19a),document[_0x471f92(0x1e2)]['appendChild'](logoutButton),document[_0x471f92(0x2c9)]('logout-btn')[_0x471f92(0x1a7)](_0x471f92(0x2d4),logout);function checkUserAccess(_0x30e5f0=null){const _0x511d22=_0x471f92;if(currentUser&&currentUser[_0x511d22(0x262)]&&currentUser['subscription'][_0x511d22(0x253)]===_0x511d22(0x21c)||_0x30e5f0===_0x511d22(0x187))_0x30e5f0&&(contentSections[_0x511d22(0x25a)](_0x2646d4=>_0x2646d4['classList'][_0x511d22(0x26b)]('active')),document['getElementById'](_0x30e5f0)[_0x511d22(0x2b4)]['add'](_0x511d22(0x21c)));else{alert(_0x511d22(0x1f0)),contentSections[_0x511d22(0x25a)](_0xcec048=>_0xcec048[_0x511d22(0x2b4)]['remove'](_0x511d22(0x21c))),document['getElementById']('abonnements')[_0x511d22(0x2b4)][_0x511d22(0x1e7)](_0x511d22(0x21c)),tabs[_0x511d22(0x25a)](_0x4139df=>_0x4139df[_0x511d22(0x2b4)][_0x511d22(0x26b)](_0x511d22(0x21c)));const _0x1e021d=document['querySelector'](_0x511d22(0x176));_0x1e021d&&_0x1e021d[_0x511d22(0x2b4)][_0x511d22(0x1e7)]('active');}}function exportTableToPDF(_0x28f1cf,_0x346c46){const _0x80ba00=_0x471f92,{jsPDF:_0x435a01}=window[_0x80ba00(0x1e4)],_0x34bb85=new _0x435a01(),_0x4da98e=document[_0x80ba00(0x2c9)](_0x28f1cf);_0x34bb85[_0x80ba00(0x2e6)]({'html':'#'+_0x28f1cf}),_0x34bb85[_0x80ba00(0x18d)](_0x346c46+_0x80ba00(0x172));}function exportTableToExcel(_0x486718,_0x4408e9){const _0x2287aa=_0x471f92,_0x2d5d89=document[_0x2287aa(0x2c9)](_0x486718),_0x1b1794=XLSX['utils'][_0x2287aa(0x174)](_0x2d5d89,{'sheet':_0x2287aa(0x177)});XLSX['writeFile'](_0x1b1794,_0x4408e9+'.xlsx');}function printTable(_0x438bff){const _0x32d45e=_0x471f92,_0x55b297=window['open']('','_blank'),_0x15bf11=document[_0x32d45e(0x2c9)](_0x438bff),_0x24a3f2=_0x15bf11[_0x32d45e(0x2a7)](!![]),_0x268224=_0x24a3f2['querySelectorAll']('tr');_0x268224['forEach'](_0x10deaa=>{const _0x175404=_0x10deaa['lastElementChild'];_0x175404&&_0x10deaa['removeChild'](_0x175404);}),_0x55b297[_0x32d45e(0x15d)][_0x32d45e(0x241)](_0x32d45e(0x173)),_0x55b297[_0x32d45e(0x15d)][_0x32d45e(0x241)]('<style>table\x20{\x20border-collapse:\x20collapse;\x20width:\x20100%;\x20}\x20th,\x20td\x20{\x20text-align:\x20left;\x20padding:\x208px;\x20border:\x201px\x20solid\x20#ddd;\x20}</style>'),_0x55b297['document'][_0x32d45e(0x241)](_0x32d45e(0x266)),_0x55b297[_0x32d45e(0x15d)][_0x32d45e(0x241)](_0x24a3f2[_0x32d45e(0x2c8)]),_0x55b297['document'][_0x32d45e(0x241)](_0x32d45e(0x23b)),_0x55b297[_0x32d45e(0x15d)][_0x32d45e(0x274)](),_0x55b297[_0x32d45e(0x1c0)](),_0x55b297[_0x32d45e(0x1e9)](),_0x55b297[_0x32d45e(0x274)]();}document[_0x471f92(0x2e9)](_0x471f92(0x2c7))[_0x471f92(0x25a)](_0x414721=>{const _0x3edd7c=_0x471f92;_0x414721[_0x3edd7c(0x1a7)](_0x3edd7c(0x2d4),()=>{const _0x5a6a2b=_0x3edd7c,_0x41c922=_0x414721[_0x5a6a2b(0x212)]('.content-section')[_0x5a6a2b(0x1ba)]('.data-table')['id'],_0x5f4914=_0x414721[_0x5a6a2b(0x212)](_0x5a6a2b(0x233))[_0x5a6a2b(0x1ba)]('h2')['textContent'];exportTableToPDF(_0x41c922,''+_0x5f4914);});}),document[_0x471f92(0x2e9)](_0x471f92(0x243))['forEach'](_0x5f26b8=>{const _0x369193=_0x471f92;_0x5f26b8[_0x369193(0x1a7)](_0x369193(0x2d4),()=>{const _0x1def15=_0x369193,_0x475a85=_0x5f26b8[_0x1def15(0x212)]('.content-section')[_0x1def15(0x1ba)](_0x1def15(0x2e3))['id'],_0x1c1c54=_0x5f26b8['closest'](_0x1def15(0x233))['querySelector']('h2')[_0x1def15(0x28e)];exportTableToExcel(_0x475a85,''+_0x1c1c54);});}),document[_0x471f92(0x2e9)](_0x471f92(0x15a))['forEach'](_0x4b9a19=>{const _0x5c5568=_0x471f92;_0x4b9a19[_0x5c5568(0x1a7)](_0x5c5568(0x2d4),()=>{const _0x4e3986=_0x5c5568,_0x33a5f5=_0x4b9a19[_0x4e3986(0x212)](_0x4e3986(0x233))[_0x4e3986(0x1ba)](_0x4e3986(0x2e3))['id'];printTable(_0x33a5f5);});});function showDetailsModal(_0x1c05d0){const _0x790e9b=_0x471f92,_0x26d8a5=document['getElementById'](_0x790e9b(0x157)),_0x9cb386=document[_0x790e9b(0x2c9)](_0x790e9b(0x244));_0x9cb386[_0x790e9b(0x17c)]=_0x1c05d0,_0x26d8a5[_0x790e9b(0x2d1)][_0x790e9b(0x2cc)]=_0x790e9b(0x1e8);}document[_0x471f92(0x1ba)](_0x471f92(0x166))[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>{const _0x3de09c=_0x471f92;document[_0x3de09c(0x2c9)](_0x3de09c(0x157))[_0x3de09c(0x2d1)]['display']=_0x3de09c(0x25b);});const editAgenceBtn=document[_0x471f92(0x2c9)](_0x471f92(0x2b7)),editAgenceForm=document[_0x471f92(0x2c9)]('edit-agence-form'),cancelAgenceBtn=document[_0x471f92(0x2c9)](_0x471f92(0x23c)),agenceInfoDiv=document[_0x471f92(0x2c9)]('agence-info');editAgenceBtn[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>{const _0xd35d2=_0x471f92;editAgenceForm['style'][_0xd35d2(0x2cc)]='block',agenceInfoDiv[_0xd35d2(0x2d1)][_0xd35d2(0x2cc)]='none',editAgenceBtn[_0xd35d2(0x2d1)][_0xd35d2(0x2cc)]=_0xd35d2(0x25b);}),cancelAgenceBtn[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>{const _0x8c5af7=_0x471f92;editAgenceForm['style'][_0x8c5af7(0x2cc)]=_0x8c5af7(0x25b),agenceInfoDiv[_0x8c5af7(0x2d1)]['display']=_0x8c5af7(0x1e8),editAgenceBtn[_0x8c5af7(0x2d1)][_0x8c5af7(0x2cc)]=_0x8c5af7(0x1e8);}),editAgenceForm[_0x471f92(0x1a7)](_0x471f92(0x1de),async _0x561bc4=>{const _0x317413=_0x471f92;_0x561bc4[_0x317413(0x226)]();const _0x2386fe=document[_0x317413(0x2c9)](_0x317413(0x182))[_0x317413(0x1a5)],_0xc77555=document[_0x317413(0x2c9)](_0x317413(0x2eb))[_0x317413(0x1a5)],_0x1c1cc8=document[_0x317413(0x2c9)](_0x317413(0x247))[_0x317413(0x1a5)],_0x32230d=document['getElementById'](_0x317413(0x1b9))[_0x317413(0x1a5)],_0x4801ac=document[_0x317413(0x2c9)](_0x317413(0x169))[_0x317413(0x1a5)],_0x269fd0=document['getElementById'](_0x317413(0x194))['value'];if(currentUser){const _0x11c385={'nom':_0x2386fe,'prenom':_0xc77555,'telephone':_0x1c1cc8,'email':_0x32230d,'adresse':_0x4801ac,'apiKey':_0x269fd0};try{await update(ref(database,_0x317413(0x2b3)+currentUser['id']+_0x317413(0x2d8)),_0x11c385),alert('Informations\x20de\x20l\x27agence\x20mises\x20à\x20jour\x20avec\x20succès\x20!'),loadAgenceData(),editAgenceForm[_0x317413(0x2d1)]['display']=_0x317413(0x25b),agenceInfoDiv[_0x317413(0x2d1)][_0x317413(0x2cc)]=_0x317413(0x1e8),editAgenceBtn[_0x317413(0x2d1)][_0x317413(0x2cc)]=_0x317413(0x1e8);}catch(_0x3a89ca){console[_0x317413(0x235)](_0x317413(0x2af),_0x3a89ca),alert(_0x317413(0x2e5));}}else alert(_0x317413(0x16f));});function loadAgenceData(){const _0x25ca11=_0x471f92;if(currentUser){const _0x235ee0=ref(database,_0x25ca11(0x2b3)+currentUser['id']+_0x25ca11(0x2d8));get(_0x235ee0)[_0x25ca11(0x280)](_0x2f994c=>{const _0xa14abd=_0x25ca11;if(_0x2f994c[_0xa14abd(0x181)]()){const _0xf4c89c=_0x2f994c[_0xa14abd(0x164)]();agenceInfoDiv['innerHTML']=_0xa14abd(0x2f0)+_0xf4c89c['nom']+_0xa14abd(0x1f3)+_0xf4c89c[_0xa14abd(0x23d)]+'</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong>Téléphone:</strong>\x20'+_0xf4c89c['telephone']+_0xa14abd(0x2aa)+_0xf4c89c[_0xa14abd(0x1c1)]+_0xa14abd(0x1ff)+_0xf4c89c[_0xa14abd(0x2d7)]+_0xa14abd(0x269)+_0xf4c89c[_0xa14abd(0x1be)]+_0xa14abd(0x159),document['getElementById']('agence-nom')[_0xa14abd(0x1a5)]=_0xf4c89c['nom']||'',document[_0xa14abd(0x2c9)](_0xa14abd(0x2eb))[_0xa14abd(0x1a5)]=_0xf4c89c['prenom']||'',document[_0xa14abd(0x2c9)](_0xa14abd(0x247))[_0xa14abd(0x1a5)]=_0xf4c89c['telephone']||'',document[_0xa14abd(0x2c9)](_0xa14abd(0x1b9))['value']=_0xf4c89c[_0xa14abd(0x1c1)]||'',document['getElementById'](_0xa14abd(0x169))[_0xa14abd(0x1a5)]=_0xf4c89c[_0xa14abd(0x2d7)]||'',document[_0xa14abd(0x2c9)]('agence-api-key')[_0xa14abd(0x1a5)]=_0xf4c89c[_0xa14abd(0x1be)]||'';}else agenceInfoDiv[_0xa14abd(0x17c)]=_0xa14abd(0x208);})['catch'](_0x4f7318=>{const _0x110eea=_0x25ca11;console['error'](_0x110eea(0x1b8),_0x4f7318),agenceInfoDiv[_0x110eea(0x17c)]=_0x110eea(0x271);});}}const manualGpsOption=document[_0x471f92(0x2c9)](_0x471f92(0x1e0)),autoGpsOption=document[_0x471f92(0x2c9)](_0x471f92(0x1f8)),manualGpsFields=document[_0x471f92(0x2c9)](_0x471f92(0x1c7)),autoGpsMapDiv=document[_0x471f92(0x2c9)]('auto-gps-map');manualGpsOption[_0x471f92(0x1a7)](_0x471f92(0x22e),()=>{const _0x1a78ba=_0x471f92;manualGpsFields[_0x1a78ba(0x2d1)][_0x1a78ba(0x2cc)]=_0x1a78ba(0x1e8),autoGpsMapDiv[_0x1a78ba(0x2d1)][_0x1a78ba(0x2cc)]=_0x1a78ba(0x25b);}),autoGpsOption[_0x471f92(0x1a7)](_0x471f92(0x22e),()=>{const _0x113533=_0x471f92;manualGpsFields[_0x113533(0x2d1)][_0x113533(0x2cc)]=_0x113533(0x25b),autoGpsMapDiv['style']['display']=_0x113533(0x1e8),initMap();});let map,marker;function initMap(){const _0x185ef0=_0x471f92;!map&&(map=L[_0x185ef0(0x1ec)](_0x185ef0(0x231)),L[_0x185ef0(0x26d)]('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{'maxZoom':0x13})[_0x185ef0(0x1e5)](map),navigator[_0x185ef0(0x1f5)]?navigator['geolocation'][_0x185ef0(0x242)](_0x257e25=>{const _0x5d3e4c=_0x185ef0,_0x3473b8=_0x257e25[_0x5d3e4c(0x1a4)][_0x5d3e4c(0x2db)],_0x52b015=_0x257e25[_0x5d3e4c(0x1a4)][_0x5d3e4c(0x289)];map[_0x5d3e4c(0x2f3)]([_0x3473b8,_0x52b015],0xd),!marker?marker=L[_0x5d3e4c(0x184)]([_0x3473b8,_0x52b015],{'draggable':!![]})[_0x5d3e4c(0x1e5)](map):marker[_0x5d3e4c(0x2bb)]([_0x3473b8,_0x52b015]),document[_0x5d3e4c(0x2c9)](_0x5d3e4c(0x1b7))[_0x5d3e4c(0x1a5)]=_0x3473b8,document[_0x5d3e4c(0x2c9)](_0x5d3e4c(0x24e))[_0x5d3e4c(0x1a5)]=_0x52b015,marker['on'](_0x5d3e4c(0x2ee),function(_0x58cb6c){const _0x4b4cb4=_0x5d3e4c,_0x345c0e=marker['getLatLng']();document[_0x4b4cb4(0x2c9)]('maison-latitude')[_0x4b4cb4(0x1a5)]=_0x345c0e[_0x4b4cb4(0x2f4)],document[_0x4b4cb4(0x2c9)](_0x4b4cb4(0x24e))[_0x4b4cb4(0x1a5)]=_0x345c0e[_0x4b4cb4(0x180)];});},_0x5e82cc=>{const _0x553f0a=_0x185ef0;console[_0x553f0a(0x235)](_0x553f0a(0x237),_0x5e82cc),alert(_0x553f0a(0x21e)),map[_0x553f0a(0x2f3)]([51.505,-0.09],0xd),!marker?marker=L[_0x553f0a(0x184)]([51.505,-0.09],{'draggable':!![]})[_0x553f0a(0x1e5)](map):marker[_0x553f0a(0x2bb)]([51.505,-0.09]);}):(console['error']('La\x20géolocalisation\x20n\x27est\x20pas\x20supportée\x20par\x20votre\x20navigateur.'),alert(_0x185ef0(0x18e)),map[_0x185ef0(0x2f3)]([51.505,-0.09],0xd),!marker?marker=L[_0x185ef0(0x184)]([51.505,-0.09],{'draggable':!![]})['addTo'](map):marker[_0x185ef0(0x2bb)]([51.505,-0.09])),map['on'](_0x185ef0(0x2d4),function(_0x566929){const _0x442c60=_0x185ef0;marker[_0x442c60(0x2bb)](_0x566929[_0x442c60(0x17e)]),document[_0x442c60(0x2c9)](_0x442c60(0x1b7))['value']=_0x566929[_0x442c60(0x17e)]['lat'],document[_0x442c60(0x2c9)](_0x442c60(0x24e))[_0x442c60(0x1a5)]=_0x566929[_0x442c60(0x17e)]['lng'];}));}const fabButton=document[_0x471f92(0x1ba)](_0x471f92(0x2c5)),fabOptions=document[_0x471f92(0x1ba)]('.fab-options'),contentSections=document[_0x471f92(0x2e9)](_0x471f92(0x233)),navLinks=document[_0x471f92(0x2e9)](_0x471f92(0x1c5));let isAnimating=![],currentIconIndex=0x0;const icons=[_0x471f92(0x25c),_0x471f92(0x206),_0x471f92(0x1aa),_0x471f92(0x2d3),'fas\x20fa-file-contract',_0x471f92(0x218),_0x471f92(0x29c),_0x471f92(0x261)];fabButton[_0x471f92(0x1a7)]('click',()=>{const _0xb8e033=_0x471f92;fabOptions[_0xb8e033(0x2b4)][_0xb8e033(0x1a6)](_0xb8e033(0x15b)),!fabOptions[_0xb8e033(0x2b4)][_0xb8e033(0x191)](_0xb8e033(0x15b))&&(currentIconIndex=0x0,fabButton[_0xb8e033(0x1ba)]('i')[_0xb8e033(0x1ae)]=icons[currentIconIndex]);});function animateFABIcon(){const _0x4563db=_0x471f92;!isAnimating&&!fabOptions[_0x4563db(0x2b4)]['contains'](_0x4563db(0x15b))&&(isAnimating=!![],fabButton[_0x4563db(0x1ba)]('i')['className']=icons[currentIconIndex],currentIconIndex=(currentIconIndex+0x1)%icons[_0x4563db(0x2b6)],setTimeout(()=>{isAnimating=![];},0x1f4));}setInterval(animateFABIcon,0x7d0),fabButton['addEventListener'](_0x471f92(0x2d4),()=>{const _0x23e372=_0x471f92;fabOptions[_0x23e372(0x2b4)]['toggle'](_0x23e372(0x15b));}),navLinks[_0x471f92(0x25a)](_0x3c0dd3=>{const _0x400fa9=_0x471f92;_0x3c0dd3['addEventListener'](_0x400fa9(0x2d4),_0x292aca=>{const _0xce17e6=_0x400fa9;_0x292aca['preventDefault']();const _0x414387=_0x3c0dd3[_0xce17e6(0x267)][_0xce17e6(0x198)];contentSections[_0xce17e6(0x25a)](_0x947ba7=>{const _0x82b2c4=_0xce17e6;_0x947ba7['classList'][_0x82b2c4(0x26b)](_0x82b2c4(0x21c));});const _0x2dab55=document[_0xce17e6(0x2c9)](_0x414387);_0x2dab55&&(_0x2dab55[_0xce17e6(0x2b4)][_0xce17e6(0x1e7)](_0xce17e6(0x21c)),fabOptions[_0xce17e6(0x2b4)][_0xce17e6(0x26b)]('show')),checkUserAccess(_0x414387);});});const dashboardItems=document['querySelectorAll'](_0x471f92(0x285));dashboardItems['forEach'](_0x4fb65d=>{const _0xa0494=_0x471f92;_0x4fb65d[_0xa0494(0x1a7)](_0xa0494(0x2d4),()=>{const _0x39ea3c=_0xa0494,_0x335a3d=_0x4fb65d['dataset'][_0x39ea3c(0x198)];contentSections[_0x39ea3c(0x25a)](_0x44adf0=>{const _0x303aa5=_0x39ea3c;_0x44adf0[_0x303aa5(0x2b4)][_0x303aa5(0x26b)](_0x303aa5(0x21c));});const _0x38c5af=document[_0x39ea3c(0x2c9)](_0x335a3d);_0x38c5af&&_0x38c5af[_0x39ea3c(0x2b4)][_0x39ea3c(0x1e7)](_0x39ea3c(0x21c));});});function showBackButton(){const _0x3c2a21=_0x471f92;document[_0x3c2a21(0x2c9)]('back-button-container')[_0x3c2a21(0x2d1)][_0x3c2a21(0x2cc)]=_0x3c2a21(0x1e8);}function hideBackButton(){const _0x245aec=_0x471f92;document[_0x245aec(0x2c9)](_0x245aec(0x1d1))[_0x245aec(0x2d1)][_0x245aec(0x2cc)]=_0x245aec(0x25b);}document['getElementById'](_0x471f92(0x299))[_0x471f92(0x1a7)](_0x471f92(0x2d4),()=>{const _0x40f69c=_0x471f92;contentSections[_0x40f69c(0x25a)](_0x19debf=>{const _0x5172a3=_0x40f69c;_0x19debf['classList'][_0x5172a3(0x26b)](_0x5172a3(0x21c));}),document['getElementById'](_0x40f69c(0x293))[_0x40f69c(0x2b4)][_0x40f69c(0x1e7)](_0x40f69c(0x21c)),hideBackButton();}),navLinks[_0x471f92(0x25a)](_0x30b7e5=>{const _0x2cddb9=_0x471f92;_0x30b7e5[_0x2cddb9(0x1a7)](_0x2cddb9(0x2d4),_0x328c57=>{const _0x178469=_0x2cddb9;_0x328c57[_0x178469(0x226)]();const _0x3c3d6e=_0x30b7e5[_0x178469(0x267)][_0x178469(0x198)];contentSections[_0x178469(0x25a)](_0x2ca69f=>{const _0x3cf6b2=_0x178469;_0x2ca69f[_0x3cf6b2(0x2b4)][_0x3cf6b2(0x26b)](_0x3cf6b2(0x21c));});const _0x4dd988=document[_0x178469(0x2c9)](_0x3c3d6e);_0x4dd988&&(_0x4dd988['classList'][_0x178469(0x1e7)](_0x178469(0x21c)),fabOptions['classList'][_0x178469(0x26b)]('show')),checkUserAccess(_0x3c3d6e),_0x3c3d6e!==_0x178469(0x293)?showBackButton():hideBackButton();});}),dashboardItems[_0x471f92(0x25a)](_0x192e88=>{_0x192e88['addEventListener']('click',()=>{const _0x1cbbf9=_0x4e39,_0x539cde=_0x192e88[_0x1cbbf9(0x267)][_0x1cbbf9(0x198)];contentSections[_0x1cbbf9(0x25a)](_0x2b2ca6=>{const _0x37b8af=_0x1cbbf9;_0x2b2ca6[_0x37b8af(0x2b4)][_0x37b8af(0x26b)](_0x37b8af(0x21c));});const _0xdd3592=document[_0x1cbbf9(0x2c9)](_0x539cde);_0xdd3592&&_0xdd3592['classList']['add']('active'),_0x539cde!=='dashboard'?showBackButton():hideBackButton();});});function initializeDataLoad(){isAuthenticated&&(checkUserRoleAndSubscription(),setInterval(checkAndUpdateSubscriptionStatus,0x3c*0x3c*0x3e8),loadDashboardData(),loadProprietaires(),loadMaisons(),loadLocataires(),loadSouscriptions(),loadRecouvrements(),loadAgenceData(),loadProprietairesForFilterSouscriptions(),currentUser&&loadConstructionTypesForUser(currentUser['id']));}initializeDataLoad();
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+// Firebase Configuration (Replace with your config)
+const firebaseConfig = {
+    apiKey: "AIzaSyCNiyVW5DgsvqIR2eAlQ2Ls02DuliFWOOI",
+    authDomain: "immo-75593.firebaseapp.com",
+    databaseURL: "https://immo-75593-default-rtdb.firebaseio.com",
+    projectId: "immo-75593",
+    storageBucket: "immo-75593.firebasestorage.app",
+    messagingSenderId: "146632846661",
+    appId: "1:146632846661:web:d63ca5c24f5b4acdeea22c",
+    measurementId: "G-52KYCJZSHE"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+// Authentication State
+let isAuthenticated = false;
+
+// Authentication Management
+const authSection = document.getElementById("auth-section");
+const loginFormContainer = document.getElementById("login-form-container");
+const registerFormContainer = document.getElementById("register-form-container");
+const loginForm = document.getElementById("login-form");
+const registerForm = document.getElementById("register-form");
+const showRegisterLink = document.getElementById("show-register");
+const showLoginLink = document.getElementById("show-login");
+
+// Retrieve user data from localStorage on page load
+let currentUser = null;
+
+// Variable pour stocker les types de construction personnalisés de l'utilisateur
+let userConstructionTypes = {};
+
+// Check if the user is already authenticated on page load
+window.addEventListener('load', () => {
+    const storedUser = localStorage.getItem('currentUser');
+    const storedAuthStatus = localStorage.getItem('isAuthenticated');
+
+    if (storedUser && storedAuthStatus === 'true') {
+        currentUser = JSON.parse(storedUser);
+        isAuthenticated = true;
+        checkUserRoleAndSubscription();
+        hideAuthSection();
+        initializeDataLoad();
+    } else {
+        // Display the authentication section if the user is not logged in
+        authSection.style.display = "flex";
+    }
+});
+
+// Switch between login and registration forms
+showRegisterLink.addEventListener("click", () => {
+    loginFormContainer.style.display = "none";
+    registerFormContainer.style.display = "block";
+});
+
+showLoginLink.addEventListener("click", () => {
+    registerFormContainer.style.display = "none";
+    loginFormContainer.style.display = "block";
+});
+
+// Registration
+registerForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    showLoading();
+    const username = document.getElementById("register-username").value;
+    const password = document.getElementById("register-password").value;
+
+    try {
+        // Hash the password (simple example, use a more secure method in production)
+        const hashedPassword = simpleHash(password);
+
+        // Check if the username already exists
+        const usersRef = ref(database, 'users');
+        const snapshot = await get(usersRef);
+        if (snapshot.exists()) {
+            const users = snapshot.val();
+            for (const userId in users) {
+                const user = users[userId];
+                if (user.username === username) {
+                    alert("Ce nom d'utilisateur existe déjà. Veuillez en choisir un autre.");
+                    hideLoading();
+                    return;
+                }
+            }
+        }
+
+        // Register the user in Firebase
+        const newUserRef = push(usersRef);
+        await set(newUserRef, {
+            id: newUserRef.key,
+            username: username,
+            password: hashedPassword,
+            role: 'user',
+        });
+
+        alert("Inscription réussie !");
+        registerForm.reset();
+        showLoginForm();
+    } catch (error) {
+        console.error("Erreur lors de l'inscription :", error);
+        alert("Erreur lors de l'inscription.");
+    } finally {
+        hideLoading();
+    }
+});
+
+// Login
+loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    showLoading();
+    const username = document.getElementById("login-username").value;
+    const password = document.getElementById("login-password").value;
+
+    try {
+        const usersRef = ref(database, 'users');
+        const snapshot = await get(usersRef);
+        if (snapshot.exists()) {
+            const users = snapshot.val();
+            let userFound = false;
+            for (const userId in users) {
+                const user = users[userId];
+                // Compare the hashed password
+                if (user.username === username && user.password === simpleHash(password)) {
+                    // Store user information
+                    currentUser = {
+                        id: user.id, // Retrieve the ID
+                        username: user.username,
+                        role: user.role, // Retrieve the role
+                        subscription: user.subscription || {},
+                        // ... other information if needed ...
+                    };
+                    isAuthenticated = true;
+                    // Store user data in localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    localStorage.setItem('isAuthenticated', 'true'); // Store the connection status
+                    checkUserRoleAndSubscription();
+                    hideAuthSection();
+                    loadDashboardData();
+                    initializeDataLoad(); // Initialize data loading here
+                    userFound = true;
+                    break;
+                }
+            }
+            if (!userFound) {
+                alert("Pseudo ou mot de passe incorrect.");
+            }
+        } else {
+            alert("Aucun utilisateur trouvé.");
+        }
+    } catch (error) {
+        console.error("Erreur lors de la connexion :", error);
+        alert("Erreur lors de la connexion.");
+    } finally {
+        hideLoading();
+    }
+});
+
+// Function to display the login form
+function showLoginForm() {
+    registerFormContainer.style.display = "none";
+    loginFormContainer.style.display = "block";
+}
+
+
+
+// Function to check and update subscription status
+async function checkAndUpdateSubscriptionStatus() {
+    if (currentUser && currentUser.subscription) {
+        const today = new Date();
+        const subscriptionEndDate = new Date(currentUser.subscription.endDate);
+
+        if (today > subscriptionEndDate) {
+            // Subscription expired
+            currentUser.subscription.status = "expired";
+            await update(ref(database, `users/${currentUser.id}/subscription`), {
+                status: "expired",
+            });
+
+            // Update localStorage
+            localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+            // Alert the user
+            alert(
+                "Votre abonnement a expiré. Veuillez renouveler votre abonnement pour continuer à utiliser les fonctionnalités premium."
+            );
+
+            checkUserRoleAndSubscription(); // Update user interface
+        } else {
+            // Check if the subscription is about to expire (e.g., within 2 days)
+            const daysUntilExpiration = Math.round(
+                (subscriptionEndDate - today) / (1000 * 60 * 60 * 24)
+            );
+            if (daysUntilExpiration <= 2) {
+                alert(
+                    `Votre abonnement expirera dans ${daysUntilExpiration} jour(s). Pensez à le renouveler.`
+                );
+            }
+        }
+    }
+}
+
+function checkUserRoleAndSubscription() {
+    if (currentUser) {
+        // Check the role
+        const isAdmin = currentUser.role === "admin";
+        const addProprietaireBtn = document.getElementById("add-proprietaire-btn");
+        const addMaisonBtn = document.getElementById("add-maison-btn");
+        const addLocataireBtn = document.getElementById("add-locataire-btn");
+        const addSouscriptionBtn = document.getElementById("add-souscription-btn");
+        const addRecouvrementBtn = document.getElementById("add-recouvrement-btn")
+
+
+
+        if (addProprietaireBtn) {
+            addProprietaireBtn.style.display = isAdmin ? "block" : "none";
+        }
+        if (addMaisonBtn) {
+            addMaisonBtn.style.display = isAdmin ? "block" : "none";
+        }
+        if (addLocataireBtn) {
+            addLocataireBtn.style.display = isAdmin ? "block" : "none";
+        }
+        if (addSouscriptionBtn) {
+            addSouscriptionBtn.style.display = isAdmin ? "block" : "none";
+        }
+        if (addRecouvrementBtn) {
+            addRecouvrementBtn.style.display = isAdmin ? "block" : "none";
+        }
+
+        // Check the subscription
+        const userSubscription = currentUser.subscription;
+        const isSubscribed = userSubscription && (userSubscription.status === "active");
+        const subscribeBtn = document.getElementById("subscribe-monthly-btn");
+        const subscribeAnnuelBtn = document.getElementById("subscribe-yearly-btn");
+        const cancelSubscriptionBtn = document.getElementById("cancel-subscription-btn");
+
+        if (isSubscribed) {
+            // Subscribed user or in trial period
+            document.getElementById("abonnement-status-text").textContent = "Abonné";
+            subscribeBtn.style.display = "none";
+            subscribeAnnuelBtn.style.display = "none";
+            cancelSubscriptionBtn.style.display = "block";
+        } else {
+            // Unsubscribed user
+            document.getElementById("abonnement-status-text").textContent = "Non abonné";
+            subscribeBtn.style.display = "block";
+            subscribeAnnuelBtn.style.display = "block";
+            cancelSubscriptionBtn.style.display = "none";
+        }
+
+        // Update localStorage with the subscription status
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    }
+}
+
+// Function to hash the password (simple method for the example)
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash.toString();
+}
+
+// Function to display the user interface after login
+function showMainInterface() {
+    authSection.style.display = "none";
+    // Display other sections of the application
+    // ...
+}
+
+// Function to hide the authentication section
+function hideAuthSection() {
+    authSection.style.display = "none";
+}
+
+// Functions to show/hide loading
+function showLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+}
+
+function hideLoading() {
+    document.getElementById("loading-overlay").style.display = "none";
+}
+
+// Form Management
+const addProprietaireBtn = document.getElementById("add-proprietaire-btn");
+const addMaisonBtn = document.getElementById("add-maison-btn");
+const addLocataireBtn = document.getElementById("add-locataire-btn");
+const addSouscriptionBtn = document.getElementById("add-souscription-btn");
+const addRecouvrementBtn = document.getElementById("add-recouvrement-btn");
+
+const addProprietaireForm = document.getElementById("add-proprietaire-form");
+const addMaisonForm = document.getElementById("add-maison-form");
+const addLocataireForm = document.getElementById("add-locataire-form");
+const addSouscriptionForm = document.getElementById("add-souscription-form");
+const addRecouvrementForm = document.getElementById("add-recouvrement-form");
+
+const cancelProprietaireBtn = document.getElementById("cancel-proprietaire-btn");
+const cancelMaisonBtn = document.getElementById("cancel-maison-btn");
+const cancelLocataireBtn = document.getElementById("cancel-locataire-btn");
+const cancelSouscriptionBtn = document.getElementById("cancel-souscription-btn");
+const cancelRecouvrementBtn = document.getElementById("cancel-recouvrement-btn");
+
+// Functions to show/hide forms
+function showForm(form) {
+    form.classList.add("active");
+}
+
+function hideForm(form) {
+    form.classList.remove("active");
+    form.reset();
+}
+
+// Events to display forms
+addProprietaireBtn.addEventListener("click", () => showForm(addProprietaireForm));
+addMaisonBtn.addEventListener("click", () => showForm(addMaisonForm));
+addLocataireBtn.addEventListener("click", () => showForm(addLocataireForm));
+addSouscriptionBtn.addEventListener("click", () => showForm(addSouscriptionForm));
+addRecouvrementBtn.addEventListener("click", () => showForm(addRecouvrementForm));
+
+// Events to hide forms
+cancelProprietaireBtn.addEventListener("click", () => hideForm(addProprietaireForm));
+cancelMaisonBtn.addEventListener("click", () => hideForm(addMaisonForm));
+cancelLocataireBtn.addEventListener("click", () => hideForm(addLocataireForm));
+cancelSouscriptionBtn.addEventListener("click", () => hideForm(addSouscriptionForm));
+cancelRecouvrementBtn.addEventListener("click", () => hideForm(addRecouvrementForm));
+
+// Form submission handling
+addProprietaireForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    showLoading();
+
+    const nom = document.getElementById("proprietaire-nom").value;
+    const prenom = document.getElementById("proprietaire-prenom").value;
+    const contact = document.getElementById("proprietaire-contact").value;
+    const email = document.getElementById("proprietaire-email").value;
+    const adresse = document.getElementById("proprietaire-adresse").value;
+
+    addProprietaire(nom, prenom, contact, email, adresse)
+        .then(() => {
+            hideForm(addProprietaireForm);
+            loadProprietaires(); // Reload the list
+        })
+        .catch((error) => {
+            console.error("Erreur lors de l'ajout du propriétaire:", error);
+            alert("Erreur lors de l'ajout du propriétaire.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
+});
+
+// Gestion du formulaire d'ajout de maison
+addMaisonForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    showLoading();
+
+    const proprietaireId = document.getElementById("maison-proprietaire").value;
+    const type = document.getElementById("maison-type").value;
+    const type_construction = type === "autre" ? document.getElementById("nouveau-type-construction").value : type;
+    const numero = document.getElementById("maison-numero").value;
+    const pieces = document.getElementById("maison-pieces").value;
+    const ville = document.getElementById("maison-ville").value;
+    const commune = document.getElementById("maison-commune").value;
+    const quartier = document.getElementById("maison-quartier").value;
+    const loyer = document.getElementById("maison-loyer").value;
+    const nombreLoyer = document.getElementById("maison-nombre-loyer").value;
+    const caution = document.getElementById("maison-caution").value;
+    const avance = document.getElementById("maison-avance").value;
+    const frais_supplementaire = document.getElementById("maison-frais-supplementaire").value;
+    const media = document.getElementById("maison-media").value;
+    const latitude = document.getElementById("maison-latitude").value;
+    const longitude = document.getElementById("maison-longitude").value;
+
+    // Si un nouveau type est entré, l'ajouter à la base de données
+    if (type === "autre" && type_construction) {
+        try {
+            await addNewConstructionTypeForUser(currentUser.id, type_construction);
+            // Recharger les types de construction de l'utilisateur
+            await loadUserConstructionTypes(); 
+            // Mettre à jour la liste déroulante avec le nouveau type
+            updateTypeSelectWithCustomTypes();
+             // Définir la valeur du type sur le type nouvellement ajouté
+            document.getElementById("maison-type").value = type_construction;
+        } catch (error) {
+            console.error("Erreur lors de l'ajout d'un nouveau type de construction:", error);
+            alert("Erreur lors de l'ajout d'un nouveau type de construction.");
+            hideLoading();
+            return; // Arrêter l'exécution en cas d'erreur
+        }
+    }
+
+    // Ajouter la maison
+    addMaison(proprietaireId, type_construction, numero, pieces, ville, commune, quartier, loyer,nombreLoyer, caution, avance, frais_supplementaire, media, latitude, longitude)
+        .then(() => {
+            hideForm(addMaisonForm);
+            loadMaisons();
+        })
+        .catch((error) => {
+            console.error("Erreur lors de l'ajout de la maison:", error);
+            alert("Erreur lors de l'ajout de la maison.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
+});
+
+// Fonction pour mettre à jour la liste déroulante des types avec les types personnalisés
+function updateTypeSelectWithCustomTypes() {
+    const typeSelect = document.getElementById("maison-type");
+
+    // Sauvegarder la valeur actuellement sélectionnée (si elle existe)
+    const selectedTypeValue = typeSelect.value;
+
+    // Effacer les options existantes (sauf la première qui est un placeholder et "Autre")
+    while (typeSelect.options.length > 2) {
+        typeSelect.remove(2);
+    }
+
+    // Ajouter les types personnalisés
+    for (const typeId in userConstructionTypes) {
+        const type = userConstructionTypes[typeId];
+        const option = document.createElement("option");
+        option.value = type.nom;
+        option.text = type.nom;
+        typeSelect.add(option);
+    }
+
+    // Restaurer la valeur sélectionnée si elle existe encore, sinon sélectionner "Autre"
+    const optionExists = Array.from(typeSelect.options).some(opt => opt.value === selectedTypeValue);
+    typeSelect.value = optionExists ? selectedTypeValue : "autre";
+
+    // Forcer l'affichage du champ de texte si "Autre" est sélectionné
+    if (typeSelect.value === "autre") {
+        document.getElementById("nouveau-type-construction").style.display = "block";
+    } else {
+        document.getElementById("nouveau-type-construction").style.display = "none";
+    }
+}
+
+// Fonction pour ajouter un nouveau type de construction à la base de données pour un utilisateur spécifique
+async function addNewConstructionTypeForUser(userId, newType) {
+    const userTypesRef = ref(database, `users/${userId}/typesConstruction`);
+    const newTypeRef = push(userTypesRef);
+    await set(newTypeRef, {
+        nom: newType
+    });
+}
+
+// Fonction pour charger les types de construction personnalisés de l'utilisateur
+async function loadUserConstructionTypes() {
+    if (!currentUser) return;
+
+    const userTypesRef = ref(database, `users/${currentUser.id}/typesConstruction`);
+    try {
+        const snapshot = await get(userTypesRef);
+        if (snapshot.exists()) {
+            userConstructionTypes = snapshot.val();
+        } else {
+            userConstructionTypes = {}; // Réinitialiser si l'utilisateur n'a pas de types personnalisés
+        }
+    } catch (error) {
+        console.error("Erreur lors du chargement des types de construction personnalisés:", error);
+        userConstructionTypes = {}; // Réinitialiser en cas d'erreur
+    }
+}
+
+// Mettre à jour la liste des types de construction lors du chargement de la page et pour l'utilisateur connecté
+function loadConstructionTypesForUser(userId) {
+    const userTypesRef = ref(database, `users/${userId}/typesConstruction`);
+    onValue(userTypesRef, (snapshot) => {
+        const types = snapshot.val();
+        const typeSelect = document.getElementById("maison-type");
+        // Effacer les options existantes sauf la première (et "Autre")
+        while (typeSelect.options.length > 2) {
+            typeSelect.remove(2);
+        }
+        for (const typeId in types) {
+            const type = types[typeId];
+            // Vérifier si l'option existe déjà avant de l'ajouter
+            if (!typeSelect.querySelector(`option[value="${type.nom}"]`)) {
+                const option = document.createElement("option");
+                option.value = type.nom;
+                option.text = type.nom;
+                typeSelect.add(option);
+            }
+        }
+    }, {
+        onlyOnce: true
+    });
+}
+
+// Gestion de l'affichage du champ pour un nouveau type de construction
+document.getElementById("maison-type").addEventListener("change", (event) => {
+    const nouveauTypeInput = document.getElementById("nouveau-type-construction");
+    if (event.target.value === "autre") {
+        nouveauTypeInput.style.display = "block";
+    } else {
+        nouveauTypeInput.style.display = "none";
+    }
+});
+
+addLocataireForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    showLoading();
+
+    const nom = document.getElementById("locataire-nom").value;
+    const prenom = document.getElementById("locataire-prenom").value;
+    const contact = document.getElementById("locataire-contact").value;
+    const email = document.getElementById("locataire-email").value;
+    addLocataire(nom, prenom, contact, email)
+        .then(() => {
+            hideForm(addLocataireForm);
+            loadLocataires(); // Reload the list
+        })
+        .catch((error) => {
+            console.error("Erreur lors de l'ajout du locataire:", error);
+            alert("Erreur lors de l'ajout du locataire.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
+});
+
+addSouscriptionForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    showLoading();
+
+    const maisonId = document.getElementById("souscription-maison").value;
+    const locataireId = document.getElementById("souscription-locataire").value;
+    const caution = parseInt(document.getElementById("souscription-caution").value);
+    const avance = parseInt(document.getElementById("souscription-avance").value);
+    const autres = document.getElementById("souscription-autres").value;
+    const dateDebut = document.getElementById("souscription-date-debut").value;
+
+    addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut)
+        .then(() => {
+            hideForm(addSouscriptionForm);
+            loadSouscriptions(); // Reload the list
+            loadProprietairesForFilterSouscriptions();
+        })
+        .catch((error) => {
+            console.error("Erreur lors de l'ajout de la souscription:", error);
+            alert("Erreur lors de l'ajout de la souscription.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
+});
+
+// Gestion de la soumission du formulaire de recouvrement
+// Gestion de la soumission du formulaire de recouvrement
+addRecouvrementForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    showLoading();
+
+    const souscriptionId = document.getElementById("recouvrement-souscription").value;
+    const montant = parseInt(document.getElementById("recouvrement-montant").value);
+    const periode = document.getElementById("recouvrement-periode").value;
+    const commentaire = document.getElementById("recouvrement-commentaire").value;
+    const date = document.getElementById("recouvrement-date").value;
+
+    addRecouvrement(souscriptionId, montant, periode, commentaire, date)
+        .then(() => {
+            hideForm(addRecouvrementForm);
+            loadRecouvrements(); // Recharger la liste des recouvrements
+            loadProprietairesForFilter();
+        })
+        .catch((error) => {
+            console.error("Erreur lors de l'ajout du recouvrement:", error);
+            alert("Erreur lors de l'ajout du recouvrement.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
+});
+
+// Function to add a landlord
+async function addProprietaire(nom, prenom, contact, email, adresse) {
+    const proprietairesRef = ref(database, 'proprietaires');
+    const newProprietaireRef = push(proprietairesRef);
+    await set(newProprietaireRef, {
+        id: newProprietaireRef.key, // Use Firebase-generated key
+        userId: currentUser.id,
+        nom: nom,
+        prenom: prenom,
+        contact: contact || "",
+        adresse: adresse || "" // Empty email if not provided
+    });
+}
+
+async function addMaison(proprietaireId, type, numero, pieces, ville, commune, quartier, loyer,nombreLoyer, caution, avance, frais_supplementaire, media, latitude, longitude) {
+    const maisonsRef = ref(database, 'maisons');
+    const newMaisonRef = push(maisonsRef);
+    await set(newMaisonRef, {
+        id: newMaisonRef.key,
+        userId: currentUser.id,
+        proprietaire: proprietaireId,
+        type: type,
+        numero: numero || "",
+        pieces: pieces || 0,
+        ville: ville || "",
+        commune: commune || "",
+        quartier: quartier || "",
+        loyer: loyer || 0,
+        "nombre de loyer": nombreLoyer || 0,
+        caution: caution || 0,
+        avance: avance || 0,
+        frais_supplementaire: frais_supplementaire || "",
+        media: media || "",
+        latitude: latitude || null,
+        longitude: longitude || null
+    });
+}
+
+// Function to add a tenant
+async function addLocataire(nom, prenom, contact, email) {
+    const locatairesRef = ref(database, 'locataires');
+    const newLocataireRef = push(locatairesRef);
+    await set(newLocataireRef, {
+        id: newLocataireRef.key, // Use Firebase-generated key
+        userId: currentUser.id,
+        nom: nom,
+        prenom: prenom,
+        contact: contact || "",
+        email: email || "", // Empty email if not provided
+    });
+}
+
+async function addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut) {
+    const souscriptionsRef = ref(database, 'souscriptions');
+    const newSouscriptionRef = push(souscriptionsRef);
+    const maisonRef = ref(database, `maisons/${maisonId}`);
+    const maisonSnapshot = await get(maisonRef);
+    const maison = maisonSnapshot.val();
+    const loyer = maison.loyer;
+    const proprietaireId = maison.proprietaire;
+
+    await set(newSouscriptionRef, {
+        id: newSouscriptionRef.key,
+        userId: currentUser.id,
+        maison: maisonId,
+        locataire: locataireId,
+        caution: caution || 0,
+        avance: avance || 0,
+        autres: autres || "",
+        dateDebut: dateDebut,
+        loyer: loyer,
+        proprietaire: proprietaireId
+    });
+}
+
+// Fonction pour ajouter un recouvrement
+async function addRecouvrement(souscriptionId, montant, periode, commentaire, date) {
+    const recouvrementsRef = ref(database, 'recouvrements');
+    const newRecouvrementRef = push(recouvrementsRef);
+
+    // Récupérer l'ID du propriétaire à partir de la souscription
+    const souscriptionRef = ref(database, `souscriptions/${souscriptionId}`);
+    const souscriptionSnapshot = await get(souscriptionRef);
+    const souscription = souscriptionSnapshot.val();
+    const maisonId = souscription.maison;
+    const maisonRef = ref(database, `maisons/${maisonId}`);
+    const maisonSnapshot = await get(maisonRef);
+    const maison = maisonSnapshot.val();
+    const proprietaireId = maison.proprietaire;
+
+    await set(newRecouvrementRef, {
+        id: newRecouvrementRef.key,
+        userId: currentUser.id,
+        souscription: souscriptionId,
+        montant: montant || 0,
+        periode: periode || "",
+        commentaire: commentaire || "",
+        proprietaire: proprietaireId, // Stocker l'ID du propriétaire
+        date: date
+    });
+}
+
+function loadProprietaires() {
+    showLoading();
+    const proprietairesList = document.querySelector("#proprietaires-list tbody");
+    proprietairesList.innerHTML = "";
+
+    const proprietairesRef = ref(database, 'proprietaires');
+    onValue(proprietairesRef, (snapshot) => {
+        const proprietaires = snapshot.val();
+        let proprietairesCount = 0;
+        for (const proprietaireId in proprietaires) {
+            const proprietaire = proprietaires[proprietaireId];
+
+            // Check if the landlord belongs to the current user
+            if (proprietaire.userId === currentUser.id) {
+                proprietairesCount++;
+                const row = document.createElement("tr");
+                row.innerHTML = `
+  
+  <td>${proprietaire.nom}</td>
+  <td>${proprietaire.prenom}</td>
+  <td>${proprietaire.contact}</td>
+  <td>${proprietaire.email}</td>
+  <td>${proprietaire.adresse}</td>
+  <td class="actions-cell">
+  <button class="edit-btn" data-id="${proprietaire.id}">Modifier</button>
+  <button class="delete-btn" data-id="${proprietaire.id}">Supprimer</button>
+  </td>
+`;
+                proprietairesList.appendChild(row);
+            }
+        }
+        document.getElementById('dashboard-proprietaires-count').textContent = proprietairesCount;
+        hideLoading();
+    }, {
+        onlyOnce: true
+    });
+}
+
+function loadMaisons() {
+    showLoading();
+    const maisonsList = document.querySelector("#maisons-list tbody");
+    maisonsList.innerHTML = "";
+
+    const maisonsRef = ref(database, 'maisons');
+    onValue(maisonsRef, (snapshot) => {
+        const maisons = snapshot.val();
+        let maisonsCount = 0;
+
+        // Assurez-vous que les types de construction sont chargés avant de charger les maisons
+        loadConstructionTypesForUser(currentUser.id);
+
+        // Update the landlord dropdown list
+        const proprietaireSelect = document.getElementById("maison-proprietaire");
+        proprietaireSelect.innerHTML = '<option value="">Sélectionner Propriétaire</option>';
+        const proprietairesRef = ref(database, 'proprietaires');
+        get(proprietairesRef).then((proprietairesSnapshot) => {
+            const proprietaires = proprietairesSnapshot.val();
+            for (const proprietaireId in proprietaires) {
+                const proprietaire = proprietaires[proprietaireId];
+                // Check if the landlord belongs to the current user
+                if (proprietaire.userId === currentUser.id) {
+                    const option = document.createElement("option");
+                    option.value = proprietaireId;
+                    option.text = `${proprietaire.nom} ${proprietaire.prenom}`;
+                    proprietaireSelect.appendChild(option);
+                }
+            }
+        });
+
+        for (const maisonId in maisons) {
+            const maison = maisons[maisonId];
+
+            // Check if the house belongs to the current user
+            if (maison.userId === currentUser.id) {
+                maisonsCount++;
+                // Retrieve the name of the landlord
+                get(ref(database, `proprietaires/${maison.proprietaire}`)).then((proprietaireSnapshot) => {
+                    const proprietaire = proprietaireSnapshot.val();
+                    const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Propriétaire inconnu';
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+          
+          <td>${proprietaireNom}</td>
+          <td>${maison.type}</td>
+          <td>${maison.numero}</td>
+          <td>${maison.pieces}</td>
+          <td>${maison.ville}, ${maison.commune}, ${maison.quartier}</td>
+          <td>${maison.loyer}</td>
+          <td>${maison.avance}</td>
+          <td>${maison.frais_supplementaire}</td>
+          <td class="actions-cell">
+          <button class="edit-btn" data-id="${maison.id}">Modifier</button>
+          <button class="delete-btn" data-id="${maison.id}">Supprimer</button>
+          </td>
+      `;
+                    maisonsList.appendChild(row);
+                });
+            }
+        }
+        document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
+        hideLoading();
+    }, {
+        onlyOnce: true
+    });
+}
+
+function loadLocataires() {
+    showLoading();
+    const locatairesList = document.querySelector("#locataires-list tbody");
+    locatairesList.innerHTML = "";
+
+    const locatairesRef = ref(database, 'locataires');
+    onValue(locatairesRef, (snapshot) => {
+        const locataires = snapshot.val();
+        let locatairesCount = 0;
+        for (const locataireId in locataires) {
+            const locataire = locataires[locataireId];
+
+            // Check if the tenant belongs to the current user
+            if (locataire.userId === currentUser.id) {
+                locatairesCount++;
+                const row = document.createElement("tr");
+                row.innerHTML = `
+    
+    <td>${locataire.nom}</td>
+    <td>${locataire.prenom}</td>
+    <td>${locataire.contact}</td>
+    <td>${locataire.email}</td>
+    <td class="actions-cell">
+        <button class="edit-btn" data-id="${locataire.id}">Modifier</button>
+        <button class="delete-btn" data-id="${locataire.id}">Supprimer</button>
+    </td>
+`;
+                locatairesList.appendChild(row);
+            }
+        }
+        document.getElementById('dashboard-locataires-count').textContent = locatairesCount;
+        hideLoading();
+    }, {
+        onlyOnce: true
+    });
+}
+
+// Fonction pour charger les propriétaires pour le filtre (Souscriptions)
+function loadProprietairesForFilterSouscriptions() {
+    const proprietaireFilter = document.getElementById("proprietaire-filter-souscriptions");
+    proprietaireFilter.innerHTML = '<option value="">Tous</option>'; // Option "Tous" par défaut
+
+    const souscriptionsRef = ref(database, 'souscriptions');
+    get(souscriptionsRef).then((souscriptionsSnapshot) => {
+        const souscriptions = souscriptionsSnapshot.val();
+        const proprietairesIds = new Set();
+
+        for (const souscriptionId in souscriptions) {
+            const souscription = souscriptions[souscriptionId];
+            if (souscription.userId === currentUser.id && souscription.proprietaire) {
+                proprietairesIds.add(souscription.proprietaire);
+            }
+        }
+
+        // Récupérer les noms des propriétaires à partir des IDs
+        proprietairesIds.forEach(proprietaireId => {
+            const proprietaireRef = ref(database, `proprietaires/${proprietaireId}`);
+            get(proprietaireRef).then((proprietaireSnapshot) => {
+                const proprietaire = proprietaireSnapshot.val();
+                if (proprietaire) {
+                    const option = document.createElement("option");
+                    option.value = proprietaireId;
+                    option.text = `${proprietaire.nom} ${proprietaire.prenom}`;
+                    proprietaireFilter.appendChild(option);
+                }
+            });
+        });
+    });
+}
+
+// Fonction pour filtrer les souscriptions par propriétaire
+function filterSouscriptionsByProprietaire() {
+  const selectedProprietaireId = document.getElementById("proprietaire-filter-souscriptions").value;
+  const souscriptionsRows = document.querySelectorAll("#souscriptions-list tbody tr");
+
+  souscriptionsRows.forEach(row => {
+      const proprietaireCell = row.querySelector("td:nth-child(8)"); // Colonne "Propriétaire" (8ème cellule)
+      const proprietaireId = proprietaireCell.dataset.proprietaireId;
+
+      if (!selectedProprietaireId || proprietaireId === selectedProprietaireId) {
+          row.style.display = "";
+      } else {
+          row.style.display = "none";
+      }
+  });
+}
+
+function loadSouscriptions() {
+  showLoading();
+  const souscriptionsList = document.querySelector("#souscriptions-list tbody");
+  souscriptionsList.innerHTML = "";
+
+  // Update the house dropdown list
+  const maisonSelect = document.getElementById("souscription-maison");
+  maisonSelect.innerHTML = '<option value="">Sélectionner Maison</option>';
+  const maisonsRef = ref(database, 'maisons');
+  get(maisonsRef).then((maisonsSnapshot) => {
+      const maisons = maisonsSnapshot.val();
+      for (const maisonId in maisons) {
+          const maison = maisons[maisonId];
+          // Check if the house belongs to the current user
+          if (maison.userId === currentUser.id) {
+              const option = document.createElement("option");
+              option.value = maisonId;
+              // Use the formatted ID for display in the dropdown list
+              option.text = `${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+              maisonSelect.appendChild(option);
+          }
+      }
+  });
+
+  // Update the tenant dropdown list
+  const locataireSelect = document.getElementById("souscription-locataire");
+  locataireSelect.innerHTML = '<option value="">Sélectionner Locataire</option>';
+  const locatairesRef = ref(database, 'locataires');
+  get(locatairesRef).then((locatairesSnapshot) => {
+      const locataires = locatairesSnapshot.val();
+      for (const locataireId in locataires) {
+          const locataire = locataires[locataireId];
+          // Check if the tenant belongs to the current user
+          if (locataire.userId === currentUser.id) {
+              const option = document.createElement("option");
+              option.value = locataireId;
+              option.text = `${locataire.nom} ${locataire.prenom}`;
+              locataireSelect.appendChild(option);
+          }
+      }
+  });
+
+    // Écouteur d'événement pour le changement de sélection de la maison
+    maisonSelect.addEventListener("change", async () => {
+        const selectedMaisonId = maisonSelect.value;
+        if (selectedMaisonId) {
+            // Récupérer les informations de la maison sélectionnée
+            const maisonRef = ref(database, `maisons/${selectedMaisonId}`);
+            const maisonSnapshot = await get(maisonRef);
+            const maison = maisonSnapshot.val();
+
+            // Calculer le montant de l'avance
+            let avanceMontant = 0;
+            if (maison.loyer && maison.avance) {
+                avanceMontant = maison.loyer * maison.avance;
+            }
+            //Ajout du nombre de loyer dans le calcul de l'avance
+            if (maison.loyer && maison.avance && maison["nombre de loyer"]) {
+                avanceMontant = maison.loyer * (maison.avance + maison["nombre de loyer"]);
+            }
+
+            // Mettre à jour les champs du formulaire
+            document.getElementById("souscription-avance").value = avanceMontant;
+            document.getElementById("souscription-caution").value = maison.caution || "";
+            document.getElementById("souscription-autres").value = maison.frais_supplementaire || "";
+        } else {
+            // Réinitialiser les champs si aucune maison n'est sélectionnée
+            document.getElementById("souscription-avance").value = "";
+            document.getElementById("souscription-caution").value = "";
+            document.getElementById("souscription-autres").value = "";
+        }
+    });
+
+  const souscriptionsRef = ref(database, 'souscriptions');
+  onValue(souscriptionsRef, (snapshot) => {
+      const souscriptions = snapshot.val();
+      let souscriptionsCount = 0;
+      for (const souscriptionId in souscriptions) {
+          const souscription = souscriptions[souscriptionId];
+
+          // Check if the subscription belongs to the current user
+          if (souscription.userId === currentUser.id) {
+              souscriptionsCount++;
+              // Retrieve house and tenant information
+              Promise.all([
+                  get(ref(database, `maisons/${souscription.maison}`)),
+                  get(ref(database, `locataires/${souscription.locataire}`)),
+                  get(ref(database, `proprietaires/${souscription.proprietaire}`))
+              ]).then(([maisonSnapshot, locataireSnapshot, proprietaireSnapshot]) => {
+                  const maison = maisonSnapshot.val();
+                  const locataire = locataireSnapshot.val();
+                  const proprietaire = proprietaireSnapshot.val();
+
+                  // Vérifier si le propriétaire existe avant d'essayer d'accéder à ses propriétés
+                  const proprietaireId = proprietaire ? proprietaire.id : 'inconnu';
+                  const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Inconnu';
+
+                  const row = document.createElement("tr");
+                  row.innerHTML = `
+                      <td>${maison ? maison.ville + ', ' + maison.commune + ', ' + maison.quartier : 'Inconnue'}</td>
+                      <td>${locataire ? locataire.nom + ' ' + locataire.prenom : 'Inconnu'}</td>
+                      <td>${souscription.caution}</td>
+                      <td>${souscription.avance}</td>
+                      <td>${souscription.autres}</td>
+                      <td>${souscription.dateDebut}</td>
+                      <td>${souscription.loyer}</td>
+                      <td data-proprietaire-id="${proprietaireId}">${proprietaireNom}</td>
+                      <td class="actions-cell">
+                          <button class="edit-btn" data-id="${souscription.id}">Modifier</button>
+                          <button class="delete-btn" data-id="${souscription.id}">Supprimer</button>
+                      </td>
+                  `;
+                  souscriptionsList.appendChild(row);
+              });
+          }
+      }
+      document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
+      hideLoading();
+
+      // Ajout de l'écouteur d'événements pour le filtrage par propriétaire
+      const proprietaireFilterSouscriptions = document.getElementById("proprietaire-filter-souscriptions");
+      proprietaireFilterSouscriptions.addEventListener("change", filterSouscriptionsByProprietaire);
+  }, {
+      onlyOnce: true
+  });
+}
+
+// Fonction pour charger les recouvrements
+function loadRecouvrements() {
+  showLoading();
+  const recouvrementsList = document.querySelector("#recouvrements-list tbody");
+  recouvrementsList.innerHTML = "";
+
+  // Mettre à jour la liste déroulante des souscriptions
+  const souscriptionSelect = document.getElementById("recouvrement-souscription");
+  souscriptionSelect.innerHTML = '<option value="">Sélectionner Souscription</option>';
+  const souscriptionsRef = ref(database, 'souscriptions');
+  get(souscriptionsRef).then((souscriptionsSnapshot) => {
+    const souscriptions = souscriptionsSnapshot.val();
+    for (const souscriptionId in souscriptions) {
+      const souscription = souscriptions[souscriptionId];
+      if (souscription.userId === currentUser.id) {
+        const option = document.createElement("option");
+        option.value = souscriptionId;
+        get(ref(database, `maisons/${souscription.maison}`)).then((maisonSnapshot) => {
+          const maison = maisonSnapshot.val();
+          get(ref(database, `locataires/${souscription.locataire}`)).then((locataireSnapshot) => {
+            const locataire = locataireSnapshot.val();
+            option.text = `${locataire.nom} ${locataire.prenom} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+            souscriptionSelect.appendChild(option);
+          });
+        });
+      }
+    }
+  });
+
+  // Ajouter un écouteur d'événement pour le changement de sélection de la souscription
+  souscriptionSelect.addEventListener("change", async () => {
+    const selectedSouscriptionId = souscriptionSelect.value;
+    if (selectedSouscriptionId) {
+      // Récupérer l'ID du propriétaire à partir de la souscription sélectionnée
+      const souscriptionRef = ref(database, `souscriptions/${selectedSouscriptionId}`);
+      const souscriptionSnapshot = await get(souscriptionRef);
+      const souscription = souscriptionSnapshot.val();
+      const maisonId = souscription.maison;
+      const maisonRef = ref(database, `maisons/${maisonId}`);
+      const maisonSnapshot = await get(maisonRef);
+      const maison = maisonSnapshot.val();
+      const proprietaireId = maison.proprietaire;
+
+      // Récupérer le nom du propriétaire à partir de son ID
+      const proprietaireRef = ref(database, `proprietaires/${proprietaireId}`);
+      const proprietaireSnapshot = await get(proprietaireRef);
+      const proprietaire = proprietaireSnapshot.val();
+      const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Propriétaire inconnu';
+
+      // Mettre à jour le champ de sélection du propriétaire
+      const proprietaireSelect = document.getElementById("recouvrement-proprietaire");
+      proprietaireSelect.innerHTML = `<option value="${proprietaireId}">${proprietaireNom}</option>`;
+    } else {
+      // Réinitialiser le champ de sélection du propriétaire si aucune souscription n'est sélectionnée
+      const proprietaireSelect = document.getElementById("recouvrement-proprietaire");
+      proprietaireSelect.innerHTML = '<option value="">Sélectionner Propriétaire</option>';
+    }
+  });
+
+  const recouvrementsRef = ref(database, 'recouvrements');
+  onValue(recouvrementsRef, (snapshot) => {
+    const recouvrements = snapshot.val();
+    let recouvrementCount = 0;
+    let numero = 1;
+    for (const recouvrementId in recouvrements) {
+      const recouvrement = recouvrements[recouvrementId];
+      if (recouvrement.userId === currentUser.id) {
+        recouvrementCount++;
+        get(ref(database, `souscriptions/${recouvrement.souscription}`)).then((souscriptionSnapshot) => {
+          const souscription = souscriptionSnapshot.val();
+          if (souscription) {
+            Promise.all([
+              get(ref(database, `locataires/${souscription.locataire}`)),
+              get(ref(database, `maisons/${souscription.maison}`)),
+              get(ref(database, `proprietaires/${recouvrement.proprietaire}`))
+            ]).then(([locataireSnapshot, maisonSnapshot, proprietaireSnapshot]) => {
+              const locataire = locataireSnapshot.val();
+              const maison = maisonSnapshot.val();
+              const proprietaire = proprietaireSnapshot.val();
+              const proprietaireId = proprietaire ? proprietaire.id : 'inconnu'; // Récupérer l'ID du propriétaire
+              const proprietaireNom = proprietaire ? `${proprietaire.nom} ${proprietaire.prenom}` : 'Inconnu';
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${numero}</td>
+                <td>${locataire ? locataire.nom + ' ' + locataire.prenom : 'Inconnu'}</td>
+                <td>${maison && maison.numero ? maison.numero : 'N/A'}</td>
+                                <td>${souscription.loyer}</td>
+                <td>${recouvrement.periode}</td>
+                <td>${recouvrement.montant}</td>
+                <td>${recouvrement.date}</td>
+                <td>${recouvrement.commentaire}</td>
+                <td data-proprietaire-id="${proprietaireId}">${proprietaireNom}</td>
+                <td class="actions-cell">
+                  <button class="edit-btn" data-id="${recouvrement.id}">Modifier</button>
+                  <button class="delete-btn" data-id="${recouvrement.id}">Supprimer</button>
+                </td>
+              `;
+              recouvrementsList.appendChild(row);
+              numero++;
+            });
+          }
+        });
+      }
+    }
+    document.getElementById('dashboard-recouvrements-count').textContent = recouvrementCount;
+    hideLoading();
+  }, {
+    onlyOnce: true
+  });
+}
+
+// Fonction pour charger les propriétaires pour le filtre (Recouvrements)
+function loadProprietairesForFilter() {
+    const proprietaireFilter = document.getElementById("proprietaire-filter");
+    proprietaireFilter.innerHTML = '<option value="">Tous</option>'; // Option "Tous" par défaut
+
+    const recouvrementsRef = ref(database, 'recouvrements');
+    get(recouvrementsRef).then((recouvrementsSnapshot) => {
+        const recouvrements = recouvrementsSnapshot.val();
+        const proprietairesIds = new Set(); // Utilisation d'un Set pour éviter les doublons
+
+        for (const recouvrementId in recouvrements) {
+            const recouvrement = recouvrements[recouvrementId];
+            if (recouvrement.userId === currentUser.id && recouvrement.proprietaire) {
+                proprietairesIds.add(recouvrement.proprietaire);
+            }
+        }
+
+        // Récupérer les noms des propriétaires à partir des IDs
+        proprietairesIds.forEach(proprietaireId => {
+            const proprietaireRef = ref(database, `proprietaires/${proprietaireId}`);
+            get(proprietaireRef).then((proprietaireSnapshot) => {
+                const proprietaire = proprietaireSnapshot.val();
+                if (proprietaire) {
+                    const option = document.createElement("option");
+                    option.value = proprietaireId;
+                    option.text = `${proprietaire.nom} ${proprietaire.prenom}`;
+                    proprietaireFilter.appendChild(option);
+                }
+            });
+        });
+    });
+}
+
+// Fonction pour filtrer les recouvrements par propriétaire
+function filterRecouvrementsByProprietaire() {
+    const selectedProprietaireId = document.getElementById("proprietaire-filter").value;
+    const recouvrementsRows = document.querySelectorAll("#recouvrements-list tbody tr");
+
+    recouvrementsRows.forEach(row => {
+        const proprietaireCell = row.querySelector("td:nth-child(9)"); // Colonne "Propriétaire" (9ème cellule)
+
+        // Récupérer l'ID du propriétaire à partir de l'attribut data-
+        const proprietaireId = proprietaireCell.dataset.proprietaireId;
+
+        if (!selectedProprietaireId || proprietaireId === selectedProprietaireId) {
+            row.style.display = ""; // Afficher la ligne
+        } else {
+            row.style.display = "none"; // Masquer la ligne
+        }
+    });
+}
+
+// Appeler loadProprietairesForFilter au chargement de la page et après l'ajout d'un recouvrement
+window.addEventListener('load', () => {
+  // ...
+  loadProprietairesForFilter();
+  loadProprietairesForFilterSouscriptions();
+  // Ajouter un écouteur d'événement pour le filtre des propriétaires
+  const proprietaireFilter = document.getElementById("proprietaire-filter");
+  proprietaireFilter.addEventListener("change", filterRecouvrementsByProprietaire);
+  // Ajouter un écouteur d'événement pour le filtre des souscriptions (CORRECTION)
+  const proprietaireFilterSouscriptions = document.getElementById("proprietaire-filter-souscriptions");
+  proprietaireFilterSouscriptions.addEventListener("change", filterSouscriptionsByProprietaire);
+});
+
+// Function to open the edit modal
+function openEditModal(itemId, itemType) {
+    const modal = document.getElementById("edit-modal");
+    const form = document.getElementById("edit-form");
+    form.innerHTML = ''; // Clear previous form fields
+
+    // Fetch current data and populate form fields
+    const itemRef = ref(database, `${itemType}/${itemId}`);
+    get(itemRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const itemData = snapshot.val();
+            switch (itemType) {
+                case 'proprietaires':
+                    populateProprietaireForm(form, itemData, itemId);
+                    break;
+                case 'maisons':
+                    populateMaisonForm(form, itemData, itemId);
+                    break;
+                case 'locataires':
+                    populateLocataireForm(form, itemData, itemId);
+                    break;
+                case 'souscriptions':
+                    populateSouscriptionForm(form, itemData, itemId);
+                    break;
+                case 'recouvrements':
+                    populateRecouvrementForm(form, itemData, itemId);
+                    break;
+                    // Add cases for other item types as needed
+            }
+        } else {
+            console.log("No data available for editing");
+        }
+    }).catch((error) => {
+        console.error("Error fetching item data:", error);
+    });
+
+    modal.style.display = "block";
+}
+
+// Function to populate the form with 'proprietaire' data
+function populateProprietaireForm(form, itemData, itemId) {
+    form.innerHTML = `
+<h3>Modifier le propriétaire</h3>
+<input type="text" id="edit-nom" value="${itemData.nom}" required>
+<input type="text" id="edit-prenom" value="${itemData.prenom}" required>
+<input type="tel" id="edit-contact" value="${itemData.contact || ''}" placeholder="Contact (optionnel)">
+<input type="email" id="edit-email" value="${itemData.email || ''}" placeholder="Email (optionnel)">
+<input type="text" id="edit-adresse" value="${itemData.adresse || ''}" placeholder="Adresse (optionnel)">
+<button type="submit" class="submit-btn">Enregistrer</button>
+<button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+`;
+
+    // Handle form submission
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        const updatedData = {
+            nom: document.getElementById("edit-nom").value,
+            prenom: document.getElementById("edit-prenom").value,
+            contact: document.getElementById("edit-contact").value,
+            email: document.getElementById("edit-email").value,
+            adresse: document.getElementById("edit-adresse").value
+        };
+        updateItem('proprietaires', itemId, updatedData);
+    };
+}
+
+// Function to populate the form with 'maison' data
+function populateMaisonForm(form, itemData, itemId) {
+    // Fetch the list of landlords and construction types
+    const proprietairesRef = ref(database, 'proprietaires');
+    const typesConstructionRef = ref(database, `users/${currentUser.id}/typesConstruction`);
+
+    Promise.all([
+        get(proprietairesRef),
+        get(typesConstructionRef)
+    ]).then(([proprietairesSnapshot, typesSnapshot]) => {
+        const proprietaires = proprietairesSnapshot.val();
+        const typesConstruction = typesSnapshot.val();
+
+        // Create landlord select options
+        let proprietaireOptions = '';
+        for (const proprietaireId in proprietaires) {
+            const proprietaire = proprietaires[proprietaireId];
+            if (proprietaire.userId === currentUser.id) {
+                const selected = proprietaireId === itemData.proprietaire ? 'selected' : '';
+                proprietaireOptions += `<option value="${proprietaireId}" ${selected}>${proprietaire.nom} ${proprietaire.prenom}</option>`;
+            }
+        }
+
+        // Create construction type select options
+        let typeOptions = '<option value="autre">Autre</option>';
+        for (const typeId in typesConstruction) {
+            const type = typesConstruction[typeId];
+            const selected = type.nom === itemData.type ? 'selected' : '';
+            typeOptions += `<option value="${type.nom}" ${selected}>${type.nom}</option>`;
+        }
+
+        // Populate the form
+        form.innerHTML = `
+  <h3>Modifier la maison</h3>
+  <select id="edit-proprietaire">${proprietaireOptions}</select>
+  <select id="edit-type">${typeOptions}</select>
+  <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
+  <input type="text" id="edit-numero" value="${itemData.numero || ''}" placeholder="Numéro (optionnel)">
+  <input type="number" id="edit-pieces" value="${itemData.pieces || ''}" placeholder="Nombre de pièces (optionnel)">
+  <input type="text" id="edit-ville" value="${itemData.ville || ''}" placeholder="Ville (optionnel)">
+  <input type="text" id="edit-commune" value="${itemData.commune || ''}" placeholder="Commune (optionnel)">
+  <input type="text" id="edit-quartier" value="${itemData.quartier || ''}" placeholder="Quartier (optionnel)">
+  <input type="number" id="edit-loyer" value="${itemData.loyer || ''}" placeholder="Loyer (optionnel)">
+  <input type="number" id="edit-nombre-loyer" value="${itemData["nombre de loyer"] || ''}" placeholder="Nombre de loyer (optionnel)">
+  <input type="number" id="edit-caution" value="${itemData.caution || ''}" placeholder="Caution (optionnel)">
+  <input type="number" id="edit-avance" value="${itemData.avance || ''}" placeholder="Nombre d'avance (optionnel)">
+  <input type="text" id="edit-frais-supplementaire" value="${itemData.frais_supplementaire || ''}" placeholder="Frais supplémentaires (optionnel)">
+  <input type="text" id="edit-media" value="${itemData.media || ''}" placeholder="Lien vidéo YouTube ou image (optionnel)">
+  <button type="submit" class="submit-btn">Enregistrer</button>
+  <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+`;
+
+        // Show/hide new construction type input based on selection
+        const typeSelect = document.getElementById("edit-type");
+        const nouveauTypeInput = document.getElementById("nouveau-type-construction");
+        if (typeSelect.value !== "autre") {
+            nouveauTypeInput.style.display = "none";
+        }
+        typeSelect.addEventListener("change", () => {
+            nouveauTypeInput.style.display = typeSelect.value === "autre" ? "block" : "none";
+        });
+
+        // Handle form submission
+        form.onsubmit = (event) => {
+            event.preventDefault();
+            const typeConstruction = typeSelect.value === "autre" ? nouveauTypeInput.value : typeSelect.value;
+            const updatedData = {
+                proprietaire: document.getElementById("edit-proprietaire").value,
+                type: typeConstruction,
+                numero: document.getElementById("edit-numero").value,
+                pieces: parseInt(document.getElementById("edit-pieces").value),
+                ville: document.getElementById("edit-ville").value,
+                commune: document.getElementById("edit-commune").value,
+                quartier: document.getElementById("edit-quartier").value,
+                loyer: parseInt(document.getElementById("edit-loyer").value),
+                "nombre de loyer": parseInt(document.getElementById("edit-nombre-loyer").value),
+                caution: parseInt(document.getElementById("edit-caution").value),
+                avance: parseInt(document.getElementById("edit-avance").value),
+                frais_supplementaire: document.getElementById("edit-frais-supplementaire").value,
+                media: document.getElementById("edit-media").value
+            };
+            updateItem('maisons', itemId, updatedData);
+        };
+    });
+}
+
+// Function to populate the form with 'locataire' data
+function populateLocataireForm(form, itemData, itemId) {
+    form.innerHTML = `
+<h3>Modifier le locataire</h3>
+<input type="text" id="edit-nom" value="${itemData.nom}" required>
+<input type="text" id="edit-prenom" value="${itemData.prenom}" required>
+<input type="tel" id="edit-contact" value="${itemData.contact || ''}" placeholder="Contact (optionnel)">
+<input type="email" id="edit-email" value="${itemData.email || ''}" placeholder="Email (optionnel)">
+<button type="submit" class="submit-btn">Enregistrer</button>
+<button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+`;
+
+    // Handle form submission
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        const updatedData = {
+            nom: document.getElementById("edit-nom").value,
+            prenom: document.getElementById("edit-prenom").value,
+            contact: document.getElementById("edit-contact").value,
+            email: document.getElementById("edit-email").value
+        };
+        updateItem('locataires', itemId, updatedData);
+    };
+}
+
+// Function to populate the form with 'souscription' data
+function populateSouscriptionForm(form, itemData, itemId) {
+    // Fetch the list of houses and tenants
+    const maisonsRef = ref(database, 'maisons');
+    const locatairesRef = ref(database, 'locataires');
+
+    Promise.all([
+        get(maisonsRef),
+        get(locatairesRef)
+    ]).then(([maisonsSnapshot, locatairesSnapshot]) => {
+        const maisons = maisonsSnapshot.val();
+        const locataires = locatairesSnapshot.val();
+
+        // Create house select options
+        let maisonOptions = '';
+        for (const maisonId in maisons) {
+            const maison = maisons[maisonId];
+            if (maison.userId === currentUser.id) {
+                const selected = maisonId === itemData.maison ? 'selected' : '';
+                maisonOptions += `<option value="${maisonId}" ${selected}>${maison.ville}, ${maison.commune}, ${maison.quartier}</option>`;
+            }
+        }
+
+        // Create tenant select options
+        let locataireOptions = '';
+        for (const locataireId in locataires) {
+            const locataire = locataires[locataireId];
+            if (locataire.userId === currentUser.id) {
+                const selected = locataireId === itemData.locataire ? 'selected' : '';
+                locataireOptions += `<option value="${locataireId}" ${selected}>${locataire.nom} ${locataire.prenom}</option>`;
+            }
+        }
+
+        // Populate the form
+        form.innerHTML = `
+  <h3>Modifier la souscription</h3>
+  <select id="edit-maison">${maisonOptions}</select>
+  <select id="edit-locataire">${locataireOptions}</select>
+  <input type="number" id="edit-caution" value="${itemData.caution || ''}" placeholder="Caution (optionnel)">
+  <input type="number" id="edit-avance" value="${itemData.avance || ''}" placeholder="Avance (optionnel)">
+  <input type="text" id="edit-autres" value="${itemData.autres || ''}" placeholder="Autres frais (optionnel)">
+  <input type="date" id="edit-dateDebut" value="${itemData.dateDebut}" required>
+  <button type="submit" class="submit-btn">Enregistrer</button>
+  <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+`;
+
+        // Handle form submission
+        form.onsubmit = (event) => {
+            event.preventDefault();
+            const updatedData = {
+                maison: document.getElementById("edit-maison").value,
+                locataire: document.getElementById("edit-locataire").value,
+                caution: parseInt(document.getElementById("edit-caution").value),
+                avance: parseInt(document.getElementById("edit-avance").value),
+                autres: document.getElementById("edit-autres").value,
+                dateDebut: document.getElementById("edit-dateDebut").value
+            };
+            updateItem('souscriptions', itemId, updatedData);
+        };
+    });
+}
+
+// Function to populate the form with 'recouvrement' data
+function populateRecouvrementForm(form, itemData, itemId) {
+    // Fetch the list of subscriptions
+    const souscriptionsRef = ref(database, 'souscriptions');
+
+    get(souscriptionsRef).then((souscriptionsSnapshot) => {
+        const souscriptions = souscriptionsSnapshot.val();
+
+        // Create subscription select options
+        let souscriptionOptions = '';
+        for (const souscriptionId in souscriptions) {
+            const souscription = souscriptions[souscriptionId];
+            if (souscription.userId === currentUser.id) {
+                const selected = souscriptionId === itemData.souscription ? 'selected' : '';
+                souscriptionOptions += `<option value="${souscriptionId}" ${selected}>ID: ${souscriptionId}</option>`; // Replace with relevant details
+            }
+        }
+
+        // Populate the form
+        form.innerHTML = `
+  <h3>Modifier le recouvrement</h3>
+  <select id="edit-souscription">${souscriptionOptions}</select>
+  <input type="number" id="edit-montant" value="${itemData.montant || ''}" placeholder="Montant (optionnel)">
+  <input type="month" id="edit-periode" value="${itemData.periode || ''}" placeholder="Période (optionnel)">
+  <input type="text" id="edit-commentaire" value="${itemData.commentaire || ''}" placeholder="Commentaire (optionnel)">
+  <input type="date" id="edit-date" value="${itemData.date || ''}" placeholder="Date (optionnel)">
+  <button type="submit" class="submit-btn">Enregistrer</button>
+  <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+`;
+
+        // Handle form submission
+        form.onsubmit = (event) => {
+            event.preventDefault();
+            const updatedData = {
+                souscription: document.getElementById("edit-souscription").value,
+                montant: parseInt(document.getElementById("edit-montant").value),
+                periode: document.getElementById("edit-periode").value,
+                commentaire: document.getElementById("edit-commentaire").value,
+                date: document.getElementById("edit-date").value
+            };
+            updateItem('recouvrements', itemId, updatedData);
+        };
+    });
+}
+
+// Function to close the edit modal
+function closeEditModal() {
+    document.getElementById("edit-modal").style.display = "none";
+}
+
+// Attach the closeEditModal function to the window object
+window.closeEditModal = closeEditModal;
+
+// Function to update an item in Firebase
+function updateItem(itemType, itemId, updatedData) {
+    showLoading();
+    const itemRef = ref(database, `${itemType}/${itemId}`);
+    update(itemRef, updatedData)
+        .then(() => {
+            // Reload the data after editing
+            switch (itemType) {
+                case 'proprietaires':
+                    loadProprietaires();
+                    break;
+                case 'maisons':
+                    loadMaisons();
+                    break;
+                case 'locataires':
+                    loadLocataires();
+                    break;
+                case 'souscriptions':
+                    loadSouscriptions();
+                    break;
+                case 'recouvrements':
+                    loadRecouvrements();
+                    break;
+                    // Add cases for other item types as needed
+            }
+            alert(`${itemType.charAt(0).toUpperCase() + itemType.slice(1, -1)} modifié avec succès !`);
+            closeEditModal();
+        })
+        .catch((error) => {
+            console.error(`Erreur lors de la modification de ${itemType}:`, error);
+            alert(`Erreur lors de la modification de ${itemType}.`);
+        })
+        .finally(() => {
+            hideLoading();
+        });
+}
+
+// Event delegation for "Edit" and "Delete" buttons
+document.querySelector("#proprietaires-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'proprietaires'));
+document.querySelector("#maisons-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'maisons'));
+document.querySelector("#locataires-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'locataires'));
+document.querySelector("#souscriptions-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'souscriptions'));
+document.querySelector("#recouvrements-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'recouvrements'));
+
+function handleEditDelete(event, itemType) {
+    const target = event.target;
+    if (target.classList.contains("edit-btn")) {
+        const itemId = target.dataset.id;
+        openEditModal(itemId, itemType);
+    } else if (target.classList.contains("delete-btn")) {
+        const itemId = target.dataset.id;
+        const confirmationText = `Êtes-vous sûr de vouloir supprimer ce ${itemType.slice(0, -1)} ?`;
+        if (confirm(confirmationText)) {
+            deleteItem(itemType, itemId);
+        }
+    }
+}
+
+// Function to delete an item
+async function deleteItem(itemType, itemId) {
+    showLoading();
+    try {
+        const itemRef = ref(database, `${itemType}/${itemId}`);
+        await remove(itemRef);
+        // Reload the list after deletion
+        if (itemType === 'proprietaires') {
+            loadProprietaires();
+        } else if (itemType === 'maisons') {
+            loadMaisons();
+        } else if (itemType === 'locataires') {
+            loadLocataires();
+        } else if (itemType === 'souscriptions') {
+            loadSouscriptions();
+        } else if (itemType === 'recouvrements') {
+            loadRecouvrements();
+        }
+    } catch (error) {
+        console.error(`Erreur lors de la suppression de ${itemType}:`, error);
+        alert(`Erreur lors de la suppression de ${itemType}.`);
+    } finally {
+        hideLoading();
+    }
+}
+
+// Subscription Management
+const subscribeMonthlyBtn = document.getElementById("subscribe-monthly-btn");
+const subscribeYearlyBtn = document.getElementById("subscribe-yearly-btn");
+const cancelSubscriptionBtn = document.getElementById("cancel-subscription-btn");
+
+// Monthly subscription
+subscribeMonthlyBtn.addEventListener("click", () => {
+    handleSubscription("monthly");
+});
+
+// Annual subscription
+subscribeYearlyBtn.addEventListener("click", () => {
+    handleSubscription("yearly");
+});
+
+async function handleSubscription(subscriptionType) {
+    // Check if the user already has an active subscription
+    if (
+        currentUser &&
+        currentUser.subscription &&
+        currentUser.subscription.status === "active"
+    ) {
+        alert("Vous avez déjà un abonnement actif.");
+        return;
+    }
+
+    // Fetch the user's agency data to get the public API key
+    const agenceRef = ref(database, `users/${currentUser.id}/agence`);
+    const agenceSnapshot = await get(agenceRef);
+    if (!agenceSnapshot.exists()) {
+        alert("Veuillez configurer les informations de votre agence avant de souscrire à un abonnement.");
+        return;
+    }
+    const agenceData = agenceSnapshot.val();
+    const publicKey = agenceData.apiKey;
+
+    if (!publicKey) {
+        alert("Clé API publique FedaPay manquante. Veuillez configurer les informations de votre agence.");
+        return;
+    }
+
+    const amount = subscriptionType === "monthly" ? 1000 : 10000;
+    const description =
+        subscriptionType === "monthly"
+            ? "Abonnement mensuel à la plateforme de gestion locative"
+            : "Abonnement annuel à la plateforme de gestion locative";
+
+    showLoading();
+
+    // Initialize FedaPay checkout
+    FedaPay.init({
+        public_key: publicKey,
+        transaction: {
+            amount: amount,
+            description: description,
+        },
+        customer: {
+            email: agenceData.email || "email@default.com", // Use agency email or a default email
+        },
+        onComplete: async function (transaction) {
+            if (transaction.reason === FedaPay.CHECKOUT_COMPLETED) {
+                // Calculate the expiration date
+                const startDate = new Date();
+                const endDate = new Date(
+                    subscriptionType === "monthly"
+                        ? startDate.getTime() + 30 * 24 * 60 * 60 * 1000
+                        : startDate.getTime() + 365 * 24 * 60 * 60 * 1000
+                );
+
+                // Save the subscription in the Firebase database
+                const subscriptionData = {
+                    status: "active",
+                    type: subscriptionType,
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                };
+                await update(
+                    ref(database, `users/${currentUser.id}/subscription`),
+                    subscriptionData
+                );
+
+                // Update the current user's status
+                if (currentUser) {
+                    currentUser.subscription = subscriptionData;
+                    // Update localStorage
+                    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+                }
+
+                checkUserRoleAndSubscription();
+                alert(
+                    `Abonnement ${subscriptionType === "monthly" ? "mensuel" : "annuel"} réussi !`
+                );
+                loadDashboardData();
+            } else if (transaction.reason === FedaPay.DIALOG_DISMISSED) {
+                alert("Paiement annulé.");
+            } else {
+                console.log("Transaction : ", transaction);
+                alert("Erreur lors du paiement. Veuillez réessayer.");
+            }
+        },
+    }).open();
+
+    hideLoading();
+}
+
+// Function to load dashboard data
+async function loadDashboardData() {
+    if (!isAuthenticated) return;
+
+    // Load the number of landlords
+    const proprietairesRef = ref(database, 'proprietaires');
+    onValue(proprietairesRef, (snapshot) => {
+        const proprietaires = snapshot.val();
+        let proprietairesCount = 0;
+        for (const proprietaireId in proprietaires) {
+            if (proprietaires[proprietaireId].userId === currentUser.id) {
+                proprietairesCount++;
+            }
+        }
+        document.getElementById('dashboard-proprietaires-count').textContent = proprietairesCount;
+    });
+
+    // Load the number of tenants
+    const locatairesRef = ref(database, 'locataires');
+    onValue(locatairesRef, (snapshot) => {
+        const locataires = snapshot.val();
+        let locatairesCount = 0;
+        for (const locataireId in locataires) {
+            if (locataires[locataireId].userId === currentUser.id) {
+                locatairesCount++;
+            }
+        }
+        document.getElementById('dashboard-locataires-count').textContent = locatairesCount;
+    });
+
+    // Load the number of houses
+    const maisonsRef = ref(database, 'maisons');
+    onValue(maisonsRef, (snapshot) => {
+        const maisons = snapshot.val();
+        let maisonsCount = 0;
+        for (const maisonId in maisons) {
+          if (maisons[maisonId].userId === currentUser.id) {
+            maisonsCount++;
+        }
+    }
+    document.getElementById('dashboard-maisons-count').textContent = maisonsCount;
+});
+
+// Load the number of subscriptions
+const souscriptionsRef = ref(database, 'souscriptions');
+onValue(souscriptionsRef, (snapshot) => {
+    const souscriptions = snapshot.val();
+    let souscriptionsCount = 0;
+    for (const souscriptionId in souscriptions) {
+        if (souscriptions[souscriptionId].userId === currentUser.id) {
+            souscriptionsCount++;
+        }
+    }
+    document.getElementById('dashboard-souscriptions-count').textContent = souscriptionsCount;
+});
+
+// Load the number of recouvremets
+const recouvrementsRef = ref(database, 'recouvrements');
+onValue(recouvrementsRef, (snapshot) => {
+    const recouvrements = snapshot.val();
+    let recouvrementCount = 0;
+    for (const recouvrementId in recouvrements) {
+        if (recouvrements[recouvrementId].userId === currentUser.id) {
+            recouvrementCount++;
+        }
+    }
+    document.getElementById('dashboard-recouvrements-count').textContent = recouvrementCount;
+});
+
+// Load the number of active subscriptions
+const usersRef = ref(database, 'users');
+onValue(usersRef, (snapshot) => {
+    const users = snapshot.val();
+    let activeSubscriptionsCount = 0;
+    for (const userId in users) {
+        const user = users[userId];
+        if (user.subscription && user.subscription.status === 'active') {
+            activeSubscriptionsCount++;
+        }
+    }
+    document.getElementById('dashboard-abonnements-count').textContent = activeSubscriptionsCount;
+});
+}
+
+cancelSubscriptionBtn.addEventListener("click", async () => {
+if (currentUser && currentUser.subscription) {
+    if (confirm("Êtes-vous sûr de vouloir annuler votre abonnement ?")) {
+        // Update the subscription status in Firebase
+        await update(ref(database, `users/${currentUser.id}/subscription`), { status: 'cancelled' });
+
+        // Update the current user's status
+        currentUser.subscription.status = 'cancelled';
+
+        // Update localStorage
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+        checkUserRoleAndSubscription();
+
+        alert('Abonnement annulé.');
+        loadDashboardData(); // Reload data to update subscription status
+    }
+} else {
+    alert('Vous n\'avez pas d\'abonnement actif à annuler.');
+}
+});
+
+// Logout function
+function logout() {
+localStorage.removeItem('currentUser');
+localStorage.removeItem('isAuthenticated'); // Remove connection status
+isAuthenticated = false;
+currentUser = null;
+// Redirect to login page or refresh the page
+window.location.href = 'index.html'; // Redirect to login page
+}
+
+// Add a logout button (example)
+const logoutButton = document.createElement('button');
+logoutButton.id = 'logout-btn';
+logoutButton.textContent = 'Déconnexion';
+document.body.appendChild(logoutButton); // Add it to the appropriate place in your HTML
+
+// Event handler for logout
+document.getElementById('logout-btn').addEventListener('click', logout);
+
+function checkUserAccess(targetSectionId = null) {
+// Removed subscription check for "agence"
+if (currentUser &&
+    currentUser.subscription &&
+    (currentUser.subscription.status === 'active') ||
+    targetSectionId === "agence") { // Allow access to "agence" regardless of subscription
+    // Authorized user - do nothing
+    if (targetSectionId) {
+        // Display the target section
+        contentSections.forEach(s => s.classList.remove("active"));
+        document.getElementById(targetSectionId).classList.add("active");
+    }
+} else {
+    // Unauthorized user - redirect to the subscription section
+    alert("Vous devez avoir un abonnement actif pour accéder à cette section.");
+    contentSections.forEach(s => s.classList.remove("active"));
+    document.getElementById("abonnements").classList.add("active"); // Display the subscription section
+
+    // Update the status of the "Subscriptions" navigation button
+    tabs.forEach(t => t.classList.remove("active"));
+    const abonnementTab = document.querySelector('[data-target="abonnements"]');
+    if (abonnementTab) {
+        abonnementTab.classList.add("active");
+    }
+}
+}
+
+// Functions to export tables
+function exportTableToPDF(tableId, fileName) {
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+const table = document.getElementById(tableId);
+
+doc.autoTable({ html: `#${tableId}` });
+doc.save(`${fileName}.pdf`);
+}
+
+function exportTableToExcel(tableId, fileName) {
+const table = document.getElementById(tableId);
+const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet 1" });
+XLSX.writeFile(wb, `${fileName}.xlsx`);
+}
+
+function printTable(tableId) {
+const printWindow = window.open('', '_blank');
+const table = document.getElementById(tableId);
+const tableClone = table.cloneNode(true);
+
+// Remove the "Actions" column for printing
+const rows = tableClone.querySelectorAll('tr');
+rows.forEach(row => {
+    const lastCell = row.lastElementChild;
+    if (lastCell) {
+        row.removeChild(lastCell);
+    }
+});
+
+printWindow.document.write('<html><head><title>Impression du tableau</title>');
+printWindow.document.write('<style>table { border-collapse: collapse; width: 100%; } th, td { text-align: left; padding: 8px; border: 1px solid #ddd; }</style>');
+printWindow.document.write('</head><body>');
+printWindow.document.write(tableClone.outerHTML);
+printWindow.document.write('</body></html>');
+printWindow.document.close();
+printWindow.focus();
+printWindow.print();
+printWindow.close();
+}
+
+// Add event handlers for export and print
+document.querySelectorAll('.export-pdf-btn').forEach(button => {
+button.addEventListener('click', () => {
+    const tableId = button.closest('.content-section').querySelector('.data-table').id;
+    const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
+    exportTableToPDF(tableId, `${sectionTitle}`);
+});
+});
+
+document.querySelectorAll('.export-excel-btn').forEach(button => {
+button.addEventListener('click', () => {
+    const tableId = button.closest('.content-section').querySelector('.data-table').id;
+    const sectionTitle = button.closest('.content-section').querySelector('h2').textContent;
+    exportTableToExcel(tableId, `${sectionTitle}`);
+});
+});
+
+document.querySelectorAll('.print-btn').forEach(button => {
+button.addEventListener('click', () => {
+    const tableId = button.closest('.content-section').querySelector('.data-table').id;
+    printTable(tableId);
+});
+});
+
+// Function to display the modal window with details
+function showDetailsModal(details) {
+const modal = document.getElementById("details-modal");
+const detailsContent = document.getElementById("modal-details-content");
+detailsContent.innerHTML = details;
+modal.style.display = "block";
+}
+
+// Event handler to close the modal window
+document.querySelector(".close-modal").addEventListener("click", () => {
+document.getElementById("details-modal").style.display = "none";
+});
+
+// Gestion des informations de l'agence
+const editAgenceBtn = document.getElementById("edit-agence-btn");
+const editAgenceForm = document.getElementById("edit-agence-form");
+const cancelAgenceBtn = document.getElementById("cancel-agence-btn");
+const agenceInfoDiv = document.getElementById("agence-info");
+
+editAgenceBtn.addEventListener("click", () => {
+editAgenceForm.style.display = "block";
+agenceInfoDiv.style.display = "none";
+editAgenceBtn.style.display = "none";
+});
+
+cancelAgenceBtn.addEventListener("click", () => {
+editAgenceForm.style.display = "none";
+agenceInfoDiv.style.display = "block";
+editAgenceBtn.style.display = "block";
+});
+
+editAgenceForm.addEventListener("submit", async (event) => {
+event.preventDefault();
+const agenceNom = document.getElementById("agence-nom").value;
+const agencePrenom = document.getElementById("agence-prenom").value;
+const agenceTelephone = document.getElementById("agence-telephone").value;
+const agenceEmail = document.getElementById("agence-email").value;
+const agenceAdresse = document.getElementById("agence-adresse").value;
+const agenceApiKey = document.getElementById("agence-api-key").value;
+
+if (currentUser) {
+    const agenceData = {
+        nom: agenceNom,
+        prenom: agencePrenom,
+        telephone: agenceTelephone,
+        email: agenceEmail,
+        adresse: agenceAdresse,
+        apiKey: agenceApiKey
+    };
+
+    try {
+        await update(ref(database, `users/${currentUser.id}/agence`), agenceData);
+        alert("Informations de l'agence mises à jour avec succès !");
+        loadAgenceData(); // Recharger les données de l'agence
+        editAgenceForm.style.display = "none";
+        agenceInfoDiv.style.display = "block";
+        editAgenceBtn.style.display = "block";
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour des informations de l'agence :", error);
+        alert("Erreur lors de la mise à jour des informations de l'agence.");
+    }
+} else {
+    alert("Utilisateur non connecté.");
+}
+});
+
+function loadAgenceData() {
+if (currentUser) {
+    const agenceRef = ref(database, `users/${currentUser.id}/agence`);
+    get(agenceRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const agenceData = snapshot.val();
+            agenceInfoDiv.innerHTML = `
+                  <p><strong>Nom:</strong> ${agenceData.nom}</p>
+                  <p><strong>Prénom:</strong> ${agenceData.prenom}</p>
+                  <p><strong>Téléphone:</strong> ${agenceData.telephone}</p>
+                  <p><strong>Email:</strong> ${agenceData.email}</p>
+                  <p><strong>Adresse:</strong> ${agenceData.adresse}</p>
+                  <p><strong>Clé API publique FedaPay:</strong> ${agenceData.apiKey}</p>
+              `;
+            // Pré-remplir le formulaire avec les données existantes
+            document.getElementById("agence-nom").value = agenceData.nom || '';
+            document.getElementById("agence-prenom").value = agenceData.prenom || '';
+            document.getElementById("agence-telephone").value = agenceData.telephone || '';
+            document.getElementById("agence-email").value = agenceData.email || '';
+            document.getElementById("agence-adresse").value = agenceData.adresse || '';
+            document.getElementById("agence-api-key").value = agenceData.apiKey || '';
+        } else {
+            agenceInfoDiv.innerHTML = "<p>Aucune information d'agence disponible.</p>";
+        }
+    }).catch((error) => {
+        console.error("Erreur lors du chargement des informations de l'agence :", error);
+        agenceInfoDiv.innerHTML = "<p>Erreur lors du chargement des informations de l'agence.</p>";
+    });
+}
+}
+
+// Gestion des options GPS pour le formulaire d'ajout de maison
+const manualGpsOption = document.getElementById("manual-gps");
+const autoGpsOption = document.getElementById("auto-gps");
+const manualGpsFields = document.getElementById("manual-gps-fields");
+const autoGpsMapDiv = document.getElementById("auto-gps-map");
+
+manualGpsOption.addEventListener("change", () => {
+manualGpsFields.style.display = "block";
+autoGpsMapDiv.style.display = "none";
+});
+
+autoGpsOption.addEventListener("change", () => {
+manualGpsFields.style.display = "none";
+autoGpsMapDiv.style.display = "block";
+initMap();
+});
+
+let map, marker;
+
+function initMap() {
+if (!map) {
+    map = L.map('auto-gps-map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    // Get user's current location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => { // Success callback
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                map.setView([lat, lng], 13); // Center map on user's location
+
+                if (!marker) {
+                    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                } else {
+                    marker.setLatLng([lat, lng]);
+                }
+
+                document.getElementById("maison-latitude").value = lat;
+                document.getElementById("maison-longitude").value = lng;
+
+                marker.on('dragend', function (event) {
+                    const position = marker.getLatLng();
+                    document.getElementById("maison-latitude").value = position.lat;
+                    document.getElementById("maison-longitude").value = position.lng;
+                });
+
+            },
+            (error) => { // Error callback
+                console.error("Erreur de géolocalisation:", error);
+                alert("Impossible d'obtenir votre position actuelle. Veuillez autoriser la géolocalisation ou entrer les coordonnées manuellement.");
+                map.setView([51.505, -0.09], 13); // Set to a default location
+
+                if (!marker) {
+                    marker = L.marker([51.505, -0.09], { draggable: true }).addTo(map);
+                } else {
+                    marker.setLatLng([51.505, -0.09]);
+                }
+            }
+        );
+    } else {
+        console.error("La géolocalisation n'est pas supportée par votre navigateur.");
+        alert("Votre navigateur ne supporte pas la géolocalisation. Veuillez entrer les coordonnées manuellement.");
+        map.setView([51.505, -0.09], 13); // Set to a default location
+        if (!marker) {
+            marker = L.marker([51.505, -0.09], { draggable: true }).addTo(map);
+        } else {
+            marker.setLatLng([51.505, -0.09]);
+        }
+    }
+    map.on('click', function (event) {
+        marker.setLatLng(event.latlng);
+        document.getElementById("maison-latitude").value = event.latlng.lat;
+        document.getElementById("maison-longitude").value = event.latlng.lng;
+    });
+}
+}
+
+// Gestion du bouton flottant pour afficher les sections
+const fabButton = document.querySelector(".fab-button");
+const fabOptions = document.querySelector(".fab-options");
+const contentSections = document.querySelectorAll(".content-section");
+const navLinks = document.querySelectorAll(".fab-option");
+
+// Animation pour l'icône du menu (FAB)
+let isAnimating = false;
+let currentIconIndex = 0;
+const icons = ["fas fa-tachometer-alt", "fas fa-user-tie", "fas fa-home", "fas fa-users", "fas fa-file-contract", "fas fa-hand-holding-usd", "fas fa-credit-card", "fas fa-building"]; // Add more icons if needed
+
+fabButton.addEventListener("click", () => {
+fabOptions.classList.toggle("show");
+// Reset to default icon when closing
+if (!fabOptions.classList.contains("show")) {
+    currentIconIndex = 0; // Set to the first icon index
+    fabButton.querySelector("i").className = icons[currentIconIndex];
+}
+});
+
+function animateFABIcon() {
+if (!isAnimating && !fabOptions.classList.contains("show")) { // Only animate when menu is closed
+    isAnimating = true;
+    fabButton.querySelector("i").className = icons[currentIconIndex];
+
+    currentIconIndex = (currentIconIndex + 1) % icons.length; // Move to the next icon (loop back to the beginning)
+
+    setTimeout(() => {
+        isAnimating = false;
+    }, 500); // Adjust the animation duration as needed
+}
+}
+
+// Start the FAB icon animation loop (e.g., every 2 seconds)
+setInterval(animateFABIcon, 2000);
+
+fabButton.addEventListener("click", () => {
+fabOptions.classList.toggle("show");
+});
+
+navLinks.forEach((link) => {
+link.addEventListener("click", (event) => {
+    event.preventDefault();
+    const targetSectionId = link.dataset.section;
+    contentSections.forEach((section) => {
+        section.classList.remove("active");
+    });
+
+    const targetSection = document.getElementById(targetSectionId);
+    if (targetSection) {
+        targetSection.classList.add("active");
+        fabOptions.classList.remove("show");
+    }
+    // Check user access based on the clicked section
+    checkUserAccess(targetSectionId);
+});
+});
+
+// Rendre les éléments du tableau de bord cliquables
+const dashboardItems = document.querySelectorAll('.dashboard-item');
+
+dashboardItems.forEach(item => {
+item.addEventListener('click', () => {
+    const targetSectionId = item.dataset.section;
+    contentSections.forEach(section => {
+        section.classList.remove('active');
+    });
+
+    const targetSection = document.getElementById(targetSectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
+});
+});
+
+// Function to show the "Back" button
+function showBackButton() {
+    document.getElementById("back-button-container").style.display = "block";
+}
+
+// Function to hide the "Back" button
+function hideBackButton() {
+    document.getElementById("back-button-container").style.display = "none";
+}
+
+// Event listener for the "Back" button
+document.getElementById("back-button").addEventListener("click", () => {
+    contentSections.forEach((section) => {
+        section.classList.remove("active");
+    });
+    document.getElementById("dashboard").classList.add("active");
+    hideBackButton(); // Hide the button after returning to the dashboard
+});
+
+// Show or hide the "Back" button when switching sections
+navLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const targetSectionId = link.dataset.section;
+        contentSections.forEach((section) => {
+            section.classList.remove("active");
+        });
+
+        const targetSection = document.getElementById(targetSectionId);
+        if (targetSection) {
+            targetSection.classList.add("active");
+            fabOptions.classList.remove("show");
+        }
+        // Check user access based on the clicked section
+        checkUserAccess(targetSectionId);
+
+        // Show or hide the "Back" button based on the target section
+        if (targetSectionId !== "dashboard") {
+            showBackButton();
+        } else {
+            hideBackButton();
+        }
+    });
+});
+
+// Show or hide the "Back" button when clicking on dashboard items
+dashboardItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const targetSectionId = item.dataset.section;
+        contentSections.forEach(section => {
+            section.classList.remove('active');
+        });
+
+        const targetSection = document.getElementById(targetSectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+
+        // Show or hide the "Back" button based on the target section
+        if (targetSectionId !== "dashboard") {
+            showBackButton();
+        } else {
+            hideBackButton();
+        }
+    });
+});
+
+// Data loading initialization
+async function initializeDataLoad() {
+    if (isAuthenticated) {
+        checkUserRoleAndSubscription();
+        setInterval(checkAndUpdateSubscriptionStatus, 60 * 60 * 1000);
+        loadDashboardData();
+        loadProprietaires();
+        loadMaisons();
+        loadLocataires();
+        loadSouscriptions();
+        loadRecouvrements();
+        loadAgenceData();
+        loadProprietairesForFilterSouscriptions();
+        setDefaultDate();
+        if (currentUser) {
+            await loadUserConstructionTypes(); // Attend la fin du chargement des types
+            updateTypeSelectWithCustomTypes(); // Met à jour la liste déroulante
+        }
+    }
+}
+
+// Fonction pour définir la date par défaut dans le champ "recouvrement-date"
+function setDefaultDate() {
+    const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+    document.getElementById("recouvrement-date").value = today;
+}
+
+// Call initializeDataLoad on page load
+initializeDataLoad();
