@@ -305,8 +305,9 @@ async function displayHouses(houses) {
     for (const houseId in houses) {
         const house = houses[houseId];
 
-        // Vérifie si la maison est déjà achetée
+        // Vérifie si la maison est déjà achetée ou si elle est disponible
         const isPurchased = house.purchasedBy && house.purchasedBy.length > 0;
+        const isAvailable = house.disponible === undefined || house.disponible;
 
         // Affiche la maison même si certaines données essentielles sont manquantes
         try {
@@ -318,8 +319,8 @@ async function displayHouses(houses) {
                 <h3>${house.type || 'Type inconnu'} à louer</h3>
                 <p class="location"><strong>Localisation:</strong> ${house.ville || 'Ville inconnue'}, ${house.commune || 'Commune inconnue'}, ${house.quartier || 'Quartier inconnu'}</p>
                 <p class="price"><strong>Loyer:</strong> ${house.loyer ? house.loyer + ' FCFA' : 'Loyer inconnu'}</p>
-                <button class="rent-button" data-house-id="${houseId}" ${isPurchased ? 'disabled' : ''}>
-                    ${isPurchased ? 'Indisponible' : 'LOUER'}
+                <button class="rent-button" data-house-id="${houseId}" ${isPurchased || !isAvailable ? 'disabled' : ''}>
+                    ${isPurchased || !isAvailable ? 'INDISPONIBLE' : 'LOUER'}
                 </button>
             `;
             housesContainer.appendChild(houseDiv);
@@ -349,6 +350,7 @@ async function displayHouses(houses) {
 
             // Écouteur d'événement pour le bouton "LOUER"
             const rentButton = houseDiv.querySelector(".rent-button");
+            if (!isPurchased && isAvailable) {
             rentButton.addEventListener("click", async () => {
                 // Récupère les détails supplémentaires uniquement si l'utilisateur clique sur "LOUER"
                 try {
@@ -398,6 +400,7 @@ async function displayHouses(houses) {
                     // Gérer l'affichage d'un message d'erreur ou d'une modale d'erreur ici
                 }
             });
+        }
         } catch (error) {
             console.error("Erreur lors de la création de la carte de la maison:", error);
         }

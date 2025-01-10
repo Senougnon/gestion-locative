@@ -617,7 +617,8 @@ async function addMaison(proprietaireId, type, numero, pieces, ville, commune, q
         frais_supplementaire: frais_supplementaire || "",
         media: media || "",
         latitude: latitude || null,
-        longitude: longitude || null
+        longitude: longitude || null,
+        disponible: true
     });
 }
 
@@ -643,6 +644,9 @@ async function addSouscription(maisonId, locataireId, caution, avance, autres, d
     const maison = maisonSnapshot.val();
     const loyer = maison.loyer;
     const proprietaireId = maison.proprietaire;
+
+    // Marquer la maison comme indisponible
+    await update(maisonRef, { disponible: false });
 
     await set(newSouscriptionRef, {
         id: newSouscriptionRef.key,
@@ -779,6 +783,7 @@ function loadMaisons() {
           <td class="actions-cell">
           <button class="edit-btn" data-id="${maison.id}">Modifier</button>
           <button class="delete-btn" data-id="${maison.id}">Supprimer</button>
+          <button class="disponible-btn" data-id="${maison.id}" data-disponible="${maison.disponible ? 'oui' : 'non'}">${maison.disponible ? 'Rendre indisponible' : 'Rendre disponible'}</button>
           </td>
       `;
                     maisonsList.appendChild(row);
@@ -896,8 +901,7 @@ function loadSouscriptions() {
           if (maison.userId === currentUser.id) {
               const option = document.createElement("option");
               option.value = maisonId;
-              // Use the formatted ID for display in the dropdown list
-              option.text = `${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+              option.text = `${maison.type} - ${maison.numero} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
               maisonSelect.appendChild(option);
           }
       }
@@ -1518,6 +1522,16 @@ document.querySelector("#locataires-list tbody").addEventListener("click", (even
 document.querySelector("#souscriptions-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'souscriptions'));
 document.querySelector("#recouvrements-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'recouvrements'));
 
+// Event delegation for "Disponible" button
+document.querySelector("#maisons-list tbody").addEventListener("click", (event) => {
+    const target = event.target;
+    if (target.classList.contains("disponible-btn")) {
+        const maisonId = target.dataset.id;
+        const isDisponible = target.dataset.disponible === "oui";
+        updateMaisonDisponibilite(maisonId, !isDisponible);
+    }
+});
+
 function handleEditDelete(event, itemType) {
     const target = event.target;
     if (target.classList.contains("edit-btn")) {
@@ -1530,6 +1544,24 @@ function handleEditDelete(event, itemType) {
             deleteItem(itemType, itemId);
         }
     }
+}
+
+// Function to update a house's availability
+function updateMaisonDisponibilite(maisonId, disponible) {
+    showLoading();
+    const maisonRef = ref(database, `maisons/${maisonId}`);
+    update(maisonRef, { disponible: disponible })
+        .then(() => {
+            loadMaisons(); // Reload the list after updating the availability
+            alert(`Maison mise à jour avec succès !`);
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la mise à jour de la disponibilité:", error);
+            alert("Erreur lors de la mise à jour de la disponibilité.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
 }
 
 // Function to delete an item
