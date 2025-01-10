@@ -459,36 +459,39 @@ function filterHouses() {
     return filteredHouses;
 }
 
-// Show Payment Modal
+// Show Payment Modal (function entière)
 function showPaymentModal(house, additionalDetails = '') {
     let totalPrice = house.loyer; // Start with the base rent
 
-    if (house.avance && house.avance > 0) {
-        totalPrice = house.loyer * house.avance;
-    }
-    
-    if (house.loyer && house.avance && house["nombre de loyer"]) {
-        totalPrice = house.loyer * (house.avance + house["nombre de loyer"]);
+    // Convertir les valeurs en nombres avant de faire des opérations
+    let avance = parseInt(house.avance) || 0; // Si house.avance est undefined, ça devient 0
+    let nombreDeLoyer = parseInt(house["nombre de loyer"]) || 0;
+    let caution = parseInt(house.caution) || 0;
+    let frais_supplementaire = parseInt(house.frais_supplementaire) || 0;
+
+    // Calcul correct de l'avance (en tenant compte du nombre de loyers)
+    if (avance > 0) {
+        totalPrice = house.loyer * (avance + nombreDeLoyer);
     }
 
-    if (house.frais_supplementaire) {
-        totalPrice += parseInt(house.frais_supplementaire); // Assuming frais_supplementaire is a string representing a number
-    }
+    // Ajouter la caution et les frais supplémentaires
+    totalPrice += caution;
+    totalPrice += frais_supplementaire;
 
     paymentDetails.innerHTML = `
         <p><strong>Maison:</strong> ${house.ville}, ${house.commune}, ${house.quartier}</p>
         <p><strong>Loyer:</strong> ${house.loyer} FCFA</p>
-        ${house.avance > 0 ? `<p><strong>Avance:</strong> ${house.avance} mois</p>` : ''}
-        ${house["nombre de loyer"] > 0 ? `<p><strong>Nombre de loyer:</strong> ${house["nombre de loyer"]} mois</p>` : ''}
-        ${house.caution > 0 ? `<p><strong>Caution:</strong> ${house.caution} FCFA</p>` : ''}
-        ${house.frais_supplementaire ? `<p><strong>Frais Supplémentaires:</strong> ${house.frais_supplementaire} FCFA</p>` : ''}
+        ${avance > 0 ? `<p><strong>Avance:</strong> ${avance} mois</p>` : ''}
+        ${nombreDeLoyer > 0 ? `<p><strong>Nombre de loyer:</strong> ${nombreDeLoyer} mois</p>` : ''}
+        ${caution > 0 ? `<p><strong>Caution:</strong> ${caution} FCFA</p>` : ''}
+        ${frais_supplementaire > 0 ? `<p><strong>Frais Supplémentaires:</strong> ${frais_supplementaire} FCFA</p>` : ''}
         <p><strong>Montant Total à Payer:</strong> ${totalPrice} FCFA</p>
         ${additionalDetails}
     `;
     paymentModal.style.display = "block";
 }
 
-// Handle Payment
+// Handle Payment (gestionnaire d'événements du bouton payButton en entier)
 payButton.addEventListener("click", async () => {
   if (!currentUser) {
     alert("Veuillez vous connecter ou vous inscrire pour effectuer un paiement.");
@@ -515,17 +518,19 @@ payButton.addEventListener("click", async () => {
     return;
   }
 
+  // Calcul correct du montant
   let amount = selectedHouse.loyer;
-  if (selectedHouse.avance && selectedHouse.avance > 0) {
-      amount = selectedHouse.loyer * selectedHouse.avance;
+  let avance = parseInt(selectedHouse.avance) || 0;
+  let nombreDeLoyer = parseInt(selectedHouse["nombre de loyer"]) || 0;
+  let caution = parseInt(selectedHouse.caution) || 0;
+  let frais_supplementaire = parseInt(selectedHouse.frais_supplementaire) || 0;
+
+  if (avance > 0) {
+    amount = selectedHouse.loyer * (avance + nombreDeLoyer);
   }
-    
-  if (selectedHouse.loyer && selectedHouse.avance && selectedHouse["nombre de loyer"]) {
-      amount = selectedHouse.loyer * (selectedHouse.avance + selectedHouse["nombre de loyer"]);
-  }
-  if (selectedHouse.frais_supplementaire) {
-      amount += parseInt(selectedHouse.frais_supplementaire);
-  }
+
+  amount += caution;
+  amount += frais_supplementaire;
 
   const description = `Loyer pour ${selectedHouse.ville}, ${selectedHouse.commune}, ${selectedHouse.quartier}`;
 
