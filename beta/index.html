@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mon logement</title>
+    <title>Mon Agence</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -140,6 +140,8 @@
                 <input type="text" id="maison-commune" placeholder="Commune (optionnel)">
                 <input type="text" id="maison-quartier" placeholder="Quartier (optionnel)">
                 <input type="number" id="maison-loyer" placeholder="Loyer (optionnel)">
+                <input type="number" id="maison-nombre-loyer" placeholder="Nombre de loyer (optionnel)">
+                <input type="number" id="maison-caution" placeholder="Caution (optionnel)">
                 <input type="number" id="maison-avance" placeholder="Nombre d'avance (optionnel)">
                 <input type="text" id="maison-frais-supplementaire" placeholder="Frais supplémentaires (optionnel)">
                 <input type="text" id="maison-media" placeholder="Lien vidéo YouTube ou image (optionnel)">
@@ -300,6 +302,7 @@
                 <input type="number" id="recouvrement-montant" placeholder="Montant (optionnel)">
                 <input type="month" id="recouvrement-periode" placeholder="Période (optionnel)">
                 <input type="text" id="recouvrement-commentaire" placeholder="Commentaire (optionnel)">
+                <input type="date" id="recouvrement-date" required>
                 <button type="submit" class="submit-btn">Ajouter</button>
                 <button type="button" id="cancel-recouvrement-btn" class="cancel-btn">Annuler</button>
             </form>

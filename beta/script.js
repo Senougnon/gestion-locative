@@ -562,7 +562,7 @@ addRecouvrementForm.addEventListener("submit", (event) => {
     event.preventDefault();
     showLoading();
 
-    const souscriptionId = document.getElementById("recouvrement-souscription").value;
+    const souscriptionId = document.getElementById("recouvrement-souscription").value
     const montant = parseInt(document.getElementById("recouvrement-montant").value);
     const periode = document.getElementById("recouvrement-periode").value;
     const commentaire = document.getElementById("recouvrement-commentaire").value;
@@ -713,8 +713,8 @@ function loadProprietaires() {
   <td>${proprietaire.email}</td>
   <td>${proprietaire.adresse}</td>
   <td class="actions-cell">
-  <button class="edit-btn" data-id="${proprietaire.id}">Modifier</button>
-  <button class="delete-btn" data-id="${proprietaire.id}">Supprimer</button>
+  <i class="fas fa-edit edit-icon" data-id="${proprietaire.id}" title="Modifier"></i>
+  <i class="fas fa-trash-alt delete-icon" data-id="${proprietaire.id}" title="Supprimer"></i>
   </td>
 `;
                 proprietairesList.appendChild(row);
@@ -781,12 +781,12 @@ function loadMaisons() {
           <td>${maison.avance}</td>
           <td>${maison.frais_supplementaire}</td>
           <td class="actions-cell">
-          <button class="edit-btn" data-id="${maison.id}">Modifier</button>
-          <button class="delete-btn" data-id="${maison.id}">Supprimer</button>
-          <button class="disponible-btn" data-id="${maison.id}" data-disponible="${maison.disponible ? 'oui' : 'non'}">${maison.disponible ? 'Rendre indisponible' : 'Rendre disponible'}</button>
+          <i class="fas fa-edit edit-icon" data-id="${maison.id}" title="Modifier"></i>
+          <i class="fas fa-trash-alt delete-icon" data-id="${maison.id}" title="Supprimer"></i>
+          <i class="fas ${maison.disponible ? 'fa-toggle-on' : 'fa-toggle-off'} available-icon" data-id="${maison.id}" data-disponible="${maison.disponible ? 'oui' : 'non'}" title="${maison.disponible ? 'Rendre indisponible' : 'Rendre disponible'}"></i>
           </td>
       `;
-                    maisonsList.appendChild(row);
+      maisonsList.appendChild(row);
                 });
             }
         }
@@ -820,8 +820,8 @@ function loadLocataires() {
     <td>${locataire.contact}</td>
     <td>${locataire.email}</td>
     <td class="actions-cell">
-        <button class="edit-btn" data-id="${locataire.id}">Modifier</button>
-        <button class="delete-btn" data-id="${locataire.id}">Supprimer</button>
+        <i class="fas fa-edit edit-icon" data-id="${locataire.id}" title="Modifier"></i>
+        <i class="fas fa-trash-alt delete-icon" data-id="${locataire.id}" title="Supprimer"></i>
     </td>
 `;
                 locatairesList.appendChild(row);
@@ -991,8 +991,8 @@ function loadSouscriptions() {
                       <td>${souscription.loyer}</td>
                       <td data-proprietaire-id="${proprietaireId}">${proprietaireNom}</td>
                       <td class="actions-cell">
-                          <button class="edit-btn" data-id="${souscription.id}">Modifier</button>
-                          <button class="delete-btn" data-id="${souscription.id}">Supprimer</button>
+                          <i class="fas fa-edit edit-icon" data-id="${souscription.id}" title="Modifier"></i>
+                          <i class="fas fa-trash-alt delete-icon" data-id="${souscription.id}" title="Supprimer"></i>
                       </td>
                   `;
                   souscriptionsList.appendChild(row);
@@ -1103,8 +1103,8 @@ function loadRecouvrements() {
                 <td>${recouvrement.commentaire}</td>
                 <td data-proprietaire-id="${proprietaireId}">${proprietaireNom}</td>
                 <td class="actions-cell">
-                  <button class="edit-btn" data-id="${recouvrement.id}">Modifier</button>
-                  <button class="delete-btn" data-id="${recouvrement.id}">Supprimer</button>
+                <i class="fas fa-edit edit-icon" data-id="${recouvrement.id}" title="Modifier"></i>
+                <i class="fas fa-trash-alt delete-icon" data-id="${recouvrement.id}" title="Supprimer"></i>
                 </td>
               `;
               recouvrementsList.appendChild(row);
@@ -1291,8 +1291,7 @@ function populateMaisonForm(form, itemData, itemId) {
   <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
   <input type="text" id="edit-numero" value="${itemData.numero || ''}" placeholder="Numéro (optionnel)">
   <input type="number" id="edit-pieces" value="${itemData.pieces || ''}" placeholder="Nombre de pièces (optionnel)">
-  <input type="text" id="edit-ville" value="${itemData.ville || ''}" placeholder="Ville (optionnel)">
-  <input type="text" id="edit-commune" value="${itemData.commune || ''}" placeholder="Commune (optionnel)">
+  <input type="text" id="edit-ville" value="${itemData.ville || ''}" placeholder  <input type="text" id="edit-commune" value="${itemData.commune || ''}" placeholder="Commune (optionnel)">
   <input type="text" id="edit-quartier" value="${itemData.quartier || ''}" placeholder="Quartier (optionnel)">
   <input type="number" id="edit-loyer" value="${itemData.loyer || ''}" placeholder="Loyer (optionnel)">
   <input type="number" id="edit-nombre-loyer" value="${itemData["nombre de loyer"] || ''}" placeholder="Nombre de loyer (optionnel)">
@@ -1515,44 +1514,49 @@ function updateItem(itemType, itemId, updatedData) {
         });
 }
 
-// Event delegation for "Edit" and "Delete" buttons
+// Event delegation for "Edit", "Delete", and "Disponible" icons
 document.querySelector("#proprietaires-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'proprietaires'));
-document.querySelector("#maisons-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'maisons'));
+document.querySelector("#maisons-list tbody").addEventListener("click", (event) => {
+    const target = event.target;
+    if (target.classList.contains("edit-icon")) {
+        const itemId = target.dataset.id;
+        openEditModal(itemId, 'maisons');
+    } else if (target.classList.contains("delete-icon")) {
+        const itemId = target.dataset.id;
+        const confirmationText = `Êtes-vous sûr de vouloir supprimer cette maison ?`;
+        if (confirm(confirmationText)) {
+            deleteItem('maisons', itemId);
+        }
+    } else if (target.classList.contains("available-icon")) {
+        const maisonId = target.dataset.id;
+        const isDisponible = target.dataset.disponible === "oui";
+        updateMaisonDisponibilite(maisonId, !isDisponible, target);
+    }
+});
+
 document.querySelector("#locataires-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'locataires'));
 document.querySelector("#souscriptions-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'souscriptions'));
 document.querySelector("#recouvrements-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'recouvrements'));
 
-// Event delegation for "Disponible" button
-document.querySelector("#maisons-list tbody").addEventListener("click", (event) => {
-    const target = event.target;
-    if (target.classList.contains("disponible-btn")) {
-        const maisonId = target.dataset.id;
-        const isDisponible = target.dataset.disponible === "oui";
-        updateMaisonDisponibilite(maisonId, !isDisponible);
-    }
-});
-
-function handleEditDelete(event, itemType) {
-    const target = event.target;
-    if (target.classList.contains("edit-btn")) {
-        const itemId = target.dataset.id;
-        openEditModal(itemId, itemType);
-    } else if (target.classList.contains("delete-btn")) {
-        const itemId = target.dataset.id;
-        const confirmationText = `Êtes-vous sûr de vouloir supprimer ce ${itemType.slice(0, -1)} ?`;
-        if (confirm(confirmationText)) {
-            deleteItem(itemType, itemId);
-        }
-    }
-}
-
 // Function to update a house's availability
-function updateMaisonDisponibilite(maisonId, disponible) {
+function updateMaisonDisponibilite(maisonId, disponible, target) {
     showLoading();
     const maisonRef = ref(database, `maisons/${maisonId}`);
     update(maisonRef, { disponible: disponible })
         .then(() => {
             loadMaisons(); // Reload the list after updating the availability
+            // Mettre à jour l'icône et l'attribut data-disponible
+            if (disponible) {
+                target.classList.remove("fa-toggle-off");
+                target.classList.add("fa-toggle-on");
+                target.dataset.disponible = "oui";
+                target.title = "Rendre indisponible";
+            } else {
+                target.classList.remove("fa-toggle-on");
+                target.classList.add("fa-toggle-off");
+                target.dataset.disponible = "non";
+                target.title = "Rendre disponible";
+            }
             alert(`Maison mise à jour avec succès !`);
         })
         .catch((error) => {
@@ -1562,6 +1566,20 @@ function updateMaisonDisponibilite(maisonId, disponible) {
         .finally(() => {
             hideLoading();
         });
+}
+
+function handleEditDelete(event, itemType) {
+    const target = event.target;
+   if (target.classList.contains("edit-icon")) {
+        const itemId = target.dataset.id;
+        openEditModal(itemId, itemType);
+    } else if (target.classList.contains("delete-icon")) {
+        const itemId = target.dataset.id;
+        const confirmationText = `Êtes-vous sûr de vouloir supprimer ce ${itemType.slice(0, -1)} ?`;
+        if (confirm(confirmationText)) {
+            deleteItem(itemType, itemId);
+        }
+    }
 }
 
 // Function to delete an item
