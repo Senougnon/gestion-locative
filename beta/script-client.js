@@ -305,8 +305,9 @@ async function displayHouses(houses) {
     for (const houseId in houses) {
         const house = houses[houseId];
 
-        // Vérifie si la maison est déjà achetée
+        // Vérifie si la maison est déjà achetée ou si elle est disponible
         const isPurchased = house.purchasedBy && house.purchasedBy.length > 0;
+        const isAvailable = house.disponible === undefined || house.disponible;
 
         // Affiche la maison même si certaines données essentielles sont manquantes
         try {
@@ -318,8 +319,8 @@ async function displayHouses(houses) {
                 <h3>${house.type || 'Type inconnu'} à louer</h3>
                 <p class="location"><strong>Localisation:</strong> ${house.ville || 'Ville inconnue'}, ${house.commune || 'Commune inconnue'}, ${house.quartier || 'Quartier inconnu'}</p>
                 <p class="price"><strong>Loyer:</strong> ${house.loyer ? house.loyer + ' FCFA' : 'Loyer inconnu'}</p>
-                <button class="rent-button" data-house-id="${houseId}" ${isPurchased ? 'disabled' : ''}>
-                    ${isPurchased ? 'Indisponible' : 'LOUER'}
+                <button class="rent-button" data-house-id="${houseId}" ${isPurchased || !isAvailable ? 'disabled' : ''}>
+                    ${isPurchased || !isAvailable ? 'INDISPONIBLE' : 'LOUER'}
                 </button>
             `;
             housesContainer.appendChild(houseDiv);
@@ -349,6 +350,7 @@ async function displayHouses(houses) {
 
             // Écouteur d'événement pour le bouton "LOUER"
             const rentButton = houseDiv.querySelector(".rent-button");
+            if (!isPurchased && isAvailable) {
             rentButton.addEventListener("click", async () => {
                 // Récupère les détails supplémentaires uniquement si l'utilisateur clique sur "LOUER"
                 try {
@@ -398,6 +400,7 @@ async function displayHouses(houses) {
                     // Gérer l'affichage d'un message d'erreur ou d'une modale d'erreur ici
                 }
             });
+        }
         } catch (error) {
             console.error("Erreur lors de la création de la carte de la maison:", error);
         }
@@ -459,30 +462,39 @@ function filterHouses() {
     return filteredHouses;
 }
 
-// Show Payment Modal
+// Show Payment Modal (function entière)
 function showPaymentModal(house, additionalDetails = '') {
     let totalPrice = house.loyer; // Start with the base rent
 
-    if (house.avance && house.avance > 0) {
-        totalPrice = house.loyer * house.avance;
+    // Convertir les valeurs en nombres avant de faire des opérations
+    let avance = parseInt(house.avance) || 0; // Si house.avance est undefined, ça devient 0
+    let nombreDeLoyer = parseInt(house["nombre de loyer"]) || 0;
+    let caution = parseInt(house.caution) || 0;
+    let frais_supplementaire = parseInt(house.frais_supplementaire) || 0;
+
+    // Calcul correct de l'avance (en tenant compte du nombre de loyers)
+    if (avance > 0) {
+        totalPrice = house.loyer * (avance + nombreDeLoyer);
     }
 
-    if (house.frais_supplementaire) {
-        totalPrice += parseInt(house.frais_supplementaire); // Assuming frais_supplementaire is a string representing a number
-    }
+    // Ajouter la caution et les frais supplémentaires
+    totalPrice += caution;
+    totalPrice += frais_supplementaire;
 
     paymentDetails.innerHTML = `
         <p><strong>Maison:</strong> ${house.ville}, ${house.commune}, ${house.quartier}</p>
         <p><strong>Loyer:</strong> ${house.loyer} FCFA</p>
-        ${house.avance > 0 ? `<p><strong>Avance:</strong> ${house.avance} mois</p>` : ''}
-        ${house.frais_supplementaire ? `<p><strong>Frais Supplémentaires:</strong> ${house.frais_supplementaire} FCFA</p>` : ''}
+        ${avance > 0 ? `<p><strong>Avance:</strong> ${avance} mois</p>` : ''}
+        ${nombreDeLoyer > 0 ? `<p><strong>Nombre de loyer:</strong> ${nombreDeLoyer} mois</p>` : ''}
+        ${caution > 0 ? `<p><strong>Caution:</strong> ${caution} FCFA</p>` : ''}
+        ${frais_supplementaire > 0 ? `<p><strong>Frais Supplémentaires:</strong> ${frais_supplementaire} FCFA</p>` : ''}
         <p><strong>Montant Total à Payer:</strong> ${totalPrice} FCFA</p>
         ${additionalDetails}
     `;
     paymentModal.style.display = "block";
 }
 
-// Handle Payment
+// Handle Payment (gestionnaire d'événements du bouton payButton en entier)
 payButton.addEventListener("click", async () => {
   if (!currentUser) {
     alert("Veuillez vous connecter ou vous inscrire pour effectuer un paiement.");
@@ -509,13 +521,19 @@ payButton.addEventListener("click", async () => {
     return;
   }
 
+  // Calcul correct du montant
   let amount = selectedHouse.loyer;
-  if (selectedHouse.avance && selectedHouse.avance > 0) {
-      amount = selectedHouse.loyer * selectedHouse.avance;
+  let avance = parseInt(selectedHouse.avance) || 0;
+  let nombreDeLoyer = parseInt(selectedHouse["nombre de loyer"]) || 0;
+  let caution = parseInt(selectedHouse.caution) || 0;
+  let frais_supplementaire = parseInt(selectedHouse.frais_supplementaire) || 0;
+
+  if (avance > 0) {
+    amount = selectedHouse.loyer * (avance + nombreDeLoyer);
   }
-  if (selectedHouse.frais_supplementaire) {
-      amount += parseInt(selectedHouse.frais_supplementaire);
-  }
+
+  amount += caution;
+  amount += frais_supplementaire;
 
   const description = `Loyer pour ${selectedHouse.ville}, ${selectedHouse.commune}, ${selectedHouse.quartier}`;
 
@@ -576,16 +594,20 @@ async function addSubscription(maisonId, locataireId, agenceUserId) {
     const newSouscriptionRef = push(souscriptionsRef);
     const maisonRef = ref(database, `maisons/${maisonId}`);
     const maisonSnapshot = await get(maisonRef);
-    const loyer = maisonSnapshot.val().loyer;
+    const maison = maisonSnapshot.val();
+    const loyer = maison.loyer;
+    const caution = maison.caution || 0;
+    const autres = maison.frais_supplementaire || "";
+    const avance = maison.loyer * (maison.avance + maison["nombre de loyer"]);
 
     await set(newSouscriptionRef, {
         id: newSouscriptionRef.key,
         userId: agenceUserId, // Lier la souscription à l'ID de l'agence
         maison: maisonId,
         locataire: locataireId,
-        caution: 0, 
-        avance: 0, 
-        autres: "", 
+        caution: caution, 
+        avance: avance, 
+        autres: autres, 
         dateDebut: new Date().toISOString().split('T')[0], 
         loyer: loyer
     });
@@ -685,6 +707,10 @@ function showDetailsModal(house) {
         <p><strong>Localisation:</strong> ${house.ville}, ${house.commune}, ${house.quartier}</p>
         <p><strong>Loyer:</strong> ${house.loyer} FCFA</p>
         <p><strong>Nombre de pièces:</strong> ${house.pieces}</p>
+        <p><strong>Nombre de loyer:</strong> ${house["nombre de loyer"]}</p>
+        <p><strong>Caution:</strong> ${house.caution} FCFA</p>
+        <p><strong>Avance:</strong> ${house.avance} mois</p>
+        <p><strong>Frais supplementaires:</strong> ${house.frais_supplementaire} FCFA</p>
         <!-- Add other details here -->
     `;
 
@@ -738,6 +764,10 @@ function showProductDetailsPage(house) {
         <p><strong>Loyer:</strong> ${house.loyer} FCFA</p>
         <p><strong>Nombre de pièces:</strong> ${house.pieces}</p>
         <p><strong>Propriétaire:</strong> ${house.proprietaire}</p>
+        <p><strong>Nombre de loyer:</strong> ${house["nombre de loyer"]}</p>
+        <p><strong>Caution:</strong> ${house.caution} FCFA</p>
+        <p><strong>Avance:</strong> ${house.avance} mois</p>
+        <p><strong>Frais supplementaires:</strong> ${house.frais_supplementaire} FCFA</p>
         <!-- Add other details here -->
     `;
 

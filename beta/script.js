@@ -32,6 +32,9 @@ const showLoginLink = document.getElementById("show-login");
 // Retrieve user data from localStorage on page load
 let currentUser = null;
 
+// Variable pour stocker les types de construction personnalisés de l'utilisateur
+let userConstructionTypes = {};
+
 // Check if the user is already authenticated on page load
 window.addEventListener('load', () => {
     const storedUser = localStorage.getItem('currentUser');
@@ -369,14 +372,34 @@ addMaisonForm.addEventListener("submit", async (event) => {
     const commune = document.getElementById("maison-commune").value;
     const quartier = document.getElementById("maison-quartier").value;
     const loyer = document.getElementById("maison-loyer").value;
+    const nombreLoyer = document.getElementById("maison-nombre-loyer").value;
+    const caution = document.getElementById("maison-caution").value;
     const avance = document.getElementById("maison-avance").value;
     const frais_supplementaire = document.getElementById("maison-frais-supplementaire").value;
     const media = document.getElementById("maison-media").value;
     const latitude = document.getElementById("maison-latitude").value;
     const longitude = document.getElementById("maison-longitude").value;
 
+    // Si un nouveau type est entré, l'ajouter à la base de données
+    if (type === "autre" && type_construction) {
+        try {
+            await addNewConstructionTypeForUser(currentUser.id, type_construction);
+            // Recharger les types de construction de l'utilisateur
+            await loadUserConstructionTypes(); 
+            // Mettre à jour la liste déroulante avec le nouveau type
+            updateTypeSelectWithCustomTypes();
+             // Définir la valeur du type sur le type nouvellement ajouté
+            document.getElementById("maison-type").value = type_construction;
+        } catch (error) {
+            console.error("Erreur lors de l'ajout d'un nouveau type de construction:", error);
+            alert("Erreur lors de l'ajout d'un nouveau type de construction.");
+            hideLoading();
+            return; // Arrêter l'exécution en cas d'erreur
+        }
+    }
+
     // Ajouter la maison
-    addMaison(proprietaireId, type_construction, numero, pieces, ville, commune, quartier, loyer, avance, frais_supplementaire, media, latitude, longitude)
+    addMaison(proprietaireId, type_construction, numero, pieces, ville, commune, quartier, loyer,nombreLoyer, caution, avance, frais_supplementaire, media, latitude, longitude)
         .then(() => {
             hideForm(addMaisonForm);
             loadMaisons();
@@ -390,6 +413,39 @@ addMaisonForm.addEventListener("submit", async (event) => {
         });
 });
 
+// Fonction pour mettre à jour la liste déroulante des types avec les types personnalisés
+function updateTypeSelectWithCustomTypes() {
+    const typeSelect = document.getElementById("maison-type");
+
+    // Sauvegarder la valeur actuellement sélectionnée (si elle existe)
+    const selectedTypeValue = typeSelect.value;
+
+    // Effacer les options existantes (sauf la première qui est un placeholder et "Autre")
+    while (typeSelect.options.length > 2) {
+        typeSelect.remove(2);
+    }
+
+    // Ajouter les types personnalisés
+    for (const typeId in userConstructionTypes) {
+        const type = userConstructionTypes[typeId];
+        const option = document.createElement("option");
+        option.value = type.nom;
+        option.text = type.nom;
+        typeSelect.add(option);
+    }
+
+    // Restaurer la valeur sélectionnée si elle existe encore, sinon sélectionner "Autre"
+    const optionExists = Array.from(typeSelect.options).some(opt => opt.value === selectedTypeValue);
+    typeSelect.value = optionExists ? selectedTypeValue : "autre";
+
+    // Forcer l'affichage du champ de texte si "Autre" est sélectionné
+    if (typeSelect.value === "autre") {
+        document.getElementById("nouveau-type-construction").style.display = "block";
+    } else {
+        document.getElementById("nouveau-type-construction").style.display = "none";
+    }
+}
+
 // Fonction pour ajouter un nouveau type de construction à la base de données pour un utilisateur spécifique
 async function addNewConstructionTypeForUser(userId, newType) {
     const userTypesRef = ref(database, `users/${userId}/typesConstruction`);
@@ -397,6 +453,24 @@ async function addNewConstructionTypeForUser(userId, newType) {
     await set(newTypeRef, {
         nom: newType
     });
+}
+
+// Fonction pour charger les types de construction personnalisés de l'utilisateur
+async function loadUserConstructionTypes() {
+    if (!currentUser) return;
+
+    const userTypesRef = ref(database, `users/${currentUser.id}/typesConstruction`);
+    try {
+        const snapshot = await get(userTypesRef);
+        if (snapshot.exists()) {
+            userConstructionTypes = snapshot.val();
+        } else {
+            userConstructionTypes = {}; // Réinitialiser si l'utilisateur n'a pas de types personnalisés
+        }
+    } catch (error) {
+        console.error("Erreur lors du chargement des types de construction personnalisés:", error);
+        userConstructionTypes = {}; // Réinitialiser en cas d'erreur
+    }
 }
 
 // Mettre à jour la liste des types de construction lors du chargement de la page et pour l'utilisateur connecté
@@ -492,8 +566,9 @@ addRecouvrementForm.addEventListener("submit", (event) => {
     const montant = parseInt(document.getElementById("recouvrement-montant").value);
     const periode = document.getElementById("recouvrement-periode").value;
     const commentaire = document.getElementById("recouvrement-commentaire").value;
+    const date = document.getElementById("recouvrement-date").value;
 
-    addRecouvrement(souscriptionId, montant, periode, commentaire)
+    addRecouvrement(souscriptionId, montant, periode, commentaire, date)
         .then(() => {
             hideForm(addRecouvrementForm);
             loadRecouvrements(); // Recharger la liste des recouvrements
@@ -522,7 +597,7 @@ async function addProprietaire(nom, prenom, contact, email, adresse) {
     });
 }
 
-async function addMaison(proprietaireId, type, numero, pieces, ville, commune, quartier, loyer, avance, frais_supplementaire, media, latitude, longitude) {
+async function addMaison(proprietaireId, type, numero, pieces, ville, commune, quartier, loyer,nombreLoyer, caution, avance, frais_supplementaire, media, latitude, longitude) {
     const maisonsRef = ref(database, 'maisons');
     const newMaisonRef = push(maisonsRef);
     await set(newMaisonRef, {
@@ -536,11 +611,14 @@ async function addMaison(proprietaireId, type, numero, pieces, ville, commune, q
         commune: commune || "",
         quartier: quartier || "",
         loyer: loyer || 0,
+        "nombre de loyer": nombreLoyer || 0,
+        caution: caution || 0,
         avance: avance || 0,
         frais_supplementaire: frais_supplementaire || "",
         media: media || "",
         latitude: latitude || null,
-        longitude: longitude || null
+        longitude: longitude || null,
+        disponible: true
     });
 }
 
@@ -567,6 +645,9 @@ async function addSouscription(maisonId, locataireId, caution, avance, autres, d
     const loyer = maison.loyer;
     const proprietaireId = maison.proprietaire;
 
+    // Marquer la maison comme indisponible
+    await update(maisonRef, { disponible: false });
+
     await set(newSouscriptionRef, {
         id: newSouscriptionRef.key,
         userId: currentUser.id,
@@ -582,7 +663,7 @@ async function addSouscription(maisonId, locataireId, caution, avance, autres, d
 }
 
 // Fonction pour ajouter un recouvrement
-async function addRecouvrement(souscriptionId, montant, periode, commentaire) {
+async function addRecouvrement(souscriptionId, montant, periode, commentaire, date) {
     const recouvrementsRef = ref(database, 'recouvrements');
     const newRecouvrementRef = push(recouvrementsRef);
 
@@ -603,7 +684,8 @@ async function addRecouvrement(souscriptionId, montant, periode, commentaire) {
         montant: montant || 0,
         periode: periode || "",
         commentaire: commentaire || "",
-        proprietaire: proprietaireId // Stocker l'ID du propriétaire
+        proprietaire: proprietaireId, // Stocker l'ID du propriétaire
+        date: date
     });
 }
 
@@ -701,6 +783,7 @@ function loadMaisons() {
           <td class="actions-cell">
           <button class="edit-btn" data-id="${maison.id}">Modifier</button>
           <button class="delete-btn" data-id="${maison.id}">Supprimer</button>
+          <button class="disponible-btn" data-id="${maison.id}" data-disponible="${maison.disponible ? 'oui' : 'non'}">${maison.disponible ? 'Rendre indisponible' : 'Rendre disponible'}</button>
           </td>
       `;
                     maisonsList.appendChild(row);
@@ -818,8 +901,7 @@ function loadSouscriptions() {
           if (maison.userId === currentUser.id) {
               const option = document.createElement("option");
               option.value = maisonId;
-              // Use the formatted ID for display in the dropdown list
-              option.text = `${maison.ville}, ${maison.commune}, ${maison.quartier}`;
+              option.text = `${maison.type} - ${maison.numero} - ${maison.ville}, ${maison.commune}, ${maison.quartier}`;
               maisonSelect.appendChild(option);
           }
       }
@@ -842,6 +924,37 @@ function loadSouscriptions() {
           }
       }
   });
+
+    // Écouteur d'événement pour le changement de sélection de la maison
+    maisonSelect.addEventListener("change", async () => {
+        const selectedMaisonId = maisonSelect.value;
+        if (selectedMaisonId) {
+            // Récupérer les informations de la maison sélectionnée
+            const maisonRef = ref(database, `maisons/${selectedMaisonId}`);
+            const maisonSnapshot = await get(maisonRef);
+            const maison = maisonSnapshot.val();
+
+            // Calculer le montant de l'avance
+            let avanceMontant = 0;
+            if (maison.loyer && maison.avance) {
+                avanceMontant = maison.loyer * maison.avance;
+            }
+            //Ajout du nombre de loyer dans le calcul de l'avance
+            if (maison.loyer && maison.avance && maison["nombre de loyer"]) {
+                avanceMontant = maison.loyer * (maison.avance + maison["nombre de loyer"]);
+            }
+
+            // Mettre à jour les champs du formulaire
+            document.getElementById("souscription-avance").value = avanceMontant;
+            document.getElementById("souscription-caution").value = maison.caution || "";
+            document.getElementById("souscription-autres").value = maison.frais_supplementaire || "";
+        } else {
+            // Réinitialiser les champs si aucune maison n'est sélectionnée
+            document.getElementById("souscription-avance").value = "";
+            document.getElementById("souscription-caution").value = "";
+            document.getElementById("souscription-autres").value = "";
+        }
+    });
 
   const souscriptionsRef = ref(database, 'souscriptions');
   onValue(souscriptionsRef, (snapshot) => {
@@ -983,7 +1096,7 @@ function loadRecouvrements() {
                 <td>${numero}</td>
                 <td>${locataire ? locataire.nom + ' ' + locataire.prenom : 'Inconnu'}</td>
                 <td>${maison && maison.numero ? maison.numero : 'N/A'}</td>
-                <td>${souscription.loyer}</td>
+                                <td>${souscription.loyer}</td>
                 <td>${recouvrement.periode}</td>
                 <td>${recouvrement.montant}</td>
                 <td>${recouvrement.date}</td>
@@ -1118,9 +1231,9 @@ function populateProprietaireForm(form, itemData, itemId) {
 <h3>Modifier le propriétaire</h3>
 <input type="text" id="edit-nom" value="${itemData.nom}" required>
 <input type="text" id="edit-prenom" value="${itemData.prenom}" required>
-<input type="tel" id="edit-contact" value="${itemData.contact}" required>
-<input type="email" id="edit-email" value="${itemData.email}" required>
-<input type="text" id="edit-adresse" value="${itemData.adresse}" required>
+<input type="tel" id="edit-contact" value="${itemData.contact || ''}" placeholder="Contact (optionnel)">
+<input type="email" id="edit-email" value="${itemData.email || ''}" placeholder="Email (optionnel)">
+<input type="text" id="edit-adresse" value="${itemData.adresse || ''}" placeholder="Adresse (optionnel)">
 <button type="submit" class="submit-btn">Enregistrer</button>
 <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
 `;
@@ -1176,12 +1289,14 @@ function populateMaisonForm(form, itemData, itemId) {
   <select id="edit-proprietaire">${proprietaireOptions}</select>
   <select id="edit-type">${typeOptions}</select>
   <input type="text" id="nouveau-type-construction" placeholder="Entrez le nouveau type" style="display: none;">
-  <input type="text" id="edit-numero" value="${itemData.numero}" required>
-  <input type="number" id="edit-pieces" value="${itemData.pieces}" required>
-  <input type="text" id="edit-ville" value="${itemData.ville}" required>
-  <input type="text" id="edit-commune" value="${itemData.commune}" required>
-  <input type="text" id="edit-quartier" value="${itemData.quartier}" required>
-  <input type="number" id="edit-loyer" value="${itemData.loyer}" required>
+  <input type="text" id="edit-numero" value="${itemData.numero || ''}" placeholder="Numéro (optionnel)">
+  <input type="number" id="edit-pieces" value="${itemData.pieces || ''}" placeholder="Nombre de pièces (optionnel)">
+  <input type="text" id="edit-ville" value="${itemData.ville || ''}" placeholder="Ville (optionnel)">
+  <input type="text" id="edit-commune" value="${itemData.commune || ''}" placeholder="Commune (optionnel)">
+  <input type="text" id="edit-quartier" value="${itemData.quartier || ''}" placeholder="Quartier (optionnel)">
+  <input type="number" id="edit-loyer" value="${itemData.loyer || ''}" placeholder="Loyer (optionnel)">
+  <input type="number" id="edit-nombre-loyer" value="${itemData["nombre de loyer"] || ''}" placeholder="Nombre de loyer (optionnel)">
+  <input type="number" id="edit-caution" value="${itemData.caution || ''}" placeholder="Caution (optionnel)">
   <input type="number" id="edit-avance" value="${itemData.avance || ''}" placeholder="Nombre d'avance (optionnel)">
   <input type="text" id="edit-frais-supplementaire" value="${itemData.frais_supplementaire || ''}" placeholder="Frais supplémentaires (optionnel)">
   <input type="text" id="edit-media" value="${itemData.media || ''}" placeholder="Lien vidéo YouTube ou image (optionnel)">
@@ -1212,6 +1327,8 @@ function populateMaisonForm(form, itemData, itemId) {
                 commune: document.getElementById("edit-commune").value,
                 quartier: document.getElementById("edit-quartier").value,
                 loyer: parseInt(document.getElementById("edit-loyer").value),
+                "nombre de loyer": parseInt(document.getElementById("edit-nombre-loyer").value),
+                caution: parseInt(document.getElementById("edit-caution").value),
                 avance: parseInt(document.getElementById("edit-avance").value),
                 frais_supplementaire: document.getElementById("edit-frais-supplementaire").value,
                 media: document.getElementById("edit-media").value
@@ -1227,8 +1344,8 @@ function populateLocataireForm(form, itemData, itemId) {
 <h3>Modifier le locataire</h3>
 <input type="text" id="edit-nom" value="${itemData.nom}" required>
 <input type="text" id="edit-prenom" value="${itemData.prenom}" required>
-<input type="tel" id="edit-contact" value="${itemData.contact}" required>
-<input type="email" id="edit-email" value="${itemData.email}" required>
+<input type="tel" id="edit-contact" value="${itemData.contact || ''}" placeholder="Contact (optionnel)">
+<input type="email" id="edit-email" value="${itemData.email || ''}" placeholder="Email (optionnel)">
 <button type="submit" class="submit-btn">Enregistrer</button>
 <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
 `;
@@ -1284,9 +1401,9 @@ function populateSouscriptionForm(form, itemData, itemId) {
   <h3>Modifier la souscription</h3>
   <select id="edit-maison">${maisonOptions}</select>
   <select id="edit-locataire">${locataireOptions}</select>
-  <input type="number" id="edit-caution" value="${itemData.caution}" required>
-  <input type="number" id="edit-avance" value="${itemData.avance}" required>
-  <input type="text" id="edit-autres" value="${itemData.autres}" required>
+  <input type="number" id="edit-caution" value="${itemData.caution || ''}" placeholder="Caution (optionnel)">
+  <input type="number" id="edit-avance" value="${itemData.avance || ''}" placeholder="Avance (optionnel)">
+  <input type="text" id="edit-autres" value="${itemData.autres || ''}" placeholder="Autres frais (optionnel)">
   <input type="date" id="edit-dateDebut" value="${itemData.dateDebut}" required>
   <button type="submit" class="submit-btn">Enregistrer</button>
   <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
@@ -1330,9 +1447,10 @@ function populateRecouvrementForm(form, itemData, itemId) {
         form.innerHTML = `
   <h3>Modifier le recouvrement</h3>
   <select id="edit-souscription">${souscriptionOptions}</select>
-  <input type="number" id="edit-montant" value="${itemData.montant}" required>
-  <input type="month" id="edit-periode" value="${itemData.periode}" required>
-  <input type="text" id="edit-commentaire" value="${itemData.commentaire}" placeholder="Commentaire (ex: Payé)">
+  <input type="number" id="edit-montant" value="${itemData.montant || ''}" placeholder="Montant (optionnel)">
+  <input type="month" id="edit-periode" value="${itemData.periode || ''}" placeholder="Période (optionnel)">
+  <input type="text" id="edit-commentaire" value="${itemData.commentaire || ''}" placeholder="Commentaire (optionnel)">
+  <input type="date" id="edit-date" value="${itemData.date || ''}" placeholder="Date (optionnel)">
   <button type="submit" class="submit-btn">Enregistrer</button>
   <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
 `;
@@ -1344,7 +1462,8 @@ function populateRecouvrementForm(form, itemData, itemId) {
                 souscription: document.getElementById("edit-souscription").value,
                 montant: parseInt(document.getElementById("edit-montant").value),
                 periode: document.getElementById("edit-periode").value,
-                commentaire: document.getElementById("edit-commentaire").value
+                commentaire: document.getElementById("edit-commentaire").value,
+                date: document.getElementById("edit-date").value
             };
             updateItem('recouvrements', itemId, updatedData);
         };
@@ -1403,6 +1522,16 @@ document.querySelector("#locataires-list tbody").addEventListener("click", (even
 document.querySelector("#souscriptions-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'souscriptions'));
 document.querySelector("#recouvrements-list tbody").addEventListener("click", (event) => handleEditDelete(event, 'recouvrements'));
 
+// Event delegation for "Disponible" button
+document.querySelector("#maisons-list tbody").addEventListener("click", (event) => {
+    const target = event.target;
+    if (target.classList.contains("disponible-btn")) {
+        const maisonId = target.dataset.id;
+        const isDisponible = target.dataset.disponible === "oui";
+        updateMaisonDisponibilite(maisonId, !isDisponible);
+    }
+});
+
 function handleEditDelete(event, itemType) {
     const target = event.target;
     if (target.classList.contains("edit-btn")) {
@@ -1415,6 +1544,24 @@ function handleEditDelete(event, itemType) {
             deleteItem(itemType, itemId);
         }
     }
+}
+
+// Function to update a house's availability
+function updateMaisonDisponibilite(maisonId, disponible) {
+    showLoading();
+    const maisonRef = ref(database, `maisons/${maisonId}`);
+    update(maisonRef, { disponible: disponible })
+        .then(() => {
+            loadMaisons(); // Reload the list after updating the availability
+            alert(`Maison mise à jour avec succès !`);
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la mise à jour de la disponibilité:", error);
+            alert("Erreur lors de la mise à jour de la disponibilité.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
 }
 
 // Function to delete an item
@@ -1642,7 +1789,7 @@ if (currentUser && currentUser.subscription) {
         currentUser.subscription.status = 'cancelled';
 
         // Update localStorage
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
         checkUserRoleAndSubscription();
 
@@ -2086,22 +2233,30 @@ dashboardItems.forEach(item => {
 });
 
 // Data loading initialization
-function initializeDataLoad() {
-if (isAuthenticated) {
-    checkUserRoleAndSubscription();
-    setInterval(checkAndUpdateSubscriptionStatus, 60 * 60 * 1000);
-    loadDashboardData();
-    loadProprietaires();
-    loadMaisons();
-    loadLocataires();
-    loadSouscriptions();
-    loadRecouvrements();
-    loadAgenceData();
-    loadProprietairesForFilterSouscriptions();
-    if (currentUser) {
-        loadConstructionTypesForUser(currentUser.id);
+async function initializeDataLoad() {
+    if (isAuthenticated) {
+        checkUserRoleAndSubscription();
+        setInterval(checkAndUpdateSubscriptionStatus, 60 * 60 * 1000);
+        loadDashboardData();
+        loadProprietaires();
+        loadMaisons();
+        loadLocataires();
+        loadSouscriptions();
+        loadRecouvrements();
+        loadAgenceData();
+        loadProprietairesForFilterSouscriptions();
+        setDefaultDate();
+        if (currentUser) {
+            await loadUserConstructionTypes(); // Attend la fin du chargement des types
+            updateTypeSelectWithCustomTypes(); // Met à jour la liste déroulante
+        }
     }
 }
+
+// Fonction pour définir la date par défaut dans le champ "recouvrement-date"
+function setDefaultDate() {
+    const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+    document.getElementById("recouvrement-date").value = today;
 }
 
 // Call initializeDataLoad on page load
