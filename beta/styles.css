@@ -766,3 +766,7 @@ footer {
 .available-icon:hover {
     color: #333;
 }
+
+#back-button-container {
+    display: none; /* Masquer le bouton par défaut */
+}
