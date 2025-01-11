@@ -583,21 +583,33 @@ addRecouvrementForm.addEventListener("submit", (event) => {
         });
 });
 
-// Function to add a landlord
 async function addProprietaire(nom, prenom, contact, email, adresse) {
+    showLoading();
     const proprietairesRef = ref(database, 'proprietaires');
     const newProprietaireRef = push(proprietairesRef);
     await set(newProprietaireRef, {
-        id: newProprietaireRef.key, // Use Firebase-generated key
+        id: newProprietaireRef.key,
         userId: currentUser.id,
         nom: nom,
         prenom: prenom,
         contact: contact || "",
-        adresse: adresse || "" // Empty email if not provided
+        email: email || "",
+        adresse: adresse || ""
+    })
+    .then(() => {
+        hideForm(addProprietaireForm);
+        hideLoading();
+        reloadAllData(); // Recharger les données après l'ajout
+    })
+    .catch((error) => {
+        console.error("Erreur lors de l'ajout du propriétaire:", error);
+        alert("Erreur lors de l'ajout du propriétaire.");
+        hideLoading();
     });
 }
 
 async function addMaison(proprietaireId, type, numero, pieces, ville, commune, quartier, loyer,nombreLoyer, caution, avance, frais_supplementaire, media, latitude, longitude) {
+    showLoading();
     const maisonsRef = ref(database, 'maisons');
     const newMaisonRef = push(maisonsRef);
     await set(newMaisonRef, {
@@ -619,24 +631,45 @@ async function addMaison(proprietaireId, type, numero, pieces, ville, commune, q
         latitude: latitude || null,
         longitude: longitude || null,
         disponible: true
+    })
+    .then(() => {
+        hideForm(addMaisonForm);
+        hideLoading();
+        reloadAllData(); // Recharger les données après l'ajout
+    })
+    .catch((error) => {
+        console.error("Erreur lors de l'ajout de la maison:", error);
+        alert("Erreur lors de l'ajout de la maison.");
+        hideLoading();
     });
 }
 
-// Function to add a tenant
 async function addLocataire(nom, prenom, contact, email) {
+    showLoading();
     const locatairesRef = ref(database, 'locataires');
     const newLocataireRef = push(locatairesRef);
     await set(newLocataireRef, {
-        id: newLocataireRef.key, // Use Firebase-generated key
+        id: newLocataireRef.key,
         userId: currentUser.id,
         nom: nom,
         prenom: prenom,
         contact: contact || "",
-        email: email || "", // Empty email if not provided
+        email: email || ""
+    })
+    .then(() => {
+        hideForm(addLocataireForm);
+        hideLoading();
+        reloadAllData(); // Recharger les données après l'ajout
+    })
+    .catch((error) => {
+        console.error("Erreur lors de l'ajout du locataire:", error);
+        alert("Erreur lors de l'ajout du locataire.");
+        hideLoading();
     });
 }
 
 async function addSouscription(maisonId, locataireId, caution, avance, autres, dateDebut) {
+    showLoading();
     const souscriptionsRef = ref(database, 'souscriptions');
     const newSouscriptionRef = push(souscriptionsRef);
     const maisonRef = ref(database, `maisons/${maisonId}`);
@@ -645,7 +678,6 @@ async function addSouscription(maisonId, locataireId, caution, avance, autres, d
     const loyer = maison.loyer;
     const proprietaireId = maison.proprietaire;
 
-    // Marquer la maison comme indisponible
     await update(maisonRef, { disponible: false });
 
     await set(newSouscriptionRef, {
@@ -659,15 +691,23 @@ async function addSouscription(maisonId, locataireId, caution, avance, autres, d
         dateDebut: dateDebut,
         loyer: loyer,
         proprietaire: proprietaireId
+    })
+    .then(() => {
+        hideForm(addSouscriptionForm);
+        hideLoading();
+        reloadAllData(); // Recharger les données après l'ajout
+    })
+    .catch((error) => {
+        console.error("Erreur lors de l'ajout de la souscription:", error);
+        alert("Erreur lors de l'ajout de la souscription.");
+        hideLoading();
     });
 }
 
-// Fonction pour ajouter un recouvrement
 async function addRecouvrement(souscriptionId, montant, periode, commentaire, date) {
+    showLoading();
     const recouvrementsRef = ref(database, 'recouvrements');
     const newRecouvrementRef = push(recouvrementsRef);
-
-    // Récupérer l'ID du propriétaire à partir de la souscription
     const souscriptionRef = ref(database, `souscriptions/${souscriptionId}`);
     const souscriptionSnapshot = await get(souscriptionRef);
     const souscription = souscriptionSnapshot.val();
@@ -684,8 +724,18 @@ async function addRecouvrement(souscriptionId, montant, periode, commentaire, da
         montant: montant || 0,
         periode: periode || "",
         commentaire: commentaire || "",
-        proprietaire: proprietaireId, // Stocker l'ID du propriétaire
+        proprietaire: proprietaireId,
         date: date
+    })
+    .then(() => {
+        hideForm(addRecouvrementForm);
+        hideLoading();
+        reloadAllData(); // Recharger les données après l'ajout
+    })
+    .catch((error) => {
+        console.error("Erreur lors de l'ajout du recouvrement:", error);
+        alert("Erreur lors de l'ajout du recouvrement.");
+        hideLoading();
     });
 }
 
@@ -1504,6 +1554,7 @@ function updateItem(itemType, itemId, updatedData) {
             }
             alert(`${itemType.charAt(0).toUpperCase() + itemType.slice(1, -1)} modifié avec succès !`);
             closeEditModal();
+            reloadAllData(); // Recharger les données après la modification
         })
         .catch((error) => {
             console.error(`Erreur lors de la modification de ${itemType}:`, error);
@@ -1582,24 +1633,15 @@ function handleEditDelete(event, itemType) {
     }
 }
 
-// Function to delete an item
 async function deleteItem(itemType, itemId) {
     showLoading();
     try {
         const itemRef = ref(database, `${itemType}/${itemId}`);
-        await remove(itemRef);
-        // Reload the list after deletion
-        if (itemType === 'proprietaires') {
-            loadProprietaires();
-        } else if (itemType === 'maisons') {
-            loadMaisons();
-        } else if (itemType === 'locataires') {
-            loadLocataires();
-        } else if (itemType === 'souscriptions') {
-            loadSouscriptions();
-        } else if (itemType === 'recouvrements') {
-            loadRecouvrements();
-        }
+        await remove(itemRef)
+        .then(() => {
+             reloadAllData(); // Recharger les données après la suppression
+        })
+       
     } catch (error) {
         console.error(`Erreur lors de la suppression de ${itemType}:`, error);
         alert(`Erreur lors de la suppression de ${itemType}.`);
@@ -2275,6 +2317,18 @@ async function initializeDataLoad() {
 function setDefaultDate() {
     const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
     document.getElementById("recouvrement-date").value = today;
+}
+
+function reloadAllData() {
+    loadDashboardData();
+    loadProprietaires();
+    loadMaisons();
+    loadLocataires();
+    loadSouscriptions();
+    loadRecouvrements();
+    loadAgenceData();
+    loadProprietairesForFilterSouscriptions();
+    setDefaultDate();
 }
 
 // Call initializeDataLoad on page load
